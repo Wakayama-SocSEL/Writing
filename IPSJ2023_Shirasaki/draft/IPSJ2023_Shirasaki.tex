@@ -1,0 +1,195 @@
+\documentclass[uplatex,dvipdfmx,a4paper,twocolumn,base=11pt,jbase=11pt,ja=standard]{bxjsarticle}  % 環境に合わせて変更してください
+
+\usepackage{ipsj}
+\usepackage{color}
+
+%追加パッケージ
+\usepackage{enumerate}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage{caption}
+
+
+\newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
+
+\title{README修正内容に関連するソースコード変更コミット追跡への試み}{Toward tracking source code change commits related to README revision}
+\author{和歌山大学}{白﨑 優奈}{Shirasaki Yuna, Wakayama University}
+\author{和歌山大学}{伊原 彰紀}{Akinori Ihara, Wakayama University}
+\author{和歌山大学}{石岡 直樹}{Naoki Ishioka, Wakayama University}
+
+\begin{document}
+\maketitle
+
+
+%================
+%1
+\section{はじめに}
+%================
+
+
+%hogehoge（背景，動機とか）
+
+多くのソフトウェア開発プロジェクトでは，ソフトウェアの概要や使用方法などを開発者や利用者に発信するために，ソフトウェアドキュメントを公開している．ソフトウェア開発の中でもGitHubを利用するオープンソースソフトウェア(OSS)開発では，開発への参加方法，各機能の概要などをREADMEに記載し，実装途中に公開している．
+
+% （プロプライエタリソフトウェアでは，定期的なリリースの際にソフトウェアとドキュメントを同時に公開する．一方で）
+OSSでは，実装過程のソースコードが逐一公開されるため，READMEもそれに伴って更新することが期待され，ソースコードの更新によるソフトウェアの進化にREADMEの更新が追従することが求められる．しかし従来研究ではソースコードとREADMEが紐付けられていないため，どれだけ追従しているかは明らかになっていない．また，ソースコードとREADMEの更新は同時に行われない場合もあるため，READMEの更新にどのソースコードが紐付けられているかはわからない．
+
+本研究では，README更新の追従性を確認するために，ソースコードとREADMEを共通して含まれる単語に基づいて関連付ける．具体的には，READMEに含まれる単語とソースコードに含まれる単語とを比較することで，ソースコードの変更がREADMEに反映されているのかを，各ペアの単語が一致するかによって判断する．
+
+
+%================
+%2
+\section{分析}
+%================
+
+
+%2.1
+\subsection{データセット}
+%================
+%hogehoge（どんなデータセット使ったか）
+
+%fugofugo（そこからどんなデータをどうやって集めたか）
+
+
+本論文では，READMEの更新が10回以上で，英語で記述されているaliyun-openapi-nodejs-sdk
+（（TODO：リンク））を対象とする．
+
+（（TODO：リポジトリ策定の理由(更新10回以上)を詳細に記述.ここかはわからないが，リポジトリによって結果が異なるのでその辺も記述したい．似た傾向を持つ結果を複数提示したい））
+
+
+
+
+
+
+%================
+%2.2
+\subsection{分析手法}
+%================
+%hogehoge（分析を行うためにどんな準備をしたか（スニペット削除とか））
+
+%fugofugo（なぜその準備をしたのか（コードがあったらよろしくないとか））
+
+READMEの変更がソースコードの変更を追従しているかを確認するために，以下の手順で，各コミットで追加された文章をデータ整形する．
+
+\vspace{-2mm}
+\begin{enumerate}
+    \item READMEが変更されたコミットについて，各コミットで追加された文章を抽出
+    \item 正規表現を用いて，記号の削除
+    \item NLTKを用いて，説明文の分かち書き
+    \item NLTKを用いて，名詞を抽出
+    \item 全コミットを対象に，追加されたソースコードに同様の処理
+\end{enumerate}
+
+以上の方法で，READMEの変更コミットで追加された文章に含まれる名詞，全コミットで追加されたソースコードに含まれる名詞が得られる．
+
+これらの単語に一致単語があるかを比較分析する．比較ペアは，README変更コミットで追加された単語と，その前後Nコミットのコード変更で追加された単語である．
+
+%================
+%2.3
+　%\subsection{評価方法}
+%================
+
+%４２（どんな分析の仕方をしたのか（「use」と「その他」でそれぞれ分けて考えたとか））
+
+%================
+%2.4
+\subsection{結果}
+%================
+%hogehoge（どんな結果が得られたか，図とかを一緒に載せる）
+
+%fugofugo（結果からの考察）
+%分析を行った結果次のような結果が得られた．
+
+以下に，2.2の手法でaliyun-openapi-nodejs-sdkのデータを分析した結果を示す．
+% \documentclass{jsarticle}
+% \usepackage{bardiag}
+% \begin{document}
+% \renewcommand{\betweenticks}{50}
+% \bardiagrambegin{9.5}{350}{1}{2}{1cm}{0.02cm}
+%     % \drawlevellines
+%     % \baritem{-20}{23}{blue}
+%     % \baritem{-19}{5}{blue}
+%     % \baritem{-18}{2}{blue}
+%     % \baritem{-17}{24}{blue}
+%     % \baritem{-16}{24}{blue}
+%     % \baritem{-15}{27}{blue}
+%     % \baritem{-14}{21}{blue}
+%     % \baritem{-13}{20}{blue}
+%     % \baritem{-12}{7}{blue}
+%     % \baritem{-11}{2}{blue}
+
+%     \baritem{0}{23}{blue}
+%     \baritem{1}{5}{blue}
+%     \baritem{2}{2}{blue}
+%     \baritem{3}{24}{blue}
+%     \baritem{4}{24}{blue}
+%     \baritem{5}{27}{blue}
+%     \baritem{6}{21}{blue}
+%     \baritem{7}{20}{blue}
+%     \baritem{8}{7}{blue}
+%     \baritem{9}{2}{blue}
+% \bardiagramend{\large README変更コミットの前後のコミット}{\large 一致単語数}
+% \end{document}
+
+図1は，README変更コミットで追加された単語とその前後20コミットで追加された単語を比較し，10以上の一致単語があるならば一致数を，一致単語が10未満なら0を，各コミットの一致単語数に加算し，README変更コミットやその前後コミットにおいて，関連単語がいくつあるのかを示したグラフである．
+
+図1より，README変更コミットとその前のコミットで，一致単語が多くみられた．ここから，README変更に関連のあるソースコードは，READMEとほぼ同時に変更される分量が多いことがわかった．
+
+また図2は，README変更コミットで追加された単語とその前後20コミットで追加された単語を比較し，10以上の一致単語があるならば一致する(1)，一致単語が10未満なら一致しない(0)として，各コミットの一致の有無を示したグラフである．
+
+図2より，README変更前の方が，README変更後よりも密にソースコードの変更がみられる．ここから，ソースコードを変更してから，まとめてREADMEが変更されることが多いことがわかった．
+
+（（TODO：ラベル名））
+
+以上より，（（TODO:2つの結果からわかることの記載ができればよいか））
+
+
+
+%--------------------------------グラフ
+
+%--------------------------------
+
+%================
+%3
+\section{おわりに}
+%================
+
+%hogehoge（今回の研究のまとめとか）
+
+%fugofugo（今回研究から得られたことを踏まえて今後どう発展させていくか）
+
+%４２（どんな研究をしていくつもりなのか的な）
+%今回の研究のから　hogehoge-fugofugoである．
+
+本論文では，READMEがソースコードの変更を追従しているかを確認するため，各ファイルの単語を比較した．分析の結果，README更新の前からREADMEが更新されるまでの間に，READMEに関連のあるソースコードが多く変更されていることがわかった．今後は，READMEとソースコードの追従性をより詳細に分析するとともに，ソースコードの変更をREADMEに反映させるタイミングによって，READMEにどのような影響があるのかを明らかにすることを目指す.
+
+
+
+%================
+\section*{謝辞}
+%================
+
+
+%================
+\section*{参考文献}
+%================
+%[1]Shohei IKEDA, Akinori IHARA, Raula Gaikovina KULA, and Kenichi MATSUMOTO : An Empirical Study ofREADMEcontents for JavaScript Packages : IEICE TRANS. INF. and SYST., VOL.E102–D, NO.2 FEBRUARY 2019
+
+%[2]JINHAN KIM, SANGHOON LEE, and SEUNG-WON HWANG, SUNGHUN KIM : Enriching Documents with Examples: A Corpus Mining Approach : ACM Trans. Inf. Syst. 31, 1, Article 1 (January 2013)
+
+%[3]Noela Jemutai Kipyegen and William P. K. Korir : Importance of Software Documentation : IJCSI International Journal of Computer Science Issues, Vol. 10, Issue 5, No 1, September 2013 
+
+（（TODO：従来研究のところに参考文献））
+
+
+%================
+
+
+
+
+
+
+\bibliographystyle{ipsjunsrt}
+\bibliography{bibfile}
+
+\end{document}
