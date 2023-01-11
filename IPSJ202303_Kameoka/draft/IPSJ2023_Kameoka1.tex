@@ -6,8 +6,8 @@
 %追加パッケージ
 \usepackage{enumerate}
 \usepackage{url}
-\usepackage[dvipdfmx]{graphicx}
-%\usepackage{caption}
+\usepackage{graphics}
+\usepackage{caption}
 
 \newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
 
@@ -16,6 +16,7 @@
 \author{和歌山大学}{伊原 彰紀}{Akinori Ihara, Wakayama University}
 \author{和歌山大学}{南 雄太}{Yuta Minami, Wakayama University}
 \author{和歌山大学}{大森　楓木}{Fuki Omori, Wakayama University}
+
 
 \begin{document}
 \maketitle
@@ -68,22 +69,12 @@ FedAvgを用いた連合学習の概要は，図１のように個別の深層�
 %  \label{fig:test}
 %  \end{figure}
 
-%\begin{figure}[t]
-%	\centering
-%	\includegraphics[width=1.0\linewidth]{federated_learning_exp.pdf}
-%	\caption{連合学習の概略図}
-%	\label{fig:test}
-%\end{figure}
-
-%-----------
-\begin{figure}
-\begin{center}
-\includegraphics[width=0.9\linewidth]{federated_learning_exp.eps}
-\caption{連合学習の概略図}
-\label{fig:test}
-\end{center}
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=1.0\linewidth]{federated_learning_exp.pdf}
+	\caption{連合学習の概略図}
+	\label{fig:test}
 \end{figure}
-%-----------
 
 
 %================
@@ -161,17 +152,19 @@ FedAvgを用いた連合学習の概要は，図１のように個別の深層�
 %================
 
 
+
+%===============
+%\section*{参考文献}
+%================
+%================
+%\bibliographystyle{ipsjunsrt}
+%\bibliography{bibfile}
+%================
+
 \begin{thebibliography}{1}
-  \bibitem{thesis_fukuchi2021} 福地ユキ，伊原彰紀，山本豪志朗，橋谷直樹，オブジェクトの動作に基づくScratch作品の直感的検索手法，\todo{会議名}, 2021
-  \bibitem{RED2015_J. Moreno-Le ́on}　J. Moreno-Le'on, G. Robles, and M. Rom'an-Gonz'alez, ``Dr. scratch: Automatic analysis of scratch projects to assess and foster computational thinking,'' RED.Revista de Educaci'on a Distancia, vol.15, no.46, pp.1-23, 2015.
-  \bibitem{ICMSR2017_Aivaloglou} E. Aivaloglou, F. Hermans, J. Moreno-Le'on, Gr. Robles, ``A dataset of scratch programs: scraped, shaped and scored,'' Proceeding of the International Conference on Mining Software Repositories (MSR'17), pp.511-514, 2017. 
-
+    \bibitem{article1} 
+    \bibitem{article2} Brendan McMahan, Eider Moore, Daniel Ramage, Seth Hampson, Blaise Aguera y Arcas: Communication-Efficient Learning of Deep Networks from Decentralized Data: Proceedings of the 20th International Conference on Artificial Intelligence and Statistics (PMLR), No54, pp. 1273-1282, (2017)
 \end{thebibliography}
-
-
-
-
-\bibliographystyle{ipsjunsrt}
 %\bibliography{bibfile}
 
 \end{document}

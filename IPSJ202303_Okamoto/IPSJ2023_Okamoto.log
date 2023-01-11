@@ -1,0 +1,421 @@
+This is e-upTeX, Version 3.14159265-p3.7-u1.21-160201-2.6 (utf8.uptex) (TeX Live 2016) (preloaded format=uplatex 2017.2.14)  12 JAN 2023 00:32
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**IPSJ2023_Okamoto.tex
+(./IPSJ2023_Okamoto.tex
+pLaTeX2e <2016/11/29u01> (based on LaTeX2e <2017/01/01> patch level 1)
+Babel <3.9r> and hyphenation patterns for 83 language(s) loaded.
+(/usr/local/texlive/2016/texmf-dist/tex/latex/bxjscls/bxjsarticle.cls
+Document Class: bxjsarticle 2017/02/03 v1.4 BXJS document classes
+(/usr/local/texlive/2016/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2014/10/28 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count82
+\calc@Bcount=\count83
+\calc@Adimen=\dimen118
+\calc@Bdimen=\dimen119
+\calc@Askip=\skip41
+\calc@Bskip=\skip42
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count84
+\calc@Cskip=\skip43
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks15
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/bxjscls/bxjscompat.sty
+Package: bxjscompat 2017/02/03 v1.4 BXJS document classes
+)
+(/usr/local/texlive/2016/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2016/05/14 v3.1 Provides the ifpdf switch
+)
+\stockwidth=\dimen120
+\stockheight=\dimen121
+\jsc@mmm=\dimen122
+\jsZw=\dimen123
+\jsc@smallskipamount=\skip44
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 9.6222pt on input line 818.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 9.6222pt on input line 818.
+\fullwidth=\dimen124
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2010/09/12 v5.6 Page Geometry
+
+(/usr/local/texlive/2016/texmf-dist/tex/generic/oberdiek/ifvtex.sty
+Package: ifvtex 2016/05/16 v1.6 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+)
+(/usr/local/texlive/2016/texmf-dist/tex/generic/ifxetex/ifxetex.sty
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+\Gm@cnth=\count85
+\Gm@cntv=\count86
+\c@Gm@tempcnt=\count87
+\Gm@bindingoffset=\dimen125
+\Gm@wd@mp=\dimen126
+\Gm@odd@mp=\dimen127
+\Gm@even@mp=\dimen128
+\Gm@layoutwidth=\dimen129
+\Gm@layoutheight=\dimen130
+\Gm@layouthoffset=\dimen131
+\Gm@layoutvoffset=\dimen132
+\Gm@dimlist=\toks16
+)
+\c@part=\count88
+\c@section=\count89
+\c@subsection=\count90
+\c@subsubsection=\count91
+\c@paragraph=\count92
+\c@subparagraph=\count93
+\@abstractbox=\box41
+\c@figure=\count94
+\c@table=\count95
+\abovecaptionskip=\skip45
+\belowcaptionskip=\skip46
+\jsc@tocl@width=\dimen133
+\@lnumwidth=\dimen134
+\bibindent=\dimen135
+\heisei=\count96
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/bxjscls/bxjsja-standard.def
+File: bxjsja-standard.def 2017/02/03 v1.4 BXJS document classes
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/bxjscls/bxjsja-minimal.def
+File: bxjsja-minimal.def 2017/02/03 v1.4 BXJS document classes
+LaTeX Info: Redefining \rmfamily on input line 180.
+LaTeX Info: Redefining \sffamily on input line 183.
+LaTeX Info: Redefining \ttfamily on input line 186.
+LaTeX Info: Redefining \textmc on input line 189.
+LaTeX Info: Redefining \textgt on input line 190.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 9.24713pt on input line 193.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 9.24713pt on input line 193.
+)
+\symmincho=\mathgroup4
+LaTeX Font Info:    Overwriting symbol font `mincho' in version `bold'
+(Font)                  JY2/mc/m/n --> JY2/gt/m/n on input line 286.
+LaTeX Info: Redefining \textmc on input line 471.
+LaTeX Info: Redefining \textgt on input line 472.
+))
+(./ipsj.sty
+
+Package geometry Warning: Over-specification in `h'-direction.
+    `width' (381.91982pt) is ignored.
+
+
+Package geometry Warning: Over-specification in `v'-direction.
+    `height' (589.89941pt) is ignored.
+
+\author@count=\count97
+) (/usr/local/texlive/2016/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: dvipdfmx.def on input line 147.
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/graphics-def/dvipdfmx.def
+File: dvipdfmx.def 2016/07/11 v4.12 LaTeX color/graphics driver for dvipdfmx (L
+3/ChoF)
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/graphics/dvipsnam.def
+File: dvipsnam.def 2016/06/17 v3.0m Driver-dependent file (DPC,SPQR)
+))
+(/usr/local/texlive/2016/texmf-dist/tex/latex/tools/enumerate.sty
+Package: enumerate 2015/07/23 v3.00 enumerate extensions (DPC)
+\@enLab=\toks17
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip10
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2016/10/09 v1.0u Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: dvipdfmx.def on input line 99.
+)
+(/usr/local/texlive/2016/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2016/02/21 v3.3-144 Customizing captions (AR)
+
+(/usr/local/texlive/2016/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2016/05/22 v1.7-166 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 67.
+\captionmargin=\dimen136
+\captionmargin@=\dimen137
+\captionwidth=\dimen138
+\caption@tempdima=\dimen139
+\caption@indent=\dimen140
+\caption@parindent=\dimen141
+\caption@hangindent=\dimen142
+Package caption Info: Unknown document class (or package),
+(caption)             standard defaults will be used.
+)
+
+Package caption Warning: Unsupported document class (or package) detected,
+(caption)                usage of the caption package is not recommended.
+See the caption package documentation for explanation.
+
+Package caption Info: \@makecaption = \long macro:#1#2->{\small \advance \lefts
+kip .0628\linewidth \advance \rightskip .0628\linewidth \vskip \abovecaptionski
+p \sbox \@tempboxa {#1\zwspace #2}\ifdim \wd \@tempboxa <\hsize \centering \fi 
+#1\zwspace #2\par \vskip \belowcaptionskip }.
+\c@ContinuedFloat=\count98
+)
+No file IPSJ2023_Okamoto.aux.
+\openout1 = `IPSJ2023_Okamoto.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for JY2/mc/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for JT2/mc/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+*geometry* detected driver: dvipdfm
+*geometry* verbose mode - [ preamble ] result:
+* driver: dvipdfm
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* hratio: 1:1
+* vratio: 1:1
+* modes: includehead includefoot truedimen 
+* h-part:(L,W,R)=(47.85994pt, 406.80984pt, 47.85994pt)
+* v-part:(T,H,B)=(71.78993pt, 579.10576pt, 59.82494pt)
+* \paperwidth=597.49355pt
+* \paperheight=845.03255pt
+* \textwidth=406.80984pt
+* \textheight=579.10576pt
+* \oddsidemargin=-12.92157pt
+* \evensidemargin=-12.92157pt
+* \topmargin=11.00842pt
+* \headheight=0.0pt
+* \headsep=0.0pt
+* \topskip=10.0pt
+* \footskip=0.0pt
+* \marginparwidth=18.49426pt
+* \marginparsep=18.49426pt
+* \columnsep=19.91692pt
+* \skip\footins=16.0pt plus 5.0pt minus 2.0pt
+* \hoffset=0.00575pt
+* \voffset=0.00575pt
+* \mag=1189
+* \@twocolumntrue
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 12.44356pt on input line 21.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 12.44356pt on input line 21.
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <13.45668> not available
+(Font)              size <14.4> substituted on input line 21.
+
+LaTeX Font Info:    Calculating math sizes for size <13.45668> on input line 21
+.
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <9.41963> not available
+(Font)              size <9> substituted on input line 21.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <13.45668> not available
+(Font)              size <14.4> substituted on input line 21.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <9.41963> not available
+(Font)              size <9> substituted on input line 21.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <13.45668> not available
+(Font)              size <14.4> substituted on input line 21.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <9.41963> not available
+(Font)              size <9> substituted on input line 21.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <13.45668> on input line 21.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9.41963> on input line 21.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6.72833> on input line 21.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 8.71045pt on input line 21.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 6.22177pt on input line 21.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 8.71045pt on input line 21.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 9.70949pt on input line 21.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 9.70949pt on input line 21.
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <10.5> not available
+(Font)              size <10.95> substituted on input line 21.
+
+LaTeX Font Info:    Calculating math sizes for size <10.5> on input line 21.
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <10.5> not available
+(Font)              size <10.95> substituted on input line 21.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <10.5> not available
+(Font)              size <10.95> substituted on input line 21.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.5> on input line 21.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7.34996> on input line 21.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5.25> on input line 21.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 6.7966pt on input line 21.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 4.85474pt on input line 21.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 6.7966pt on input line 21.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 21.
+(/usr/local/texlive/2016/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <7.34996> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 21.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 7.3977pt on input line 21.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 7.3977pt on input line 21.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 21.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 21.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 21.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 5.54828pt on input line 21.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 4.62357pt on input line 21.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 5.54828pt on input line 21.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 6.9995pt on input line 21.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 6.9995pt on input line 21.
+
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <7.56938> not available
+(Font)              size <8> substituted on input line 21.
+
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <6> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 21.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 11.09656pt on input line 26.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 11.09656pt on input line 26.
+LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
+(Font)              scaled to size 11.09656pt on input line 26.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 11.09656pt on input line 26.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 37.
+LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
+(Font)              scaled to size 6.47299pt on input line 37.
+LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
+(Font)              scaled to size 6.47299pt on input line 37.
+LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
+(Font)              scaled to size 7.3977pt on input line 37.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 7.3977pt on input line 37.
+LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <10> not available
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 41.
+LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
+(Font)              scaled to size 9.24713pt on input line 41.
+LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <10> not available
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 41.
+LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
+(Font)              scaled to size 9.24713pt on input line 41.
+
+LaTeX Warning: Citation `thesis_fukuchi2021' on page 1 undefined on input line 
+41.
+
+Class bxjsarticle Info: Old font command '\bf' is used!!
+(bxjsarticle)           The first occurrence is on input line 41.
+
+Overfull \hbox (9.24713pt too wide) has occurred while \output is active
+[][] 
+ []
+
+
+LaTeX Warning: Citation `ICMSR2017_Aivaloglou' on page 1 undefined on input lin
+e 72.
+
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 75.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [1
+
+
+]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [2]
+
+Class bxjsarticle Warning: Some old font commands were used in text
+(bxjsarticle)              (see the log file for detail).
+
+Class bxjsarticle Info: Some old font commands were used in text:
+(bxjsarticle)             \bf
+(bxjsarticle)           You should note, that since 1994 LaTeX2e provides a
+(bxjsarticle)           new font selection scheme called NFSS2 with several
+(bxjsarticle)           new, combinable font commands. The class provides
+(bxjsarticle)           the old font commands only for compatibility.
+(./IPSJ2023_Okamoto.aux)
+
+LaTeX Font Warning: Size substitutions with differences
+(Font)              up to 0.94331pt have occurred.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 3113 strings out of 493679
+ 48579 string characters out of 6149847
+ 121809 words of memory out of 5000000
+ 6681 multiletter control sequences out of 15000+600000
+ 16128 words of font info for 81 fonts, out of 8000000 for 9000
+ 934 hyphenation exceptions out of 8191
+ 36i,13n,38p,1020b,517s stack positions out of 5000i,500n,10000p,200000b,80000s
+
+Output written on IPSJ2023_Okamoto.dvi (2 pages, 12824 bytes).
