@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.14159265-p3.7-u1.21-160201-2.6 (utf8.uptex) (TeX Live 2016) (preloaded format=uplatex 2017.2.14)  12 JAN 2023 00:38
+This is e-upTeX, Version 3.14159265-p3.7-u1.21-160201-2.6 (utf8.uptex) (TeX Live 2016) (preloaded format=uplatex 2017.2.14)  12 JAN 2023 02:07
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -320,24 +320,23 @@ LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
 (Font)              scaled to size 11.09656pt on input line 25.
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
 (Font)              scaled to size 11.09656pt on input line 25.
+Class bxjsarticle Info: Old font command '\bf' is used!!
+(bxjsarticle)           The first occurrence is on input line 28.
 LaTeX Font Info:    Font shape `JT2/mc/bx/n' in size <10> not available
-(Font)              Font shape `JT2/gt/m/n' tried instead on input line 31.
+(Font)              Font shape `JT2/gt/m/n' tried instead on input line 28.
 LaTeX Font Info:    Font shape `JT2/gt/m/n' will be
-(Font)              scaled to size 9.24713pt on input line 31.
+(Font)              scaled to size 9.24713pt on input line 28.
 LaTeX Font Info:    Font shape `JY2/mc/bx/n' in size <10> not available
-(Font)              Font shape `JY2/gt/m/n' tried instead on input line 31.
+(Font)              Font shape `JY2/gt/m/n' tried instead on input line 28.
 LaTeX Font Info:    Font shape `JY2/gt/m/n' will be
-(Font)              scaled to size 9.24713pt on input line 31.
+(Font)              scaled to size 9.24713pt on input line 28.
 
-LaTeX Warning: Citation `article1' on page 1 undefined on input line 31.
+LaTeX Warning: Citation `article1' on page 1 undefined on input line 32.
 
 
 Overfull \hbox (9.24713pt too wide) has occurred while \output is active
 [][] 
  []
-
-
-LaTeX Warning: Citation `article2' on page 1 undefined on input line 56.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -346,19 +345,21 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 ]
-File: federated_learning_exp.eps Graphic file (type eps)
 
+LaTeX Warning: Citation `article2' on page 2 undefined on input line 62.
+
+File: federated_learning_exp.eps Graphic file (type eps)
 <federated_learning_exp.eps>
 LaTeX Font Info:    Font shape `JT2/mc/m/n' will be
-(Font)              scaled to size 8.32242pt on input line 82.
+(Font)              scaled to size 8.32242pt on input line 89.
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 8.32242pt on input line 82.
+(Font)              scaled to size 8.32242pt on input line 89.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 104.
+(Font)              <7> on input line 111.
 LaTeX Font Info:    Font shape `JY2/mc/m/n' will be
-(Font)              scaled to size 6.47299pt on input line 104.
+(Font)              scaled to size 6.47299pt on input line 111.
 
-Overfull \hbox (4.70787pt too wide) in paragraph at lines 104--105
+Overfull \hbox (4.70787pt too wide) in paragraph at lines 111--112
  [][] 
  []
 
@@ -366,7 +367,19 @@ Overfull \hbox (4.70787pt too wide) in paragraph at lines 104--105
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
-(./IPSJ2023_Kameoka.aux)
+
+Class bxjsarticle Warning: Some old font commands were used in text
+(bxjsarticle)              (see the log file for detail).
+
+Class bxjsarticle Info: Some old font commands were used in text:
+(bxjsarticle)             \bf
+(bxjsarticle)           You should note, that since 1994 LaTeX2e provides a
+(bxjsarticle)           new font selection scheme called NFSS2 with several
+(bxjsarticle)           new, combinable font commands. The class provides
+(bxjsarticle)           the old font commands only for compatibility.
+[3
+
+] (./IPSJ2023_Kameoka.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.94331pt have occurred.
@@ -382,6 +395,6 @@ Here is how much of TeX's memory you used:
  5685 multiletter control sequences out of 15000+600000
  15859 words of font info for 79 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
- 34i,13n,33p,913b,515s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 34i,13n,33p,898b,515s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on IPSJ2023_Kameoka.dvi (2 pages, 11260 bytes).
+Output written on IPSJ2023_Kameoka.dvi (3 pages, 14576 bytes).
