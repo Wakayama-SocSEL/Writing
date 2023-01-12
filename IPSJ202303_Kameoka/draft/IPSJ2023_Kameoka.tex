@@ -44,6 +44,13 @@
 \section{分析}
 %================
 
+\subsection{モデル構築方法}
+モデル構築には，従来研究で使用された\todo{XX件}の説明変数に，変更行数や複雑度などソースコードの特徴量を加えた44個の特徴量を用いて，FedAvgアルゴリズムを用いた連合学習によりモデルを構築する~\cite{article2}．目的変数は，\todo{特定の？}コミットにおいて規約違反が修正有無の2クラス分類に取り組む．図~\ref{fig:explain}は，連合学習の概要を示す．リポジトリごとの深層学習によって得られたモデルを集約し加重平均を取り，出力されたモデルをそれぞれの深層学習に配布する．配布されたモデルを用いて個々のノードは再度学習を行う．モデルの構築，得られたモデルの集約，再度学習を繰り返すことで，より精度の高いモデルを得る．本研究では，オープンソースフレームワークのOpenFLを用いて実装する．
+FebAvgにおいて，深層学習のレイヤーは3層で，1，2層目はReLU層であり，3層目にシグモイド関数を用いた出力層となっている．\todo{この3層の説明は必要？}最適化アルゴリズムにはAdamを利用し，学習率は0.01に設定した．
+
+評価実験では，規約違反を修正したコミットが偏っていることがあるため，予測データに正例が極端に含まれていないことを避けるため，コミットの古い順に7割を学習データ，残り3割を予測データとする．
+
+
 
 %================
 %hogehoge（どんなデータセット使ったか）
@@ -56,15 +63,12 @@
 
 %================
 %2.2
-\subsection{データセット}
-本研究では，GitHubからPythonで実装されておりPylintを用いて開発しているtransitions, schematics, schema\_salad, python-bugzilla, python-cloudant, pyscard, pynput, OWSLib, howdoi, hickleの10リポジトリを対象とする．これらのリポジトリからそれぞれ1,000日間のコミット（中央値で501コミット分）を分析対象とする．
+\subsection{ケーススタディ}
+本研究では，GitHubで管理される\todo{スター数の多い？}10リポジトリ (transitions, schematics, schema\_salad, python-bugzilla, python-cloudant, pyscard, pynput, OWSLib, howdoi, hickle) を対象とする．これらソフトウェアは全てPythonで実装され，Pylintをしようしている．本研究では，それぞれ1,000日間のコミット（中央値で501コミット）を分析対象とする．
 
-\subsection{分析手法}
-規約違反が修正されるかの予測には，従来研究で使用されたものや本研究で加えた変更行数や複雑度などソースコードや編集についての44個の特徴量を抽出し，FedAvgアルゴリズムを用いた連合学習を行う~\cite{article2}．目的変数は，コミットにおいて規約違反が修正有無の2クラス分類とし，説明変数には規約違反の種類やソースコードの複雑度などの44個のパラメータを用いる．規約違反を修正したコミットが偏っていることがあり，予測データに正例が極端に含まれていない場合があるので学習データとテストデータは，コミットの古い順から7割を学習データとし，残り3割を予測データとすることで，時系列を考慮した予測を行う．
+%からPythonで実装されておりPylintを用いて開発しているtransitions, schematics, schema\_salad, python-bugzilla, python-cloudant, pyscard, pynput, OWSLib, howdoi, hickleの10リポジトリを対象とする．これらのリポジトリからそれぞれ1,000日間のコミット（中央値で501コミット分）を分析対象とする．
 
-図~\ref{fig:explain}は，FedAvgを用いた連合学習の概要を示し，リポジトリごとの深層学習によって得られたモデルを集約し加重平均を取り，出力されたモデルをそれぞれの深層学習に配布する．配布されたモデルを用いて個々のノードは再度学習を行う．モデルの構築，得られたモデルの集約，再度学習を繰り返すことで，より精度の高いモデルを得る手法である．実装には，オープンソースフレームワークのOpenFLを用いる．
 
-本論文で使用するFebAvgにおいて，深層学習のレイヤーは3層で，1，2層目はReLU層であり，3層目にシグモイド関数を用いた出力層となっている．最適化アルゴリズムにはAdamを利用し，学習率は0.01に設定した．
 
 %===============
 %FLの説明用図
@@ -84,34 +88,33 @@
 %\end{figure}
 
 %-----------
-%図と図の間隔
-\setlength\floatsep{5pt}
-%図と本文の間隔
-\setlength\textfloatsep{10pt}
-
-\begin{figure}
-\begin{center}
-\includegraphics[width=0.9\linewidth]{federated_learning_exp.eps}
-\caption{連合学習の概略図}
-\label{fig:explain}
-\end{center}
-\end{figure}
-%-----------
+%\begin{figure}
+%\begin{center}
+%\includegraphics[width=0.9\linewidth]{federated_learning_exp.eps}
+%\vspace{-8mm}
+%\caption{連合学習の概略図}
+%\label{fig:explain}
+%\end{center}
+%
+%\vspace{-7mm}
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.9\linewidth]{E0602federated_learning.eps}
+\vspace{-3mm}
 \caption{連合学習による予測結果}
 \label{fig:fed}
 \end{center}
-\end{figure}
 
-\begin{figure}
+\vspace{-8mm}
+
 \begin{center}
 \includegraphics[width=0.9\linewidth]{E0602deep_learning.eps}
+\vspace{-3mm}
 \caption{深層学習による予測結果}
 \label{fig:deep}
 \end{center}
+\vspace{-12mm}
 \end{figure}
 
 
@@ -150,10 +153,13 @@
 % F1値:  0.052833095448469605
 %================
 %2.4
-\subsection{結果}
-図~\ref{fig:fed}，図~\ref{fig:deep}はschematics，transitionsリポジトリに含まれる，Pylintで検出された規約違反のうち検出頻度に偏りがある規約１種類についての修正予測の評価結果である．閾値が低い場合に連合学習の再現率が高く，深層学習のモデルは閾値に関わらず全体的にすべての値が低いことがわかる．閾値が低い場合にも深層学習では再現率が低いことから，修正予測に必要な重みづけができていないことがわかる．
+図~\ref{fig:fed}は，3つのリポジトリ（schematics，transitions\todo{検証は3つのリポジトリでは？}）において，検出頻度に偏りがある\todo{修正率が低いではない？}規約1種類（\todo{具体的な規約名ある？修正率は？}）ての修正有無を予測した結果である．横軸は判別閾値を0から1まで変化させたときの適合率，再現率，F1値を示す．図~\ref{fig:deep}は比較対象として，深層学習（\todo{アルゴリズムは何？}）を用いた結果を示す．深層学習に比べ連合学習の方が高い精度で予測しているが，紙面の都合上，修正率\todo{検出頻度？}が低い規約の結果のみ示しているが，修正率が高い規約であっても連合学習の方が精度が高いことを示した．従って，\todo{結論を書く．}
 
-図~\ref{fig:fed}の結果おいて閾値が0.35の場合に最も適合率，再現率，F1値のバランスが取れていることがわかる．しかし，閾値が0.4以上の場合には，適合率に大きな変化がないが，再現率が下がっている．したがって，連合学習によって規約違反修正の予測に効果がある兆候が確認できるが，モデルとして不十分である．
+%連合学習が，深層学習
+%
+%，が低い場合に連合学習の再現率が高く，深層学習のモデルは閾値に関わらず全体的にすべての値が低いことがわかる．閾値が低い場合にも深層学習では再現率が低いことから，修正予測に必要な重みづけができていないことがわかる．
+%
+%図~\ref{fig:fed}の結果おいて閾値が0.35の場合に最も適合率，再現率，F1値のバランスが取れていることがわかる．しかし，閾値が0.4以上の場合には，適合率に大きな変化がないが，再現率が下がっている．したがって，連合学習によって規約違反修正の予測に効果がある兆候が確認できるが，モデルとして不十分である．
 
 %================
 %hogehoge（どんな結果が得られたか，図とかを一緒に載せる）
@@ -167,9 +173,9 @@
 
 %================
 %3
-\section{おわりに}
+\section{おわりに\todo{最後に読み直す}}
 
-本研究では，静的解析ツールによって検出された規約違反のうち特に修正回数や発生回数が低いものについて，予測地点において修正されるかを，　連合学習によって予測精度向上を試みた．今後の方針として，データセットの拡張，違反頻度の低い規約違反への重み付けなどを用いて予測精度の高いモデルの構築を目指す．
+本研究では，静的解析ツールによって検出された規約違反のうち特に修正回数や発生回数が低いものについて，予測地点において修正されるかを連合学習によって予測精度向上を試みた．今後の方針として，データセットの拡張，違反頻度の低い規約違反への重み付けなどを用いて予測精度の高いモデルの構築を目指す．
 %================
 
 %hogehoge（今回の研究のまとめとか）
@@ -188,13 +194,13 @@
 
 %================
 \section*{謝辞}
-〜〜〜
+本研究は和歌山大学「萌芽的個別研究支援」の助成を受けたものです．
 %================
 
 
 \begin{thebibliography}{1}
-    \bibitem{article1} Joseph R. Ruthruff, John Penix, J. David Morgenthaler, Sebastian Elbaum, and Gregg Rothermel: Predicting Accurate and Actionable Static Analysis Warnings: An Experimental Approach: Proceedings of the 30th international conference on Software engineering(ICSE), pp. 341-350, (2008)
-    \bibitem{article2} Brendan McMahan, Eider Moore, Daniel Ramage, Seth Hampson, Blaise Aguera y Arcas: Communication-Efficient Learning of Deep Networks from Decentralized Data: Proceedings of the 20th International Conference on Artificial Intelligence and Statistics (PMLR), No54, pp. 1273-1282, (2017)
+    \bibitem{article1} J. R. Ruthruff, J. Penix, J. D. Morgenthaler, S. Elbaum, and G. Rothermel: Predicting Accurate and Actionable Static Analysis Warnings: An Experimental Approach: Proc. of the Inter. Conf. on Software engineering (ICSE), pp. 341-350, 2008.
+    \bibitem{article2} B. McMahan, E. Moore, D. Ramage, S. Hampson, B. A. y Arcas: Communication-Efficient Learning of Deep Networks from Decentralized Data: Proc. of the Inter. Conf. on Artificial Intelligence and Statistics (PMLR), pp. 1273-1282, 2017.
 \end{thebibliography}
 
 
