@@ -35,7 +35,9 @@
 % （プロプライエタリソフトウェアでは，定期的なリリースの際にソフトウェアとドキュメントを同時に公開する．一方で）
 OSSプロジェクトは，実装中のソースコードを逐一公開しているため，ソースコードの更新に伴ってREADMEの更新が期待される．しかし従来研究ではソースコードとREADMEが紐付けられていないため，ソースコードとREADMEがどのように共進化しているか明らかでない．また，開発者はソースコードとREADMEを同一コミットで更新していないこともあり，READMEの更新が必要となったソースコードの変更コミットを紐付けることは容易でない．
 
-本研究は，README更新の追従性を確認するため，ソースコードとREADMEの変更内容に共通して含まれる文字列に基づいて関連付ける方法を提案する．特にREADMEの変更と，関連づけられたソースコードのコミットとの時間差を分析することで，プロジェクトにおけるREADMEの記述方針を明らかにする．\todo{今後は，記述方針がソフトウェア品質や効率にどう影響するか明らかにしたいなぁ．．ここまではこの論文で書けないけど．}
+本研究は，README更新の追従性を確認するため，ソースコードとREADMEの変更内容に共通して含まれる文字列に基づいて関連付ける方法を提案する．特にREADMEの変更と，関連づけられたソースコードのコミットとの時間差を分析することで，プロジェクトにおけるREADMEの記述方針を明らかにする．
+
+% \todo{今後は，記述方針がソフトウェア品質や効率にどう影響するか明らかにしたいなぁ．．ここまではこの論文で書けないけど．}→メモしておきます
 
 %================
 %2
@@ -54,8 +56,8 @@ OSSプロジェクトは，実装中のソースコードを逐一公開して�
 
 
 
-の両方に同じ文字列
-READMEの変更に関連することが示唆されるソースコードの変更コミットを特定する．具体的には，READMEの更新\todo{更新には追加，変更，削除を含むよね？}された文字列と，各コミットにおいて変更されたソースコード中の文字列をそれぞれ抽出し，同じ文字列を含むREADMEとソースコードを関連づける．ソースコードファイル中から記号削除，NLTKを用いて形態素解析により名詞のみを抽出する．同様の手法で，README変更コミットで追加されたREADMEから名詞のみを抽出する．\todo{READMEは変更内容のみではないの？README全体？}
+
+READMEの変更に関連することが示唆されるソースコードの変更コミットを特定する．具体的には，READMEの更新で追加された文字列と，各コミットにおいて変更されたソースコード中の文字列をそれぞれ抽出し，同じ文字列を含むREADMEとソースコードを関連づける．ソースコードファイル中から記号削除，NLTKを用いて形態素解析により名詞のみを抽出する．同様の手法で，README変更コミットで追加された文字列から名詞のみを抽出する．
 
 % READMEの変更を誘発するソースコードの変更コミットを確認するために，READMEと，各コミットで追加された文章をデータ整形する．\todo{各コミットで変更されたソースコードに含まれる文字列を抽出する}．本研究では，READMEが変更されたコミット，および前後のコミットにおいて変更されたソースコードを対象とし，ソースコードファイル中から記号削除，NLTKを用いて形態素解析により名詞のみを抽出する．
 
@@ -142,12 +144,12 @@ READMEの変更に関連することが示唆されるソースコードの変�
 \begin{center}
 %\includegraphics[width=6cm]{IPSJ202303_Shirasaki/draft/use_js.pdf}
 \includegraphics[width=0.7\linewidth]{use_js.pdf}
-\vspace{-5mm}
+% \vspace{-5mm}
 %\caption{js-multiaddrを対象とした，各コミットごとのREADMEとコードに含まれる一致単語数}
 \caption{js-multiaddrにおける各コミット中のREADMEの変更単語数}
 \label{fig:multiaddr}
 \end{center}
-\vspace{-12mm}
+% \vspace{-12mm}
 \end{figure}
 %-----------------------
 
@@ -218,7 +220,7 @@ READMEの変更に関連することが示唆されるソースコードの変�
 %[2]JINHAN KIM, SANGHOON LEE, and SEUNG-WON HWANG, SUNGHUN KIM : Enriching Documents with Examples: A Corpus Mining Approach : ACM Trans. Inf. Syst. 31, 1, Article 1 (January 2013)
 
 %[3]Noela Jemutai Kipyegen and William P. K. Korir : Importance of Software Documentation : IJCSI International Journal of Computer Science Issues, Vol. 10, Issue 5, No 1, September 2013 
-\todo{メモ：少し削る，グラフ軸名記入}
+
 
 %================
 
