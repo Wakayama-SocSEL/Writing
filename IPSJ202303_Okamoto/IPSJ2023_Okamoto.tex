@@ -73,9 +73,20 @@
 \subsection{ケーススタディ}
 %================
 
-\noindent\textbf{[概要]}本手法で撮影したスナップショットと従来研究で撮影したスナップショットを比べ，どのような動作やブロックを持つ作品が検索の対象になり得るのかを調査する．
+\noindent\textbf{[概要]}データセットの中からランダムに10件作品を抽出し，本手法で撮影したスナップショットを確認し，どのような動作やブロックを持つ作品が検索の対象になり得るのか，を調査する．
 
-\noindent\textbf{[結果]}\todo{結果：従来研究のスナップショットと本手法で撮影したスナップショットを比べて実際にどのような作品が撮影できるようになったのかを記述します}
+\noindent\textbf{[結果]}※殴り書き
+
+提案手法を用いて入力タイミングを取得できなかったプログラムの例として図2を示す．このプログラムではスペースキー入力ブロックの後に，上矢印キー入力ブロックがあるため，順に入力されるべきである．しかし，提案手法では座標移動の情報のみで入力のタイミングを特定するため，図2のプログラムのような入力ブロック間に座標移動ブロックが存在しないようなプログラムでは入力のタイミングを特定できないことが判明した．
+
+\begin{figure}
+    \begin{center}
+        \includegraphics[width=0.6\linewidth]{program.eps}
+        \caption{入力タイミングを取得できなかったプログラム}
+        \label{fig:test}
+    \end{center}
+\vspace{-13mm}
+\end{figure}
 
 %
 %\subsection{動作実験}
@@ -97,7 +108,7 @@
 \todo{謝辞}
 
 \begin{thebibliography}{1}
-  \bibitem{thesis_fukuchi2021} 福地ユキ，伊原彰紀，山本豪志朗，橋谷直樹，オブジェクトの動作に基づくScratch作品の直感的検索手法，\todo{会議名}, 2021
+  \bibitem{thesis_fukuchi2021} 福地ユキ，伊原彰紀，山本豪志朗，橋谷直樹，ビジュアルプログラミング作品検索のためのオブジェクト操作データの時系列解析，情報処理学会関西支部, 2021
   \bibitem{RED2015_J. Moreno-Le ́on}　J. Moreno-Le'on, G. Robles, and M. Rom'an-Gonz'alez, ``Dr. scratch: Automatic analysis of scratch projects to assess and foster computational thinking,'' RED.Revista de Educaci'on a Distancia, vol.15, no.46, pp.1-23, 2015.
   \bibitem{ICMSR2017_Aivaloglou} E. Aivaloglou, F. Hermans, J. Moreno-Le'on, Gr. Robles, ``A dataset of scratch programs: scraped, shaped and scored,'' Proceeding of the International Conference on Mining Software Repositories (MSR'17), pp.511-514, 2017. 
 
