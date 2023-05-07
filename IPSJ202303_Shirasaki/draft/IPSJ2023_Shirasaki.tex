@@ -33,7 +33,7 @@
 多くのソフトウェア開発プロジェクトでは，ソフトウェアの機能，使用方法などを開発者や利用者に発信するため，ソフトウェアドキュメントとしてREADMEを公開している．ソフトウェア開発の中でもGitHubを利用するオープンソースソフトウェア (OSS) 開発では，開発への参加方法，各機能の概要などもREADMEに記述しており，READMEはリポジトリのトップページに提示される重要なドキュメントとなっている．
 
 % （プロプライエタリソフトウェアでは，定期的なリリースの際にソフトウェアとドキュメントを同時に公開する．一方で）
-OSSプロジェクトは，実装中のソースコードを逐一公開しているため，ソースコードの更新に伴ってREADMEの更新が期待される．しかし従来研究ではソースコードとREADMEが紐付けられていないため，ソースコードとREADMEがどのように共進化しているか明らかでない．また，開発者はソースコードとREADMEを同一コミットで更新していないこともあり，READMEの更新が必要となったソースコードの変更コミットを紐付けることは容易でない．
+OSSプロジェクトは，実装中のソースコードを逐一公開しているため，ソースコードの更新に伴ってREADMEの更新が期待される．しかし従来研究\cite{bib1}\cite{bib2}ではソースコードとREADMEが紐付けられていないため，ソースコードとREADMEがどのように共進化しているか明らかでない．また，開発者はソースコードとREADMEを同一コミットで更新していないこともあり，READMEの更新が必要となったソースコードの変更コミットを紐付けることは容易でない．
 
 本研究は，README更新の追従性を確認するため，ソースコードとREADMEの変更内容に共通して含まれる文字列に基づいて関連付ける方法を提案する．特にREADMEの変更と，関連づけられたソースコードのコミットとの時間差を分析することで，プロジェクトにおけるREADMEの記述方針を明らかにする．
 
@@ -91,7 +91,7 @@ READMEの変更に関連することが示唆されるソースコードの変�
 
 %hogehoge（どんな結果が得られたか，図とかを一緒に載せる）
 
-図\ref{fig:aliyun}と図\ref{fig:multiaddr}は，それぞれのプロジェクトを対象に，READMEの変更コミットの前後10コミットそれぞれにおいて，READMEにおいて変更された文字列を含む頻度を計測した結果である．横軸はREADMEを変更したコミットを0とする前後のコミット位置を示し，縦軸はソースコード中に含むREADMEにおいて変更された文字列の数を示す．紙面の都合上，XXを変更したREADMEの変更箇所をケーススタディとして示す．\todo{READMEが変更されたコミットは他にもあったと思うけど，なぜこのコミットを選んだ？}
+図\ref{fig:aliyun}と図\ref{fig:multiaddr}は，それぞれのプロジェクトを対象に，READMEの変更コミットの前後10コミットそれぞれにおいて，READMEにおいて変更された文字列を含む頻度を計測した結果である．横軸はREADMEを変更したコミットを0とする前後のコミット位置を示し，縦軸はソースコード中に含むREADMEにおいて変更された文字列の数を示す．紙面の都合上，README記述に追加があった箇所をケーススタディとして示す．
 
 %で追加された単語とその前後10コミットで追加された単語を比較し,一致単語があるならば一致数を加算し，README変更コミットやその前後コミットにおいて，関連単語がいくつあるのかを示している．縦軸は一致単語数，横軸はREADME変更コミットを0とした前後のコミットを示す．
 
@@ -132,9 +132,9 @@ READMEの変更に関連することが示唆されるソースコードの変�
 %-----------------------
 \begin{figure}[t]
 \begin{center}
-%\includegraphics[width=6cm]{IPSJ202303_Shirasaki/draft/use_aliyun.pdf}
-\includegraphics[width=0.7\linewidth]{use_aliyun.pdf}
-\vspace{-5mm}
+%\includegraphics[width=6cm]{IPSJ202303_Shirasaki/draft/1commit_use_aliyun_1.pdf}
+\includegraphics[width=1\linewidth]{1commit_use_aliyun_1.pdf}
+% \vspace{-5mm}
 \caption{aliyun-openapi-nodejs-sdkにおける各コミット中のREADMEの変更単語数}
 \label{fig:aliyun}
 \end{center}
@@ -142,8 +142,8 @@ READMEの変更に関連することが示唆されるソースコードの変�
 \vspace{5mm}
 
 \begin{center}
-%\includegraphics[width=6cm]{IPSJ202303_Shirasaki/draft/use_js.pdf}
-\includegraphics[width=0.7\linewidth]{use_js.pdf}
+%\includegraphics[width=6cm]{IPSJ202303_Shirasaki/draft/1commit_use_js_1.pdf}
+\includegraphics[width=1\linewidth]{1commit_use_js_1.pdf}
 % \vspace{-5mm}
 %\caption{js-multiaddrを対象とした，各コミットごとのREADMEとコードに含まれる一致単語数}
 \caption{js-multiaddrにおける各コミット中のREADMEの変更単語数}
@@ -153,7 +153,7 @@ READMEの変更に関連することが示唆されるソースコードの変�
 \end{figure}
 %-----------------------
 
-\noindent\texttt{aliyun-openapi-nodejs-sdk: }図\ref{fig:aliyun}のA(0)においてREADMEが更新され，1コミット前のA(-1)とA(0)のソースコード変更がREADMEの更新に関連していることが示唆される．例えば，A(-1)のソースコードではDescribeAccessPointsによるアクセスポイントに関する記述が追加され，READMEには，A（0）でDescribeAccessPointsに関する記述が追加されている．ここから，このコミットでは，実装後にREADMEが更新されたことが示唆される．
+\noindent\texttt{aliyun-openapi-nodejs-sdk: }図\ref{fig:aliyun}のA(0)においてREADMEが更新され，1コミット前のA(-1)とA(0)のソースコード変更がREADMEの更新に関連していることが示唆される．例えば，A(-1)のソースコードではDescribeAccessPointsによるアクセスポイントに関する記述が追加され，READMEには，A（0）でDescribeAccessPointsに関する記述が追加されていた．このコミットでは，実装後にREADMEが更新されたことが示唆される．
 
 
 %たコミットで，更新されたREADMEと変更されたソースコードにおいて一致した単語の数を表している．
@@ -165,8 +165,7 @@ READMEの変更に関連することが示唆されるソースコードの変�
 
 % 図1より，README変更コミットとその前のコミットで，一致単語が多くみられた．ここから，README変更に関連のあるソースコードは，READMEとほぼ同時に変更される分量が多いことがわかった．
 
-\noindent\texttt{js-multiaddr: }図\ref{fig:multiaddr}のB(0)においてREADMEが更新され，2コミット後のB(2)とB(0)のソースコード変更がREADMEの更新に関連していることが示唆される．A(2)とA(0)のソースコードでは\todo{Xの変更}が行われ，READMEには\todo{XXの内容が追記？削除？変更？}されている．このコミットでは，実装前にREADMEが更新されたことが示唆される．
-
+\noindent\texttt{js-multiaddr: }図\ref{fig:multiaddr}のB(0)においてREADMEが更新され，2コミット後のB(2)のソースコード変更がREADMEの更新に関連していることが示唆される．例えば，B(0)のコミットではREADMEのみが更新され，プロトコルの項目が細分化されていた．B(2)のコミットでも，プロトコルに関連するファイルの追加やコードの変更が見られた．このコミットでは，実装前にREADMEが更新されたことが示唆される．
 
 
 %図\ref{fig:multiaddr}のB(0)はREADMEが更新されたコミット，B(2)はREADME更新の2つ後のコミットで，READMEとソースコードにおいて一致した単語の数を表している．
@@ -208,24 +207,17 @@ READMEの変更に関連することが示唆されるソースコードの変�
 
 
 
-%================
-\section*{謝辞}
-%================
+% %================
+% \section*{謝辞}
+% %================
 
 
-%================
-% \section*{参考文献}
-%================
-%[1]Shohei IKEDA, Akinori IHARA, Raula Gaikovina KULA, and Kenichi MATSUMOTO : An Empirical Study ofREADMEcontents for JavaScript Packages : IEICE TRANS. INF. and SYST., VOL.E102–D, NO.2 FEBRUARY 2019
 
-%[2]JINHAN KIM, SANGHOON LEE, and SEUNG-WON HWANG, SUNGHUN KIM : Enriching Documents with Examples: A Corpus Mining Approach : ACM Trans. Inf. Syst. 31, 1, Article 1 (January 2013)
+\begin{thebibliography}{1}
+  \bibitem{bib1} Gede Artha Prana, Christoph Treude, Ferdian Thung, Thushari Atapattu, and David Lo. 2019. Categorizing the Content of GitHub README Files. Empirical Software Engineering. vol.24, no.3, 1296-1327, 2019. 
+  \bibitem{bib2} J. Moreno-Le'on, G. Robles, and M. Rom'an-Gonz'alez, ``Dr. scratch: Automatic analysis of scratch projects to assess and foster computational thinking,'' RED.Revista de Educaci'on a Distancia, vol.15, no.46, pp.1-23, 2015.
 
-%[3]Noela Jemutai Kipyegen and William P. K. Korir : Importance of Software Documentation : IJCSI International Journal of Computer Science Issues, Vol. 10, Issue 5, No 1, September 2013 
+\end{thebibliography}
 
-
-%================
-
-\bibliographystyle{ipsjunsrt}
-\bibliography{bibfile}
 
 \end{document}
