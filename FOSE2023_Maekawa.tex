@@ -12,7 +12,11 @@
 \usepackage{fancyvrb}
 \usepackage{xurl}
 \usepackage{cite}
+\usepackage{color}
+\usepackage{listings}
 
+\renewcommand{\lstlistingname}{Program}
+\newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
 
 \begin{document}
 
@@ -32,7 +36,7 @@
 % 和文論文の場合，姓と名の間には半角スペースを入れ，
 % 複数の著者の間は全角スペースで区切る
 %
-\author{徳川 家康　源 頼朝　源 頼家
+\author{前川　大樹　伊原　彰紀　大森　楓己
 %
 % ここにタイトル英訳 (英文の場合は和訳) を書く．
 % 英語タイトルは論文1ページ目左下，著者らの名前・所属一覧の一番上に表示される
@@ -46,44 +50,109 @@
 % 所属 (和文および英文) を書く．
 % 複数著者の所属はまとめてよい．
 %
-\shozoku{Ieyasu Tokugawa}{江戸幕府}
-{Edo Bakufu}
+%\shozoku{Daiki Maekawa}{和歌山大学}
+%{Wakayama University}
 % 複数著者の所属は以下のようにまとめてよい．
-\shozoku{Yoritomo Minamoto, Yoriie Minamoto}{鎌倉幕府}
-{Kamakura Bakufu}
+\shozoku{Daiki Maekawa, Akinori Ihara}{和歌山大学}
+{Wakayama University}
 }
 
 %
 % 和文アブストラクト
 % In English paper, content of Jabstract will be ignored. 
 \Jabstract{%
-本稿はソフトウェア工学の基礎ワークショップのために，実践的IT教育シンポジウム rePiTの論文執筆キットおよび第29回ソフトウェア工学の基礎ワークショップの論文執筆キットを基に作成したものです．
-rePiTの論文執筆キットはそもそもソフトウェア科学会の論文執筆キットを基に作成したものです．}
-%
-% 英文アブストラクト（本サンプルの原論文にはなし）
-\Eabstract{
-This document has been prepared as a sample for FOSE(Foundation of Software Engineering) based on the Author Kit for rePiT and FOSE2022.
-The author kit for rePiT was originally based on author kit of JSSST Computer Software.
+\todo{和文アブストラクト}
 }
 %
+% 英文アブストラクト（本サンプルの原論文にはなし）
+% \Eabstract{
+% \todo{英語アブストラクト}
+% }
+%
 \maketitle \thispagestyle {empty}
-\section{はじめに}
-FOSE2023\cite{fose2023}論文執筆の基本的な注意事項を以下に示します．
-\begin{itemize}
-\item 論文本文が和文の場合，和文・英文のいずれかでアブストラクトを
-書いて下さい．両方併記することもできます．英文アブストラクトを書かない場合は
-場合は{\tt eabstract}環境(\verb|\Eabstract|)を空にして使って下さい．
-\item 本文が英文の場合は，クラスファイルのオプションを{\verb|[T,E]|}として下さい．
-また，和文タイトル・和文著者名・和文アブストラクトを併記する必要はありません．
-\item カラーの図を使うことは可能ですが，論文集はJ-STAGEへの掲載（フルカラー）だけでなく近代科学社Digitalのプリントオンデマンド書籍（白黒印刷）として印刷されることも考慮して作成してください．
-白黒印刷時に図が認識可能か，文章中でフルカラー前提の図に関する特定の色を指す表現がないかなど注意してください．
-\item カラーの図を使用する場合は色モードをCMYKではなくRGBで画像を作成するようにしてください．
-\item 画像の解像度は300dpi以上で作成するようにしてください．
-\end{itemize}
-その他細かな論文執筆時の注意点については論文執筆キットで配布している{\texttt sample.pdf}の4章を参照してください．
 
-\textbf{謝辞}\
-本フォーマットの基になったスタイルファイルを作成してくださった方々に感謝します．
+\section{はじめに}
+サードパーティ製ライブラリ（以降，ライブラリ）は機能追加やバグ修正により頻繁に更新されており，利用者は適宜ライブラリのバージョン更新を余儀なくされる．利用者が安全にライブラリを更新するために，パッケージマネージャはセマンティックバージョニング\footnote{\url{https://semver.org}}を採用し，バージョン間の互換性の有無を管理している．セマンティックバージョニングでは，ライブラリ更新をメジャー，マイナー，パッチのレベルに分類し，マイナーとパッチの更新では後方互換性が保たれる変更が求められる．
+しかし，バージョン名の付与は開発者が手動で行うため，破壊的変更が含まれているにも関わらず，誤ってマイナーやパッチに分類されてしまうことがある．
+この問題は，特にJavaScriptのような動的な言語において顕著であり，ライブラリと利用者のコードの不整合が実行時まで検出されないという課題がある．
+この課題に対して，ライブラリがリリースされる前に，破壊的変更の有無を検出する研究が行われている．
+
+松田らは，破壊的変更を含むライブラリの更新は，プログラムの更新と合わせてテストコードも修正すると考え，テストコードの変更有無による破壊的変更の検出手法を提案した．
+\cite{maekawa_matsuda}
+しかし，テストコードの変更には，テストの誤り修正や実行手順の修正など，ライブラリ変更とは無関係にテストコードを変更することも考えられ，そのような変更は破壊的変更を誤検出する．
+
+本研究では，テストコードの変更内容に着目し，破壊的変更の検出に寄与するテスト変更を明らかにし，テスト変更内容に基づく破壊的変更の検出手法の有効性を評価する．具体的には，２つのリサーチクエスチョンに回答する．
+
+\begin{itemize}
+\item RQ1：破壊的変更に伴うテストコード変更とは何か？
+\item RQ2：テスト変更内容に基づく破壊的変更の検出手法の有効性はどの程度か？
+\end{itemize}
+
+RQ1では，松田らのデータセットを使用して，テストコードの変更内容を細分化し，実際に破壊的変更が行われた時，どのようなテスト変更がされたかを明らかにする．
+RQ2では，破壊的変更の検出に寄与するテスト変更が行われた時，実際に破壊的変更が行われたかを評価し，従来研究と検出精度がどのように変わるかを評価する．
+
+
+\section{\todo{todo}}
+
+\section{RQ1：破壊的変更に伴うテストコード変更とは何か？}
+本章では，テストコードの変更内容を細分化し，実際に破壊的変更が行われた時，どのようなテスト変更がされたかを明らかにする．
+
+\subsection{テストコードの細分化}
+Program~\ref{testSample}は，JavaScriptで記述されたテストコードの例を示す．
+１行目でテスト対象の関数を取り込み，３行目から７行目のtest関数によってテストを行なっている．test関数は，第１引数にテスト内容を示すラベル，第２引数に実際のテストコードを含むコールバック関数が渡される．６行目で期待される結果と実際の結果を比較し，テストの成功や失敗を判断する．
+
+本論文では，３から７行目をテストケース，４行目を入力値，５行目を期待値，６行目をアサーションと呼ぶ．
+
+\begin{figure}[t]
+    \begin{lstlisting}[caption={[upper/lower text]%
+               \begin{tabular}[t]{@{}l@{}}
+                test/sum.test.js \\[1.0\normalbaselineskip]
+               \end{tabular}},frame={tb},numbers=left,label=testSample,identifierstyle={\small}]
+const sum = require('./sum');
+
+test('adds 1 + 2 to equal 3',() => {
+  const input = sum(1, 2)
+  const expected = 3
+  expect(input).toBe(expected);
+});
+\end{lstlisting}
+\vspace{-6mm}
+\end{figure}
+
+実際のテストコード変更内容を元に，テストコードの変更内容を以下の\todo{ｘ}つに細分化した．
+
+\begin{itemize}
+    \item テストケースの追加
+    \item テストケースの削除
+    \item アサーションの追加
+    \item アサーションの削除
+    \item 入力値の変更
+    \item 期待値の変更
+    \item テストケース外の変更
+    \item リファクタリング
+\end{itemize}
+
+\todo{テストケース外の変更とリファクタリングの説明}
+
+\subsection{調査方法}
+調査には，松田らのデータセット\cite{maekawa_matsuda}を使用する．松田らのデータセットは，Mujahidらのデータセットを元にしている．Mujahidらのデータセットには，npm\footnote{\url{https://www.npmjs.com/}}から，GitHubリポジトリが記載されていること，package.jsonの変更履歴が2回以上あることを条件に収集されたJavaScriptライブラリ290,417件が含まれている．松田らのデータセットは，Mujahidらが選定したJavaScriptライブラリ290,417件から，さらに条件を絞って238件のライブラリが含まれている．選定条件は，テストが付属していること，ライブラリの人気度を示すnpmスコア\footnote{\url{https://npms.io}}が上位500件以内であること，各バージョンのテスト実行時の成功率が100％であることが採用されている．松田らは，238件のライブラリについて，合計2,111件のライブラリバージョンを分析し，各バージョンの実際の破壊的変更の有無と，ライブラリのテスト変更有無をデータセットにまとめている．
+
+本調査では，松田らのデータセットに含まれるライブラリバージョン2,111件から，ライブラリテストに変更があるライブラリバージョン1,027件を抽出した．その1,027件から，95％の信頼区間でサンプリングし，ランダムに280件を目視で確認した．
+
+\subsection{調査結果}
+表\ref{table_test_patern}は，ライブラリテスト変更内容と，実際の破壊的変更有無を示す．
+
+
+
+
+
+
+\section{RQ2：テスト変更内容に基づく破壊的変更の検出手法の有効性はどの程度か？}
+\subsection{概要}
+
+
+
+\section{おわりに}
 
 %\begin{adjustvboxheight} % needed only when Appendix follows
 \bibliographystyle{jssst}
