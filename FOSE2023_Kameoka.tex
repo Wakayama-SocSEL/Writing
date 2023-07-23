@@ -10,7 +10,7 @@
 
 % 以下は説明のために使用したパッケージであるため，削除可能．
 \usepackage{fancyvrb}
-\usepackage{xurl}
+\usepackage{url}
 \usepackage{cite}
 \usepackage{color}
 \usepackage{graphicx}
@@ -81,9 +81,9 @@
 
 従来研究では，コーディング規約の導入により，ソフトウェア開発プロジェクトにとってソースコード理解の促進，バグの早期発見などに効果があることが示されている．
 % \todo{\cite{}\cite{}\cite{}}．
-% M. Beller, G. Gousios, and A. Zaidman, “How (much) do developers test?,” In Proceedings of the 37th International Conference on Software Engineering (ICSE’15), vol.2, pp.559–562, 2015.
-% B. Johnson, Y. Song, E. Murphy-Hill, and R. Bowdidge, “Why don’t software developers use static analysis tools to find bugs?,” In Proceedings of the 35th IEEE/ACM International Conference on Software Engineering (ICSE’13), pp.672–681, 2013.
-% M. Beller, R. Bholanath, S. McIntosh, and A. Zaidman, “Analyzing the state of static analysis: A large-scale evaluation in open source software,” IEEE 23rd International Conference on Software Analysis, Evolution, and Reengineering (SANER’16), vol.1, pp.470–481, 2016.
+% M. Beller, G. Gousios, and A. Zaidman, “How (much) do developers test?,” In Proceedings of the 37th International Conference on Software Engineering (ICSE’15), vol.2, pp.559\UTF{2013}562, 2015.
+% B. Johnson, Y. Song, E. Murphy-Hill, and R. Bowdidge, “Why don’t software developers use static analysis tools to find bugs?,” In Proceedings of the 35th IEEE/ACM International Conference on Software Engineering (ICSE’13), pp.672\UTF{2013}681, 2013.
+% M. Beller, R. Bholanath, S. McIntosh, and A. Zaidman, “Analyzing the state of static analysis: A large-scale evaluation in open source software,” IEEE 23rd International Conference on Software Analysis, Evolution, and Reengineering (SANER’16), vol.1, pp.470\UTF{2013}481, 2016.
 コーディング規約に従って実装されているか否かの判定には，多くのプロジェクトで静的解析ツールが用いられている．静的解析ツールは，ソースコードを実行することなく，ソースコード中に含まれるコーディング規約違反している箇所，バグを検出することができ，継続的インテグレーションの一つとして使用されることが多い．開発者は，静的解析ツールが検出した規約違反を修正することでプロジェクトの実装方針に従った共通のコーディングスタイルで実装することができる．しかし，多くのプロジェクトでは，規約違反の指摘漏れを抑えるために規約違反の判定基準を厳しく設定しており，静的解析ツールは大量の規約違反を出力し，開発者はその多くを修正していないことが課題とされている．このような静的解析ツールの誤検出を防ぐための研究が数多く発表されている．
 
 従来研究では，機械学習や深層学習を用いることによって，大量に検出されたコーディング規約違反の中から優先して修正すべき違反とそうでない違反の2値に分類している．静的解析ツールの検出結果をトリアージする研究は数多く行われているが，予測精度が低いことや安定していないことが問題点として存在する．この問題点の原因の一つとして，従来研究の機械学習モデルの構築方法として，予測するプロジェクトと同じプロジェクトを学習データとしているのでデータセットサイズや，修正される違反の割合が少ない場合に十分な学習ができずに予測精度が下がってしまうことが考えられる．
@@ -113,7 +113,7 @@
 %コーディング規約は，ソースコードの可読性や保守性の向上を目的に，ソースコードの実装方法を定めたルールとして使用される．規約には，ソースコードの構造から命名規則などのコーディングスタイルについて，禁止事項，制限事項，推奨事項などがルールとして含まれる．複数人で同一のソフトウェアを実装する場合には，コーディング規約に遵守することで，実装方法を共通化することができる．各プログラム言語がそれぞれ推奨とするコーディング規約を提供している．Java言語はJavaコーディング標準，Google Java Style Guide，C言語はMISRA-C，CERTコーディングスタンダード，C++はMISRA-C++，PythonはPEP8などを提供している．共同開発する組織は，それぞれの方針に合わせてプログラム言語別に推奨されるコーディング規約を適宜拡張する．
 
 コーディング規約には検出漏れを防ぐために多数のルールがあり，開発者がコーディング規約を違反しているソースコードを目視や手動で発見することは困難である．コーディング規約に従って実装されているか否かの判定には，多くのプロジェクトで静的解析ツールの使用を推奨している\cite{}．
-% M. Beller, R. Bholanath, S. McIntosh, and A. Zaidman, “Analyzing the state of static analysis: A large-scale evaluation in open source software,” IEEE 23rd International Conference on Software Analysis, Evolution, and Reengineering (SANER’16), vol.1, pp.470–481, 2016.
+% M. Beller, R. Bholanath, S. McIntosh, and A. Zaidman, “Analyzing the state of static analysis: A large-scale evaluation in open source software,” IEEE 23rd International Conference on Software Analysis, Evolution, and Reengineering (SANER’16), vol.1, pp.470\UTF{2013}481, 2016.
 静的解析ツールは，ソースコードを実行することなく，規約違反しているソースコードを網羅的に検出することができる．コーディング規約と同様に，各プログラミング言語ごとに規約違反するソースコードを検出する静的解析ツールが存在する．JavaはCheckStyle，PMD，FindBugs，C言語はQAC，CX-Checker，Python言語はflake8，JavaScript言語はESLintなどがある．静的解析ツールは低コストで導入できるため，多くの組織で導入されている\cite{UsingStaticAnalysisTools1}\cite{UsingStaticAnalysisTools2}．
 
 
@@ -126,7 +126,7 @@
 \subsection{静的解析ツールの問題点}
 
 静的解析ツールは効率的に規約違反を検出できる一方で，多くのプロジェクトは静的解析ツールが定義する膨大な規約違反の検出ルールを変更することなく利用していることが多いため，静的解析ツールが多量の規約違反を検出することが多い~\cite{}．
-% M. Beller, R. Bholanath, S. McIntosh, and A. Zaidman, “Analyzing the state of static analysis: A large-scale evaluation in open source software,” IEEE 23rd International Conference on Software Analysis, Evolution, and Reengineering (SANER’16), vol.1, pp.470–481, 2016.
+% M. Beller, R. Bholanath, S. McIntosh, and A. Zaidman, “Analyzing the state of static analysis: A large-scale evaluation in open source software,” IEEE 23rd International Conference on Software Analysis, Evolution, and Reengineering (SANER’16), vol.1, pp.470\UTF{2013}481, 2016.
 その結果，検出された規約違反の多くは，開発者によって修正されないままとなり，修正しない規約違反は静的解析ツールの誤検出として取り扱われている．このように膨大な規約違反の中から優先的に修正する規約違反を特定は，開発者の実装経験，組織の慣習の理解が必要であり，容易な作業ではない\cite{HowFar}\cite{shuseisarenai}．優先的に修正する規約違反の特定に向けて，多くの従来研究が機械学習モデルなどを用いて優先的に修正すべき規約違反を特定する手法を提案，検証している．
 
 
@@ -151,7 +151,7 @@
 % ソースコードの差分や特徴量を説明変数として機械学習を用いた修正優先度予測を行っている研究は多く存在し，モデルの構築方法を工夫することによって予測精度の向上を図っている．
 
 従来手法では，特定のプロジェクトにおける過去の開発履歴を学習データとして，未来の規約違反の修正を予測するモデルを構築している．機械学習モデルを取り扱う上で評価データと同一のプロジェクトの開発履歴を使用することが良いとされている．しかしPanichellaの研究では規約の種類によって規約違反の修正率，修正数が大きく異なることを示している\cite{}，その結果，規約違反を修正されるコード断片（正例），規約違反を修正されないコード断片（負例）の数が不均衡となり，機械学習モデルの予測性能が低下することが示唆される．
-% S. Panichella, V. Arnaoudova, M. Di Penta, and G. Antoniol, “Would static analysis tools help developers with code reviews?,” IEEE 22nd International Conference on Software Analysis, Evolution, and Reengineering (SANER’15), pp.161–170, 2015.
+% S. Panichella, V. Arnaoudova, M. Di Penta, and G. Antoniol, “Would static analysis tools help developers with code reviews?,” IEEE 22nd International Conference on Software Analysis, Evolution, and Reengineering (SANER’15), pp.161\UTF{2013}170, 2015.
 本研究では，学習データに評価対象とは異なるプロジェクトの開発履歴も使用することにより，違反回数の少ない規約であったとしても特定することができると考える．著者らの知る限り，異なるプロジェクトの開発履歴を用いて修正を要する規約違反ソースコードを特定する手法は確認していない．学習データを増やすことで修正する規約違反のコード断片の特定精度の向上が期待できる．その一方で，組織に応じて実装や違反に対する修正の慣習が異なるため，異なる組織の開発履歴が予測精度の低下を招くことも考えられる．この問題を解決するために，本研究では検証対象とするソースコードと類似する特徴量を有する異なる組織の規約違反を学習する方法を提案する．
 
 
@@ -287,30 +287,30 @@
 
 \subsection{データセット}
 %------------
-\begin{table}[t]
+\begin{table*}[t]
     \centering
     \caption{分析対象プロジェクトの統計量}
     \label{datasetTB}
-    \scalebox{0.75}{
-    \begin{tabular}{l|r|r|r}
+    \scalebox{1.0}{
+    \begin{tabular}{l|r|r|r|r|r}
          \hline
-         \multirow{2}{*}{プロジェクト名} & \multirow{2}{*}{対象リビジョン数} & \multicolumn{1}{c|}{違反修正数} & \multicolumn{1}{c}{違反放置数} \\ 
-                      &               &\multicolumn{1}{c|}{(正例)} & \multicolumn{1}{c}{(負例)} \\ \hline
+         \multirow{2}{*}{プロジェクト名} & \multirow{2}{*}{対象リビジョン数} & \multicolumn{1}{c|}{違反修正数} & \multicolumn{1}{c|}{違反放置数}& \multicolumn{1}{c|}{総違反数} & \multicolumn{1}{c}{違反修正率} \\ 
+                      &               &\multicolumn{1}{c|}{(正例)} & \multicolumn{1}{c|}{(負例)} &&\\ \hline
          \hline %
-         pynput & 507 & 431 & 3,595 \\ \hline
-         pyscard & 380 & 681 & 2,705 \\ \hline
-         howdoi & 593 & 721 & 434 \\ \hline
-         schema\_salad & 564 & 1,990 & 3,009 \\ \hline
-         python-bugzilla & 243 & 189 & 183 \\ \hline
-         OWSLib & 422 & 1,547 & 3,080 \\ \hline
-         python-cloudant & 657 & 269 & 1,299 \\ \hline
-         hickle & 245 & 920 & 1,293 \\ \hline
-         transitions & 496 & 1,182 & 2,620 \\ \hline
-         schematics & 524 & 6,950 & 4,829 \\ 
+python-bugzilla & 243 & 189 & 183 & 372 & 51\%\\
+python-cloudant & 657 & 269 & 1299 & 1568 & 17\%\\
+pynput & 507 & 431 & 3595 & 4026 & 11\%\\
+pyscard & 380 & 681 & 2705 & 3386 & 20\%\\
+howdoi & 593 & 721 & 434 & 1155 & 62\%\\
+hickle & 245 & 920 & 1293 & 2213 & 42\%\\
+transitions & 496 & 1182 & 2620 & 3802 & 31\%\\
+OWSLib & 422 & 1547 & 3080 & 4627 & 33\%\\
+schema\_salad & 564 & 1990 & 3009 & 4999 & 40\%\\
+schematics & 524 & 6950 & 4829 & 11779 & 59\%\\
          \hline
     \end{tabular}
     }
-\end{table}
+\end{table*}
 %------------
 
 本研究ではケーススタディとして，Libraries.io\footnote{Libraries.io: \url{https://libraries.io/}}からPythonで実装され，静的解析ツールPylintを開発に使用しているプロジェクトを対象とする．当該プロジェクトの中でstar数が上位の100プロジェクトから，コーディング規約違反の修正割合が高い10プロジェクト（transitions, schematics, schema\_salad, python-bugzilla, python-cloudant, pyscard, pynput, OWSLib, howdoi, hickle）を対象とする．全てのプロジェクトがGitHubによってソフトウェア，および開発履歴を公開している．本研究では，各分析対象プロジェクトにおいて，2018年12月から1,000日間のコミット履歴を分析対象とする．表\ref{datasetTB}は，各プロジェクトに関する開発履歴の統計量を示す．本研究では，コーディング規約違反の修正割合が高いプロジェクトを選定しているが，修正割合はプロジェクトによって大きく異なる．
@@ -335,16 +335,16 @@
          &\multicolumn{3}{c|}{} & \multicolumn{3}{c|}{（クラスタリングなし）} & \multicolumn{3}{c}{（クラスタリングあり）}\\ \cline{2-10}
           & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値\\ \hline
          \hline %
+            python-bugzilla & 0.54 & 0.13 & 0.21 & \textbf{\underline{0.69}} & \textbf{\underline{0.64}} & \textbf{\underline{0.67}} & 0.63 & 0.23 & 0.33\\
+            python-cloudant & \textbf{\underline{0.77}} & \textbf{\underline{0.81}} & \textbf{\underline{0.79}} & 0.17 & 0.17 & 0.17 & 0.65 & 0.32 & 0.43\\
             pynput & 0.41 & \textbf{\underline{0.94}} & 0.58 & 0.42 & 0.71 & 0.53 & \textbf{\underline{0.57}} & 0.65 & \textbf{\underline{0.61}}\\
             pyscard & \textbf{\underline{0.29}} & \textbf{\underline{0.91}} & \textbf{0.44} & 0.18 & 0.89 & 0.30 & 0.12 & 0.41 & 0.18\\
             howdoi & 0.92 & \textbf{\underline{0.96}} & \textbf{\underline{0.94}} & \textbf{\underline{0.93}} & 0.59 & 0.72 & \textbf{\underline{0.93}} & 0.51 & 0.66\\
-            schema\_salad & \textbf{\underline{0.52}} & \textbf{\underline{0.66}} & \textbf{\underline{0.58}} & 0.21 & 0.52 & 0.30 & 0.15 & 0.21 & 0.17\\
-            python-bugzilla & 0.54 & 0.13 & 0.21 & \textbf{\underline{0.69}} & \textbf{\underline{0.64}} & \textbf{\underline{0.67}} & 0.63 & 0.23 & 0.33\\
-            OWSLib & \textbf{\underline{0.84}} & 0.86 & \textbf{\underline{0.85}} & 0.76 & \textbf{\underline{0.92}} & 0.83 & 0.83 & 0.88 & \textbf{\underline{0.85}}\\
-            python-cloudant & \textbf{\underline{0.77}} & \textbf{\underline{0.81}} & \textbf{\underline{0.79}} & 0.17 & 0.17 & 0.17 & 0.65 & 0.32 & 0.43\\
             hickle & 0.33 & \textbf{\underline{0.73}} & 0.45 & 0.36 & 0.66 & \textbf{\underline{0.47}} & \textbf{\underline{0.41}} & 0.47 & 0.44\\
             transitions & \textbf{\underline{0.80}} & \textbf{\underline{0.87}} & \textbf{\underline{0.83}} & 0.68 & 0.5 & 0.57 & 0.68 & 0.21 & 0.32\\
-            schematics & \textbf{\underline{0.30}} & 0.79 & \textbf{\underline{0.44}} & 0.26 & \textbf{\underline{0.94}} & 0.41 & 0.27 & 0.84 & 0.4\\
+            OWSLib & \textbf{\underline{0.84}} & 0.86 & \textbf{\underline{0.85}} & 0.76 & \textbf{\underline{0.92}} & 0.83 & 0.83 & 0.88 & \textbf{\underline{0.85}}\\
+            schema\_salad & \textbf{\underline{0.52}} & \textbf{\underline{0.66}} & \textbf{\underline{0.58}} & 0.21 & 0.52 & 0.30 & 0.15 & 0.21 & 0.17\\
+            schematics & \textbf{\underline{0.30}} & 0.79 & \textbf{\underline{0.44}} & 0.26 & \textbf{\underline{0.94}} & 0.41 & 0.27 & 0.84 & 0.40\\
     \hline
     \end{tabular}
 \end{table*}
@@ -352,15 +352,17 @@
 
 表\ref{PrevPrediction}は，従来手法，提案手法（クラスタリングなし），提案手法により構築した予測モデルの結果を示す．各プロジェクトにおいて3つの手法の中で最も予測性能の高い手法は太字と下線で示す．
 
-\noindent\textbf{知見1: 複数プロジェクトの開発履歴を用いた修正を要する規約違反の予測モデルの性能は，評価対象とするプロジェクトの過去の開発履歴を使用する方が性能が良いことが多い．}
+\noindent\textbf{知見1: 複数プロジェクトの開発履歴を用いて構築した予測モデルの性能が，評価対象とするプロジェクトの過去の開発履歴のみを用いて構築した予測モデルよりも高い性能になることもある．}
 
-F1値をる限り，2プロジェクト（python\-bugzilla，hickle）は従来手法よりも提案手法（クラスタリングなし）のほうが予測性能が高く，2プロジェクト（pynput，OWSLib）は従来手法と比べて，提案手法（クラスタリングあり）と同等，またはそれよりも予測性能が高い．その他の6プロジェクトは従来手法のほうが予測性能が高いことが明らかとなった．\todo{もう少し書いてもいいけど，ひとまずここまで．}
+各プロジェクトのF1値に着目すると，2プロジェクト（python\-bugzilla，hickle）は従来手法よりも提案手法（クラスタリングなし）のほうが予測性能が高く，2プロジェクト（pynput，OWSLib）は従来手法と比べて，提案手法（クラスタリングあり）と同等，またはそれよりも予測性能が高いが．その他の6プロジェクトは従来手法のほうが予測性能が高かった．複数のプロジェクトを使用したとしても精度が下がらないケースもあることを確認した．\todo{もう少し書いてもいいけど，ひとまずここまで．}
 
 \noindent\textbf{知見2: 学習データの少ないプロジェクト（python\-bugzilla）は複数プロジェクトの開発履歴を用いることで，従来手法より高い精度で予測できる．}
 
-python/-bugzillaは，従来手法のF1値が0.21であるが，提案手法（クラスタリングなし）と提案手法（クラスタリングあり）のF1値がそれぞれ0.67と0.33であり，複数プロジェクトの開発履歴を用いることにより精度が向上することを明らかとなった．クラスタリングするほうが精度が悪いのは．．．データ数が減るから？\todo{要修正}python/-bugzillaほど少ないわけではないけど，howdoiもデータ数が少ないが，提案手法を用いることで精度が下がるのは，他のプロジェクトを踏襲できない？\todo{要修正}
+python/-bugzillaは，従来手法のF1値が0.21であるが，提案手法（クラスタリングなし）と提案手法（クラスタリングあり）のF1値がそれぞれ0.67と0.33であり，複数プロジェクトの開発履歴を用いることにより精度が向上することを明らかとなった．クラスタリングするほうが精度が悪いのは．．．データ数が減るから？\todo{要修正}
+python/-bugzillaほど少ないわけではないけど，howdoiもデータ数が少ないが，提案手法を用いることで精度が下がるのは，他のプロジェクトを踏襲できない？\todo{要修正}
+pynputはpositiveが極端に少ないため，提案手法の方が精度高いと示唆される．同様にpython-cloudatnもpotsitiveが少ないが精度が下がった．こちらについては後ほど考察する．
 
-\noindent\textbf{知見3: 十分なデータあるschema\_saladは多様．精度低くなる．十分なデータあるOWSLibは多様．精度下がらない．}
+hincleとOWSLibは従来手法と同じ精度，または僅差で提案手法なので，それほど効果があるとは言えない．
 
 \colorbox{red}{{\bf ここまで修正完了}}
 
@@ -371,10 +373,10 @@ python/-bugzillaは，従来手法のF1値が0.21であるが，提案手法（�
 %     \item RQ2 クロスプレディクションを行った場合，従来研究で予測できなかった修正予測ができるのか
 % \end{itemize}
 % \vspace{0.2\baselineskip}  % 余白の調整
-
-RQ1では，従来手法で予測できていないデータの分析を行う．分析内容は，提案アプローチであるクラスタリングを行った結果を用いて，予測できなかったデータがどのクラスタに含まれるのかを確認する．予測できていないデータがそのプロジェクトが保持するデータの中で少数クラスタに存在すれば，提案アプローチが有効である可能性が考えられる．
-
-RQ2では実際に提案アプローチで構築した機械学習モデルの有効性を評価する．評価方法として修正優先度予測を行い，その適合率，再現率，F1値，正解率を比較することによって評価する．
+%
+%RQ1では，従来手法で予測できていないデータの分析を行う．分析内容は，提案アプローチであるクラスタリングを行った結果を用いて，予測できなかったデータがどのクラスタに含まれるのかを確認する．予測できていないデータがそのプロジェクトが保持するデータの中で少数クラスタに存在すれば，提案アプローチが有効である可能性が考えられる．
+%
+%RQ2では実際に提案アプローチで構築した機械学習モデルの有効性を評価する．評価方法として修正優先度予測を行い，その適合率，再現率，F1値，正解率を比較することによって評価する．
 
 
 
@@ -416,15 +418,15 @@ RQ2では実際に提案アプローチで構築した機械学習モデルの�
          \hline
          プロジェクト名 & cluster\_0 & cluster\_1 & cluster\_2 & cluster\_3 & cluster\_4 & cluster\_5 & cluster\_6 & cluster\_7 & cluster\_8 & cluster\_09\\ \hline
          \hline %
+         python-bugzilla & 0.67* & -- & 0.33* & -- & 0.13* & -- & --* & -- & -- & -- \\ \hline
+         python-cloudant & 0.95* & -- & 0.89* & -- & 0.89* & -- & 0.97* & -- & -- & -- \\ \hline
          pynput & 0.70* & -- & 0.35* & -- & -- & -- & -- & -- & -- & 1.00* \\ \hline
          pyscard & 0.76* & 1.00* & 0.78* & -- & -- & --* & -- & -- & 1.00* & -- \\ \hline
          howdoi & 0.57* & -- & 0.91* & -- & -- & -- & -- & -- & -- & -- \\ \hline
-         schema\_salad & 0.72* & -- & 0.86* & 0.62* & 0.92* & -- & 0.26* & -- & -- & -- \\ \hline
-         python-bugzilla & 0.67* & -- & 0.33* & -- & 0.13* & -- & --* & -- & -- & -- \\ \hline
-         OWSLib & 0.94* & 1.00* & 0.80* & -- & 1.00* & -- & 0.87* & 1.00* & -- & -- \\ \hline
-         python-cloudant & 0.95* & -- & 0.89* & -- & 0.89* & -- & 0.97* & -- & -- & -- \\ \hline
          hickle & -- & -- & 0.51* & -- & -- & -- & -- & -- & -- & -- \\ \hline
          transitions & 0.82* & -- & 0.86* & -- & --* & -- & 0.80* & -- & -- & -- \\ \hline
+         OWSLib & 0.94* & 1.00* & 0.80* & -- & 1.00* & -- & 0.87* & 1.00* & -- & -- \\ \hline
+         schema\_salad & 0.72* & -- & 0.86* & 0.62* & 0.92* & -- & 0.26* & -- & -- & -- \\ \hline
          schematics & 0.47* & -- & 0.47* & -- & -- & -- & 0.56* & -- & -- & -- \\
          \hline
     \end{tabular}
@@ -438,15 +440,15 @@ RQ2では実際に提案アプローチで構築した機械学習モデルの�
          \hline
          プロジェクト名 & cluster\_0 & cluster\_1 & cluster\_2 & cluster\_3 & cluster\_4 & cluster\_5 & cluster\_6 & cluster\_7 & cluster\_8 & cluster\_09\\ \hline
          \hline %
+         python-bugzilla & 0.67* & -- & 0.37* & -- & 0.27* & -- & --* & -- & -- & -- \\ \hline
+         python-cloudant & 0.90* & -- & 0.77* & -- & 0.91* & -- & 0.73* & -- & -- & -- \\ \hline
          pynput & 0.80* & -- & 0.64* & -- & -- & -- & -- & -- & -- & 1.00* \\ \hline
          pyscard & 0.63* & 1.00* & 0.64* & -- & -- & --* & -- & -- & 1.00* & -- \\ \hline
          howdoi & 0.57* & -- & 0.55* & -- & -- & -- & -- & -- & -- & -- \\ \hline
-         schema\_salad & 0.44* & -- & 0.51* & 0.62* & 0.03* & -- & 0.22* & -- & -- & -- \\ \hline
-         python-bugzilla & 0.67* & -- & 0.37* & -- & 0.27* & -- & --* & -- & -- & -- \\ \hline
-         OWSLib & 0.95* & 1.00* & 0.80* & -- & 1.00* & -- & 0.86* & 1.00* & -- & -- \\ \hline
-         python-cloudant & 0.90* & -- & 0.77* & -- & 0.91* & -- & 0.73* & -- & -- & -- \\ \hline
          hickle & -- & -- & 0.67* & -- & -- & -- & -- & -- & -- & -- \\ \hline
          transitions & 0.61* & -- & 0.21* & -- & --* & -- & 0.53* & -- & -- & -- \\ \hline
+         OWSLib & 0.95* & 1.00* & 0.80* & -- & 1.00* & -- & 0.86* & 1.00* & -- & -- \\ \hline
+         schema\_salad & 0.44* & -- & 0.51* & 0.62* & 0.03* & -- & 0.22* & -- & -- & -- \\ \hline
          schematics & 0.23* & -- & 0.42* & -- & -- & -- & 0.55* & -- & -- & -- \\
          \hline
     \end{tabular}
@@ -461,15 +463,15 @@ RQ2では実際に提案アプローチで構築した機械学習モデルの�
          \hline
          プロジェクト名 & cluster\_0 & cluster\_1 & cluster\_2 & cluster\_3 & cluster\_4 & cluster\_5 & cluster\_6 & cluster\_7 & cluster\_8 & cluster\_09\\ \hline
          \hline %
+         python-bugzilla & 0.67* & -- & 0.42* & -- & 1.00* & -- & --* & -- & -- & -- \\ \hline
+         python-cloudant & 0.71* & -- & 0.72* & -- & 0.73* & -- & 0.73* & -- & -- & -- \\ \hline
          pynput & 0.57* & -- & 0.56* & -- & -- & -- & -- & -- & -- & 1.00* \\ \hline
          pyscard & 0.58* & 1.00* & 0.60* & -- & -- & --* & -- & -- & 1.00* & -- \\ \hline
          howdoi & 0.57* & -- & 0.62* & -- & -- & -- & -- & -- & -- & -- \\ \hline
-         schema\_salad & 0.54* & -- & 0.09* & 0.78* & 0.03* & -- & 0.78* & -- & -- & -- \\ \hline
-         python-bugzilla & 0.67* & -- & 0.42* & -- & 1.00* & -- & --* & -- & -- & -- \\ \hline
-         OWSLib & 0.91* & 1.00* & 0.75* & -- & 1.00* & -- & 0.85* & 1.00* & -- & -- \\ \hline
-         python-cloudant & 0.71* & -- & 0.72* & -- & 0.73* & -- & 0.73* & -- & -- & -- \\ \hline
          hickle & -- & -- & 0.59* & -- & -- & -- & -- & -- & -- & -- \\ \hline
          transitions & 0.69* & -- & 0.60* & -- & --* & -- & 0.52* & -- & -- & -- \\ \hline
+         OWSLib & 0.91* & 1.00* & 0.75* & -- & 1.00* & -- & 0.85* & 1.00* & -- & -- \\ \hline
+         schema\_salad & 0.54* & -- & 0.09* & 0.78* & 0.03* & -- & 0.78* & -- & -- & -- \\ \hline
          schematics & 0.20* & -- & 0.34* & -- & -- & -- & 0.45* & -- & -- & -- \\
          \hline
     \end{tabular}
