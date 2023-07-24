@@ -21,8 +21,8 @@
 
 
 \newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
-\newcommand{\done}[1]{\colorbox{green}{{\bf DONE}:} {\textbf{[#1]}}}
-
+\newcommand{\done}[2]{\colorbox{green}{{\bf DONE}:} {\textbf{[#1]}}}
+\newcommand{\checked}[3]{\colorbox{red}{ここまでチェック済み}}
 
 \begin{document}
 
@@ -65,7 +65,7 @@
 % 和文アブストラクト
 % In English paper, content of Jabstract will be ignored. 
 \Jabstract{
-ビジュアルプログラミング言語Scratchでは，ユーザが制作した作品をオンライン上に公開することができ，またユーザは公開された作品の中から実現したい動作を検索することで，実装の参考にすることができる．ただし，検索結果にはプログラムは類似するが，学習者が実現したい振る舞いを持たない作品も多く含まれる．このように実行結果の類似性とプログラムの類似性の乖離は，プログラミング検索における多様な実装方法を持つ作品の収集を妨げ，学習効率の低下につながると示唆する．本研究では，Scratchにおけるプログラムが類似する作品の違いを分析するために，Scratchにおいて制作されるプログラムの類似度の測定手法，およびオブジェクト動作軌跡の類似度の測定手法を提案する．また，ケーススタディとして4000件のScratch作品を対象に，プログラムが類似するか否か，オブジェクト動作軌跡が類似するか否かの4種類に分類し，作品群毎に特徴を分析する．
+ビジュアルプログラミング言語Scratchでは，ユーザが制作した作品をオンライン上に公開することができ，また公開された作品を検索することで，実装の参考にすることができる．ただし，検索結果にはユーザが期待するオブジェクト動作を含まない作品，期待するオブジェクト動作を含むが作品によって実装方法が異なることも多い．一方で，プログラムは類似していてもオブジェクト動作が異なることもある．このようなプログラムの類似性とオブジェクト動作の類似性の乖離は，Scratchにおけるプログラミング検索における作品の収集の妨げになることが示唆される．本研究では，Scratchにおいて制作されるプログラムの類似度の測定手法，およびオブジェクト動作軌跡の類似度の測定手法を提案し，プログラムの類似性とオブジェクト動作軌跡の類似性の乖離を明らかにする．ケーススタディとして4000件のScratch作品を対象に，プログラムが類似するか否か，オブジェクト動作軌跡が類似するか否かの4種類に分類した結果，プログラムは類似するがオブジェクト動作軌跡が類似しない作品は全体の約1\%，オブジェクト動作軌跡は類似するがプログラムが類似する作品は全体の約28\%存在することを確認した．
 }
 %
 % 英文アブストラクト（本サンプルの原論文にはなし）
@@ -87,9 +87,9 @@ Scratchで制作する作品は小規模なプログラムが多く，使用す�
 % \todo{ここはもう少し書きたい}
 実行結果の類似性とプログラムの類似性の乖離は，プログラミング検索における多様な実装方法を持つ作品の収集を妨げ，学習効率の低下につながると示唆する．
 
-本研究は，Scratchにおけるプログラムが類似する作品とオブジェクト動作軌跡が類似する作品の違いを分析するために，Scratchにおいて制作されるプログラム類似度の計測方法，およびオブジェクト動作軌跡の類似度の計測方法を提案する．プログラム類似度の計測方法にはプログラムの編集距離を用いる(3章)．オブジェクト動作軌跡類似度の計測方法には動的時間伸縮法(DTW: Dynamic time warping)を用いる(3章)．本研究では，ケーススタディとしてScratchAPIを用いてランダムに収集し，条件に基づいてフィルタリングした4000件の作品を対象に，プログラムが類似するか否か，オブジェクト動作軌跡が類似するか否かの4種類に分類し，それぞれの作品の特徴を分析する．
+本研究は，Scratchにおけるプログラムが類似する作品とオブジェクト動作軌跡が類似する作品の違いを分析するために，Scratchにおいて制作されるプログラム類似度の計測方法，およびオブジェクト動作軌跡の類似度の計測方法を提案する．プログラム類似度の計測方法にはプログラムの編集距離を用いる(3章)．オブジェクト動作軌跡類似度の計測方法には動的時間伸縮法(DTW: Dynamic time warping)を用いる(3章)．本研究では，ケーススタディとしてScratchAPIを用いて時系列順に収集し，条件に基づいてフィルタリングした4000件の作品を対象に，プログラムが類似するか否か，オブジェクト動作軌跡が類似するか否かの4種類に分類し，それぞれの作品の特徴を分析する．
 
-続く\ref{sec:RelatedWork}章は本論文の立ち位置を説明するための関連研究と研究動機を述べる．\ref{sec:Similarity measurement}章は本論文で用いる類似度の測定手法を述べ，\ref{subsec:Analyze related work}章はケーススタディで用いるデータセットとアプローチ，その結果と考察を述べる．
+続く\ref{sec:RelatedWork}章は本論文の立ち位置を説明するための関連研究と研究動機を述べる．\ref{sec:Similarity}章は本論文で用いる類似度の測定手法を述べ，\ref{subsec:Analysis}章はケーススタディで用いるデータセットとアプローチ，その結果と考察を述べる．
 
 %%%%%%%%%%%%%%%%%%%%%%
 \section{Scratchにおける作品間の類似度}\label{sec:RelatedWork}
@@ -131,7 +131,6 @@ Peeratham\cite{Understanding}らは，ビジュアルプログラミングの作
 テキストベースのプログラミング言語に対して，ビジュアルプログラミング言語であるScratchでは，プログラムの実行結果が視覚的に出力されるため，プログラムの実装方法が類似していても，スプライトの動作軌跡は類似しないことが多々ある．このことから，Scratch上ではプログラムが類似していても，一概に似ている作品であるとは言えず，プログラムの出力結果であるスプライトの動作軌跡も考慮する必要がある．
 
 %Scratchで，ユーザは類似するプログラムが混在する膨大な検索結果の中から，多様なプログラムの実装方法を含む作品を探すことは手間がかかり容易でない．従来研究では，Scratch作品において類似したプログラムの実装方法を持つ作品を各々紐づけるために，類似プログラムを判定するための手法を提案した．具体的には，Scratchプログラムを抽象構文木（以下，AST）として捉え，プログラム間の編集距離をプログラムの類似度として算出しており，類似プログラムを判定するための基準を明らかにした．
-
 
 
 \subsection{動機}\label{subsec:reason}
@@ -177,7 +176,7 @@ Peeratham\cite{Understanding}らは，ビジュアルプログラミングの作
 \end{itembox}
 
 %%%%%%%%%%%%%%%%%%%%%%
-\section{類似度の測定手法}\label{sec:Similarity measurement}
+\section{類似度の測定手法}\label{sec:Similarity}
 %%%%%%%%%%%%%%%%%%%%%%
 
 本章では，スプライトの動作軌跡の類似度，およびプログラムの類似度の算出方法について述べる．
@@ -237,134 +236,200 @@ Scratchプログラムを抽象構文木に変換したときのイメージを�
 異なる作品のスクリプトから変換した抽象構文木に基づき，抽象構文木間の編集距離を算出する．抽象構文木における編集距離とは，片方の抽象構文木をもう片方の抽象構文木と等しくするために行う最小の編集回数である．編集の定義は，ノードの挿入，ノードの削除，ノードラベルの置換の3種類であり，編集回数とはそれぞれを行った回数の合計数のことである．また，編集距離はブロックの長さに大きく影響を受けるため，算出した編集距離をブロック長が長い方の値で割り，最小値0，最大値1に正規化した値を編集距離とする．編集距離が小さいほど，プログラムの類似度は大きい．
 
 %%%%%%%%%%%%%%%%%%%%%%
-\section{動作軌跡類似度とプログラム類似度の関係性分析}\label{sec:Analyze related work}
+\section{動作軌跡類似度とプログラム類似度の関係性分析}\label{sec:Analysis}
 %%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{データセット}
-Scratchは，2019年のバージョン3.0のリリースにおいて，大幅なブロックの追加や仕様の変更が行われている．本研究では，共通の学習環境で制作された作品を比較するために，バージョン3.0がリリースされた2019年1月3日以降に制作された作品を対象とする．また，動作軌跡の計算を複雑化せず，ある程度のプログラム規模を持たせるため，以下の条件を満たす作品4000件を対象とした．
+Scratchは，バージョン3.0のリリースにおいて大幅なブロックの追加や仕様が変更された．本研究では，共通の学習環境で制作された作品を比較するために，バージョン3.0がリリースされた2019年1月3日以降に制作された作品を対象とする．また，動作軌跡の計算を複雑化せず，ある程度のプログラム規模を有する作品を対象とするために，次の条件によって分析対象とする4000件の作品を時系列順に収集した．
 \begin{itemize}
     \item 並列に同じ種類のイベントブロックが存在しない
     \item 独自に定義するブロック,メッセージブロックが存在しない
     \item ブロック数が5つ以上
 \end{itemize}
+
 \subsection{アプローチ}\label{subsec:approach}
-データセットとして収集した4000件の作品間の動作軌跡類似度，プログラム類似度を総当たりで測定し，作品対をプログラムが類似するか否か，スプライト動作軌跡が類似するか否かの4種類に分類する．また，プログラムと動作軌跡がそれぞれ類似しているかどうかは，先行研究で示された閾値に基づいて判断する．
-\subsubsection{プログラム類似度の閾値}
-先行研究では，編集距離を用いた類似スクリプトの紐付けを行った結果，閾値を0.50にしたときに最も分類の精度が高くなった．このことから，本研究では編集距離0.50をプログラムが類似する境界値とする．
-\subsubsection{動作軌跡類似度の閾値}
-先行研究では，DTWを用いた提案手法の精度を明らかにするために，著者が実装したScratch作品検索を用いて4種類の入力を行い，DTW距離の算出結果について分析を行った．定量分析では，距離を昇順に並べたある2点の傾きから距離が収束する値を求めることで，類似しない動作が抽出されるおおよその距離を明らかにした．定性分析では，定量分析で明らかにした距離以下の動作を提示し，動作の類似性を評価するアンケートを実施することで，類似動作を抽出可能な距離を4種類の入力それぞれについて明らかにした．本研究では，先行研究で示された４種類の入力と類似する動作を抽出可能な距離4つのうち，最もDTW距離の小さい2.2を動作軌跡が類似する境界値とする．
+
+データセットとして収集した4000件の作品を対象に，\ref{sec:Similarity}章で述べた動作軌跡類似度，プログラム類似度を総当たりで測定し，作品のプログラムが類似するか否か，スプライト動作軌跡が類似するか否かの4種類に分類する．また，プログラムと動作軌跡がそれぞれ類似しているかどうかは，先行研究で示された閾値に基づいて判断する．
+
+\noindent\textbf{[プログラム類似度の閾値] }先行研究では，編集距離を用いた類似スクリプトの紐付けを行った結果，閾値を0.50にしたときに最も分類の精度が高くなった．このことから，本研究では編集距離0.50以下をプログラムが類似する境界値とし，本研究における閾値の妥当性を結果で示す．\todo{0.5って三倉研究に基づく？三倉さんの関西支部論文って閾値を設けてた？設けていなければ卒論を引用するか．．．}．
+
+\noindent\textbf{[動作軌跡類似度の閾値] }先行研究では，DTWを用いた提案手法の精度を明らかにするために，著者が実装したScratch作品検索システムを用いて4種類（\todo{直線，曲線，円，矩形}）の移動軌跡と類似する作品を収集し，動作軌跡類似度の閾値を調査している．3名が動作軌跡の類似性を目視により定性分析した結果，DTW距離が2.2以下の作品は4種類の移動軌跡において全て類似すると判断された．従って，本研究におけるDTWが2.2以上の作品は移動軌跡が類似する強化位置とし，本研究で使用するデータセットにおいても閾値の妥当性を結果で示す．\todo{福地関西支部って閾値設けてた？}
+
+%，DTW距離の算出結果について分析を行った．定量分析では，距離を昇順に並べたある2点の傾きから距離が収束する値を求めることで，類似しない動作が抽出されるおおよその距離を明らかにした．定性分析では，定量分析で明らかにした距離以下の動作を提示し，動作の類似性を評価するアンケートを実施することで，類似動作を抽出可能な距離を4種類の入力それぞれについて明らかにした．本研究では，先行研究で示された４種類の入力と類似する動作を抽出可能な距離4つのうち，最もDTW距離の小さい2.2を動作軌跡が類似する境界値とする．
+
 \subsection{結果}
 
-図\ref{fig:out-nolimit}は，横軸に編集距離、縦軸にDTW距離を示し，それぞれの軸を対数表示した散布図である．
-図中の1点は1つの作品対であることを表す．また，\ref{subsec:approach}で示した境界値を図中の線で示しており，この境界線に基づいて作品を４種類に分類した．
-
+%------------------------
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=1.0\linewidth]{Okamoto_fig/out-all-nolimit.pdf}
 	\caption{DTW距離と編集距離の関係性を示した散布図}
 	\label{fig:out-nolimit}
 \end{figure}
+%------------------------
+
+図\ref{fig:out-nolimit}は，分析対象とする4000作品を総当たりに編集距離とDTW距離を計測した結果を散布図で示す．横軸は編集距離、縦軸はDTW距離を示す．それぞれの軸は対数表示した，\done{横軸は対数表記ではない気がする．．． -> 最大値が1なので分かりづらいですが，対数表記にしています．}散布図の1点は，2つの作品間の類似度を計測した作品対の結果を表す．また，編集距離とDTW距離の境界値を赤線で示す．この境界線に基づき，散布図中の第１象限は動作軌跡もプログラムも類似しない，第２象限は動作軌跡は類似しないが，プログラムは類似する，第3象限は動作軌跡もプログラムも類似する，第4象限は動作軌跡は類似するが，プログラムが類似しないことをそれぞれ意味する．図\ref{fig:distance-boxplot1}，図\ref{fig:distance-boxplot2}，図\ref{fig:distance-boxplot3}，図\ref{fig:distance-boxplot4}はそれぞれ第1象限〜第4象限までに分類された作品事例の動作軌跡（折れ線グラフ）とプログラムを示す．折れ線グラフは青線がx座標の方向の移動，黄線がy座標方向の移動で示す．
+
+\begin{itemize}
+\item 第1象限：図\ref{fig:distance-boxplot1}は動作軌跡とプログラムが乖離する作品対の例を示したものである．動作軌跡からはそれぞれX軸もY軸も動作が類似していないことがわかる．また，プログラムからも青色の座標移動ブロックや，緑色のペンブロックを利用している点で同じ種類のブロックを利用しているが，上の作品ではループを用いており，下の作品では座標移動ブロックの中で2種のブロックを使い分けている点で類似していないと言える．\todo{ほげ}
+\item 第2象限：図\ref{fig:distance-boxplot2}は動作軌跡は類似しないが，プログラムが類似する作品対の例を示したものである．動作軌跡からはそれぞれX軸もY軸も動作の方向が違うことがわかるが，プログラムはどちらもループを用いている点や，ブロック数から類似していることがわかる．\todo{ほげ}
+\item 第3象限：図\ref{fig:distance-boxplot3}は動作軌跡とプログラムがそれぞれ類似しているサクhんツイの例を示したものである．動作軌跡からはそれぞれX軸とY軸も動作の方向が一致していることがわかり，プログラムからも用いているブロックの種類や数がほぼ一致していることがわかる．
+\todo{ほげ}s
+\item 第4象限：図\ref{fig:distance-boxplot4}は\todo{ほげ}
+\end{itemize}
+
+\todo{散布図の結果も書く}
+
+%図中の1点は1つの作品対であることを表す．また，\ref{subsec:approach}で示した境界値を図中の線で示しており，この境界線に基づいて作品を４種類に分類した．
+
+
+
+%-------------------------
+\begin{figure*}[t]
+  \begin{minipage}[b]{0.45\linewidth}
+    \centering
+	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-1.pdf}
+    \caption{DTW距離が7.92，編集距離が0.81の作品対}
+    \label{fig:distance-boxplot1}
+  \end{minipage}
+  \begin{minipage}[b]{0.45\linewidth}
+    \centering
+	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-2.pdf}
+	\caption{DTW距離が4.27，編集距離が0.44の作品対}
+	\label{fig:distance-boxplot2}
+  \end{minipage}
+
+
+  \begin{minipage}[b]{0.45\linewidth}
+    \centering
+	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-3.pdf}
+	\caption{DTW距離が0.00，編集距離が0.08の作品対}
+	\label{fig:distance-boxplot3}
+  \end{minipage}
+  \begin{minipage}[b]{0.45\linewidth}
+    \centering
+	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-4.pdf}
+	\caption{DTW距離が0.087，編集距離が0.88の作品対}
+	\label{fig:distance-boxplot4}
+  \end{minipage}
+\end{figure*}
+%-------------------------
+
 
 \subsubsection{分析1：分類別の統計量}
-表1は4つに分類された作品対の数を示した
 
-\begin{table*}[ht]
+表\ref{table:programs-classification}は4つの各象限に分類された作品対の数を示す．本ケーススタディで取得した作品対の合計数は7,595,815件であり，移動軌跡，プログラムともに類似する作品は約1\%，移動軌跡もプログラムも類似しない作品は約70\%であった．特に動作軌跡は類似するがプログラムが類似しない作品が約28\%存在し，これらは類似作品が多様な実装方法で作成されることが示唆される．
+
+% \todo{いらない気がする}表\ref{table:program-classification}は4つに分類された作品対のうち，それぞれの分類に含まれる作品の数を示している．本ケーススタディで分類した作品数は4000であるため，表\ref{table:programs-classification}より，分類された作品の数に大きな違いはないことがわかる．
+
+% 表\ref{table:program-length}は4つに分類された作品のプログラムに含まれるブロック数（ブロック長）の平均値を示している．この結果より，4つに分類された作品群の間で，ブロック長には大きな違いがないことがわかる．
+
+\begin{table}[t]
     \centering
-    \caption{分類別作品対数の比較}
-    \begin{tabular}{|c|c|c|}
+    \caption{分類別作品対数の比較\todo{タイトル要検討}}
+    \begin{tabular}{c|l|r|r}
         \hline
-        & プログラムが類似 & プログラムが類似しない \\
+        \multicolumn{2}{c|}{}& \multicolumn{2}{c}{プログラム} \\ \cline{3-4}
+        \multicolumn{2}{c|}{}& \multicolumn{1}{c|}{類似する} & \multicolumn{1}{c}{類似しない} \\
         \hline
-        動作軌跡が類似 & \multicolumn{1}{c|}{98408} & \multicolumn{1}{c|}{2162523} \\
-        \hline
-        動作軌跡が類似しない & \multicolumn{1}{c|}{41877} & \multicolumn{1}{c|}{5293007} \\
+        動作&類似しない & 41,877 & 5,293,007 \\
+        軌跡&類似する & 98,408 & 2,162,523 \\ \cline{2-4}
         \hline
     \end{tabular}
-    \captionsetup{skip=5pt}
+%    \captionsetup{skip=5pt}
     \label{table:programs-classification}
-\end{table*}
 
-\begin{table*}[ht]
-    \centering
-    \caption{分類別作品数の比較}
-    \begin{tabular}{|c|c|c|}
-        \hline
-        & プログラムが類似 & プログラムが類似しない \\
-        \hline
-        動作軌跡が類似 & \multicolumn{1}{c|}{2842} & \multicolumn{1}{c|}{3603} \\
-        \hline
-        動作軌跡が類似しない & \multicolumn{1}{c|}{3017} & \multicolumn{1}{c|}{3889} \\
-        \hline
-    \end{tabular}
-    \captionsetup{skip=5pt}
-    \label{table:program-classification}
-\end{table*}
+% \vspace{2mm}
 
-\begin{table*}[ht]
-    \centering
-    \caption{分類別ブロック長平均値の比較}
-    \begin{tabular}{|c|c|c|}
-        \hline
-        & プログラムが類似 & プログラムが類似しない \\
-        \hline
-        動作軌跡が類似 & \multicolumn{1}{c|}{15.5} & \multicolumn{1}{c|}{16.7} \\
-        \hline
-        動作軌跡が類似しない & \multicolumn{1}{c|}{15.4} & \multicolumn{1}{c|}{18.0} \\
-        \hline
-    \end{tabular}
-    \captionsetup{skip=5pt}
-    \label{table:program-length}
-\end{table*}
+%     \centering
+%     \caption{分類別作品数の比較}
+%     \begin{tabular}{c|l|r|r}
+%         \hline
+%         \multicolumn{2}{c|}{}& \multicolumn{2}{c}{プログラム} \\ \cline{3-4}
+%         \multicolumn{2}{c|}{}& \multicolumn{1}{c|}{類似する} & \multicolumn{1}{c}{類似しない} \\
+%         \hline
+%         動作&類似しない & 3,017 & 3,889 \\
+%         軌跡&類似する & 2,842 & 3,603 \\
+%         \hline
+%     \end{tabular}
+%     \captionsetup{skip=5pt}
+%     \label{table:program-classification}
+
+% \vspace{2mm}
+
+%     \centering
+%     \caption{分類別ブロック長平均値の比較}
+%     \begin{tabular}{c|l|r|r}
+%         \hline
+%         \multicolumn{2}{c|}{}& \multicolumn{2}{c}{プログラム} \\ \cline{3-4}
+%         \multicolumn{2}{c|}{}& \multicolumn{1}{c|}{類似する} & \multicolumn{1}{c}{類似しない} \\
+%         \hline
+%         動作&類似しない & 15.4 & 18.0 \\
+%         軌跡&類似する & 15.5 & 16.7 \\
+%         \hline
+%     \end{tabular}
+%     \captionsetup{skip=5pt}
+%     \label{table:program-length}
+\end{table}
+
+\checked{}
 
 \subsubsection{分析2：分類別のDTW距離の分布}
+
+図\ref{fig:dtw-boxplot}は，4つの各象限に分類された作品対のDTW距離の分布を示した箱ひげ図を示す．
+%外れ値は描画していない．
+第1象限と第2象限はDTW距離の中央値はそれぞれ6.43と5.41\done{XとX}であり，第3象限と第4象限はDTW距離の中央値はそれぞれ1.41と2.0\done{XとX}である．第1象限と第2象限，および第3象限と第4象限のDTW距離の分布には，統計的有意差があることを確認した（マンホイットニーのU検定，p値$<$0.05）．第3象限と第4象限の作品対は共にDTW距離が小さいが，編集距離が大きい第4象限に比べて，第3象限の方がDTW距離が小さいため，作品として類似している．\todo{効果量次第？効果量が小さい場合は，DTWが小さくてもプログラムが違うので多様性のある実装が多い，みたいなことを言う．}
+
+\subsubsection{分析3：分類別の編集距離の分布}
+図\ref{fig:distance-boxplot}は，4つの各象限に分類された作品対の編集距離の分布を示した箱ひげ図を示す．
+%外れ値は描画していない．
+第1象限と第4象限は編集距離の中央値はどちらも0.91\done{XとX}であり，第2象限と第3象限はDTW距離の中央値はそれぞれ0.46と0.44\done{XとX}である．第1象限と第4象限，および第2象限と第3象限の編集距離の分布には，統計的有意差があることを確認した（マンホイットニーのU検定，p値$<$0.05）．第象限と第3象限の作品対は共に編集距離が小さいが，DTW距離が大きい第2象限に比べて，第3象限の方が編集距離が小さいため，作品として類似している．\todo{効果量次第？効果量が小さい場合は，プログラムが似通っていてもDTWは違うので，検索が難しい，みたいなことを言う？}
+
+%-------------------------
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=1.0\linewidth]{Okamoto_fig/DTW-out.pdf}
 	\caption{分類別にDTW距離の分布を示した箱ひげ図}
 	\label{fig:dtw-boxplot}
-\end{figure}
 
-図\ref{fig:dtw-boxplot}は，４種類に分類した作品群毎にDTW距離の分布を示した箱ひげ図である．
-
-\subsubsection{分析3：分類別の編集距離の分布}
-\begin{figure}[t]
 	\centering
 	\includegraphics[width=1.0\linewidth]{Okamoto_fig/distance-out.pdf}
 	\caption{分類別に編集距離の分布を示した箱ひげ図}
 	\label{fig:distance-boxplot}
 \end{figure}
+%-------------------------
 
-% プログラムも動作軌跡も類似しない作品対
-\begin{figure}[t]
-	\centering
-	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-1.pdf}
-	\caption{DTW距離が7.92，編集距離が0.81の作品対}
-	\label{fig:distance-boxplot}
-\end{figure}
+% % プログラムも動作軌跡も類似しない作品対
+% \begin{figure}[t]
+% 	\centering
+% 	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-1.pdf}
+% 	\caption{DTW距離が7.92，編集距離が0.81の作品対}
+% 	\label{fig:distance-boxplot}
+% \end{figure}
 
-% プログラムは類似するが，動作軌跡は類似しない作品対
-\begin{figure}[t]
-	\centering
-	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-2.pdf}
-	\caption{DTW距離が4.27，編集距離が0.44の作品対}
-	\label{fig:distance-boxplot}
-\end{figure}
+% % プログラムは類似するが，動作軌跡は類似しない作品対
+% \begin{figure}[t]
+% 	\centering
+% 	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-2.pdf}
+% 	\caption{DTW距離が4.27，編集距離が0.44の作品対}
+% 	\label{fig:distance-boxplot}
+% \end{figure}
 
-% プログラムも動作軌跡も類似する作品対
-\begin{figure}[t]
-	\centering
-	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-3.pdf}
-	\caption{DTW距離が1.003e-15，編集距離が0.08の作品対}
-	\label{fig:distance-boxplot}
-\end{figure}
+% % プログラムも動作軌跡も類似する作品対
+% \begin{figure}[t]
+% 	\centering
+% 	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-3.pdf}
+% 	\caption{DTW距離が1.003e-15，編集距離が0.08の作品対}
+% 	\label{fig:distance-boxplot}
+% \end{figure}
 
-% 動作軌跡は類似するが，プログラムは類似しない作品対
-\begin{figure}[t]
-	\centering
-	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-4.pdf}
-	\caption{DTW距離が0.087，編集距離が0.88の作品対}
-	\label{fig:distance-boxplot}
-\end{figure}
+% % 動作軌跡は類似するが，プログラムは類似しない作品対
+% \begin{figure}[t]
+% 	\centering
+% 	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-4.pdf}
+% 	\caption{DTW距離が0.087，編集距離が0.88の作品対}
+% 	\label{fig:distance-boxplot}
+% \end{figure}
 
 \subsubsection{考察}
 
