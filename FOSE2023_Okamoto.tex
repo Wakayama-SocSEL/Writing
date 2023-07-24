@@ -58,7 +58,7 @@
 %
 % 複数著者の所属は以下のようにまとめてよい．
 \shozoku{Keigo Okamoto, Akinori Ihara}{和歌山大学システム工学部}
-{Faculty of Sytstems Engineering, Wakayama University}
+{Faculty of Systems Engineering, Wakayama University}
 }
 
 %
@@ -77,11 +77,11 @@
 %%%%%%%%%%%%%%%%%%%%%%
 \section{はじめに}
 %%%%%%%%%%%%%%%%%%%%%%
-我が国でも，プログラミング的思考力の育成を目的とし，プログラミング教育を本格的に推進している．特に，ビジュアルプログラミングは，画像オブジェクトの移動，効果音の制御などを命令処理を持つブロックを組み合わせることで直観的にプログラムの実装をおこなうことができる開発環境として，プログラミング初学者に広く利用されている．プログラミング的思考力の育成に，ビジュアルプログラミング言語を用いた教育が有効であることが明らかにされている\cite{}\cite{}．ビジュアルプログラミングのオンライン開発環境であるScratchは世界中の教育機関やプログラミング教室で利用されている．
+我が国でも，プログラミング的思考力の育成を目的とし，プログラミング教育を本格的に推進している．特に，ビジュアルプログラミングは，画像オブジェクトの移動，効果音の制御などを命令処理を持つブロックを組み合わせることで直観的にプログラムの実装をおこなうことができる開発環境として，プログラミング初学者に広く利用されている．プログラミング的思考力の育成に，ビジュアルプログラミング言語を用いた教育が有効であることが明らかにされている\cite{Sugiura2008}\cite{Mori2011}．ビジュアルプログラミングのオンライン開発環境であるScratchは世界中の教育機関やプログラミング教室で利用されている．
 %杉浦学，松澤芳昭，岡田健，大岩元．アルゴリズム構築能力育成の導入教育：実作業による概念理解に基づくアルゴリズム構築体験とその効果．情報処理学会論文誌，Vol.49，No.10，pp.3409-3427，2008．
-%森秀樹, 杉澤学, 張海, 前迫孝憲．Scratchを用いた小学校プログラミング授業の実践 : 小学生を対象としたプログラミング教育の再考(教育実践研究論文)．日本教育工学論文誌，Vol.34, No.4, pp.387–394, 2011.
+%森秀樹, 杉澤学, 張海, 前迫孝憲．Scratchを用いた小学校プログラミング授業の実践 : 小学生を対象としたプログラミング教育の再考(教育実践研究論文)．日本教育工学論文誌，Vol.34, No.4, pp.387\UTF{2013}394, 2011.
 
-Scratchでは，ユーザが制作したプログラム作品にタイトルや作品の説明文を付けてオンラインサービス上に公開することができ，2023年7月時点には1億3500万件\footnote{Scratch Statistics: \url{https://scratch.mit.edu/statistics/}}を超える作品が公開している．Scratchは公開済みの作品を対象に自然言語による作品検索サービスを提供しており，公開済み作品の中からユーザが制作したい作品，実現したい動作を検索し，実装の参考にする\cite{}.
+Scratchでは，ユーザが制作したプログラム作品にタイトルや作品の説明文を付けてオンラインサービス上に公開することができ，2023年7月時点には1億3500万件\footnote{Scratch Statistics: \url{https://scratch.mit.edu/statistics/}}を超える作品が公開している．Scratchは公開済みの作品を対象に自然言語による作品検索サービスを提供しており，公開済み作品の中からユーザが制作したい作品，実現したい動作を検索し，実装の参考にする\cite{Resnick_2009}.
 %Mitchel Resnick, John Maloney, Andr´es Monroy-Hern´andez, Natalie Rusk, Evelyn Eastmond, Karen Brennan, Amon Millner, Eric Rosenbaum, Jay Saul Silver, Brian S Silverman, Yasmin Bettina Kafai, Scratch: Programming for all, Communications of the ACM, Vol.52, No.11, pp.60-67, 2009.
 Scratchで制作する作品は小規模なプログラムが多く，使用するブロックも限られているため，検索によって類似するプログラムを含む作品が多数出力される．その一方で，検索結果にはプログラムは類似するが，XXXのため学習者が実現したい振る舞いを持たない作品も多く含むことが示唆される．
 % \todo{ここはもう少し書きたい}
@@ -114,18 +114,18 @@ ScratchはMITメディアラボが開発するビジュアルプログラミン�
 
 \subsection{従来研究: Scratchにおけるプログラム解析}\label{subsec:analyze-scratch}
 
-Scratchをはじめとするビジュアルプログラミング言語を用いて開発されるプログラムの調査をおこなう研究が多数報告されている．
+Scratchをはじめとするビジュアルプログラミング言語を用いて開発されるプログラムの調査をおこなう研究が報告されている\cite{Talbot_2020}．
 %Re-Use of Programming Patterns or Problem Solving?Representation of Scratch Programs by TGraphsto supportStatic Code Analysis@WiPSCE2020
 Peeratham\cite{Understanding}らは，ビジュアルプログラミングの作品に含まれるコードスメルを調査しており，プログラムで頻繁に発生する品質問題を特定し，作品を分類している．
 %Understanding Recurring Quality Problems and Their Impact on Code Sharing in Block-Based Software@VLHCC2017
-また，Peeratham\cite{techapalokul2019code}らは，ビジュアルプログラミングにおけるリファクタリングツールの適用による効果を調査しており，再利用されるプログラムを分類している．
+また，Peeratham\cite{techapalokul2019code}ら，Surisettyら\cite{Surisetty_2015}は，ビジュアルプログラミングにおけるリファクタリングツールの適用による効果を調査しており，再利用されるプログラムを分類している．
 %Code Quality Improvement for All: Automated Refactoring for Scratch＠VLHCC2019
 %Behavior-based clustering of visual code @VLHCC2015
 従来研究では，総じてプログラムの分類には取り組んでいるが，個々のプログラムの類似性には着目されておらず，またプログラムによって移動する画像オブジェクトの動作軌跡の類似性も確認していない．
 % \todo{なぜ確認しないといけないのか？}
 
 \subsection{従来研究：プログラムの類似度}\label{subsec:similarity of scratch}
-テキストベースのプログラミング言語であるC言語やJava言語を対象としたプログラム検索手法として，特徴ベクトルに基づく手法，機械学習に基づく手法，データベースに基づく手法など，プログラムの類似性に着目する研究が多数報告されている\cite{}．
+テキストベースのプログラミング言語であるC言語やJava言語を対象としたプログラム検索手法として，特徴ベクトルに基づく手法，機械学習に基づく手法，データベースに基づく手法など，プログラムの類似性に着目する研究が報告されている\cite{Grazia_2023}．
 %Luca Di Grazia and Michael Pradel. 2023. Code Search: A Survey of Techniques for Finding Code. ACM Comput. Surv. 55, 11, Article 220 (November 2023), 31 pages. https://doi.org/10.1145/3565971
 
 テキストベースのプログラミング言語に対して，ビジュアルプログラミング言語であるScratchでは，プログラムの実行結果が視覚的に出力されるため，プログラムの実装方法が類似していても，スプライトの動作軌跡は類似しないことが多々ある．このことから，Scratch上ではプログラムが類似していても，一概に似ている作品であるとは言えず，プログラムの出力結果であるスプライトの動作軌跡も考慮する必要がある．
