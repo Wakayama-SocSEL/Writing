@@ -69,7 +69,6 @@
 %
 % 英文アブストラクト（本サンプルの原論文にはなし）
 % \Eabstract{
-% \todo{英語アブスト(最後})
 % }
 %
 \maketitle \thispagestyle {empty}
@@ -80,7 +79,7 @@
 複数人で実装するソフトウェア開発では，開発者間のコーディングスタイルを共通化することにより，他の開発者，および将来の開発において，ソースコードの可読性を高め，ソフトウェア保守が容易になることが知られている\cite{EffectsSAT}．コーディングスタイルを共通化するための方策として，各プログラミング言語ではソースコードを記述するためのガイドラインとしてコーディング規約を提供している．具体的には，Java言語のJavaコーディング標準，PythonはPEP8などがある．これらコーディング規約には命名規則やコメント文などに関するルールが定められいる．
 
 従来研究では，コーディング規約の導入により，ソフトウェア開発プロジェクトにとってソースコード理解の促進，バグの早期発見などに効果があることが示されている．
-% \todo{\cite{}\cite{}\cite{}}．
+\todo{\cite{}\cite{}\cite{}}．
 % M. Beller, G. Gousios, and A. Zaidman, “How (much) do developers test?,” In Proceedings of the 37th International Conference on Software Engineering (ICSE’15), vol.2, pp.559\UTF{2013}562, 2015.
 % B. Johnson, Y. Song, E. Murphy-Hill, and R. Bowdidge, “Why don’t software developers use static analysis tools to find bugs?,” In Proceedings of the 35th IEEE/ACM International Conference on Software Engineering (ICSE’13), pp.672\UTF{2013}681, 2013.
 % M. Beller, R. Bholanath, S. McIntosh, and A. Zaidman, “Analyzing the state of static analysis: A large-scale evaluation in open source software,” IEEE 23rd International Conference on Software Analysis, Evolution, and Reengineering (SANER’16), vol.1, pp.470\UTF{2013}481, 2016.
@@ -125,7 +124,7 @@
 
 \subsection{静的解析ツールの問題点}
 
-静的解析ツールは効率的に規約違反を検出できる一方で，多くのプロジェクトは静的解析ツールが定義する膨大な規約違反の検出ルールを変更することなく利用していることが多いため，静的解析ツールが多量の規約違反を検出することが多い~\cite{}．
+静的解析ツールは効率的に規約違反を検出できる一方で，多くのプロジェクトは静的解析ツールが定義する膨大な規約違反の検出ルールを変更することなく利用していることが多いため，静的解析ツールが多量の規約違反を検出することが多い．
 % M. Beller, R. Bholanath, S. McIntosh, and A. Zaidman, “Analyzing the state of static analysis: A large-scale evaluation in open source software,” IEEE 23rd International Conference on Software Analysis, Evolution, and Reengineering (SANER’16), vol.1, pp.470\UTF{2013}481, 2016.
 その結果，検出された規約違反の多くは，開発者によって修正されないままとなり，修正しない規約違反は静的解析ツールの誤検出として取り扱われている．このように膨大な規約違反の中から優先的に修正する規約違反を特定は，開発者の実装経験，組織の慣習の理解が必要であり，容易な作業ではない\cite{HowFar}\cite{shuseisarenai}．優先的に修正する規約違反の特定に向けて，多くの従来研究が機械学習モデルなどを用いて優先的に修正すべき規約違反を特定する手法を提案，検証している．
 
@@ -157,7 +156,7 @@
 
 
 
-% 同一プロジェクトであれば実装の慣習が同じであるため高い予測精度が期待されるが，違反回数の少ない規約は十分な学習ができず，予測精度の低下が示唆される．また，違反本研究では，他のプロジェクトの開発履歴も用いることにより，違反回数の少ない規約であったとしても特定することができると考える．著者らの知る限り，異なるプロジェクトにおける開発履歴を用いて修正を要する規約違反ソースコードを特定する手法は提案されていない．%\todo{以降，殴り書きで書いてるけど，ここが一番大事}
+% 同一プロジェクトであれば実装の慣習が同じであるため高い予測精度が期待されるが，違反回数の少ない規約は十分な学習ができず，予測精度の低下が示唆される．また，違反本研究では，他のプロジェクトの開発履歴も用いることにより，違反回数の少ない規約であったとしても特定することができると考える．著者らの知る限り，異なるプロジェクトにおける開発履歴を用いて修正を要する規約違反ソースコードを特定する手法は提案されていない．
 % 開発データが増えることで修正を要する規約違反ソースコード特定の精度向上が期待される．その一方で，組織に応じて実装や違反に対する修正の慣習が異なるため，異なる組織の開発履歴が予測精度の低下を招くことも考えられる．この問題を解決するために，本研究では検証対象とするソースコードと類似する特徴量を有する異なる組織の規約違反を学習に使用する．
 
 
@@ -165,7 +164,7 @@
 
 
 
-%\subsection{アプローチ\todo{XX手法と書きたい}}
+
 
 
 %本研究では，従来手法の課題を解決するために修正予測できなかったものを修正予測することを目的とする．キーアイデアとして，機械学習モデルの学習に用いる学習データを，他プロジェクトのコーディング規約違反修正履歴を用いて補完することによって，モデルの予測精度が向上することを期待する．デメリットとして挙げた，学習データサイズに精度が依存すること，コーディング規約の種類によって精度が低下することをキーアイデアによって解決する．
@@ -182,16 +181,14 @@
 %------------
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=1.0\linewidth]{Kameoka_fig/teiannsyuhou.pdf}
+	\includegraphics[width=1.0\linewidth]{Kameoka_fig/syuhou2.pdf}
 	\caption{提案手法の流れ}
 	\label{fig:Teiannsyuhou}
 \end{figure}
 %------------
 
-図\ref{fig:Teiannsyuhou}は，本研究の提案手法の概略図を示す．本研究では，違反回数の少ない規約であったとしても特定するために，評価対象プロジェクトに加えた複数のプロジェクトの開発履歴を使用することで学習データを拡大する．さらに，規約違反に対する修正の慣習が異なるプロジェクトの開発履歴を用いることによる予測精度の低下を防ぐために，コード断片の特徴量が類似する規約違反しているコード断片をクラスタリングする．各クラスタでそれぞれ予測モデルを構築する．クラスタリングでは，学習データと検証データを統合し，両データのの説明変数に基づき分類することで，検証データが類似する規約違反するコード断片によって生成された機械学習モデルで予測を行えるようにする．
-% \todo{言い回しがくどい．}．
-予測モデルの構築には各クラスタの学習データのみ使用する．
-% \todo{文章が図中のどこに対応しているかは書いたほうがよさそう．}
+図\ref{fig:Teiannsyuhou}は，本研究の提案手法の概略図を示す．本研究では，違反回数の少ない規約であったとしても特定するために，評価対象プロジェクトに加えた複数のプロジェクトの開発履歴を使用することで学習データを拡大する．さらに，規約違反に対する修正の慣習が異なるプロジェクトの開発履歴を用いることによる予測精度の低下を防ぐために，コード断片の特徴量が類似する規約違反しているコード断片をクラスタリングする．各クラスタでそれぞれ予測モデルを構築する．クラスタリングでは，学習データと検証データを統合し，両データのの説明変数に基づき分類することで，検証データが類似する規約違反するコード断片によって生成された機械学習モデルで予測を行えるようにする．予測モデルの構築には各クラスタの学習データのみ使用する．
+\todo{文章が図中のどこに対応しているかは書いたほうがよさそう．}
 
 % 学習データに評価対象とは異なるプロジェクトの開発履歴も使用することにより，違反回数の少ない規約であったとしても特定することができると考える．著者らの知る限り，異なるプロジェクトの開発履歴を用いて修正を要する規約違反ソースコードを特定する手法は確認していない．学習データを増やすことで修正する規約違反のコード断片の特定精度の向上が期待できる．その一方で，組織に応じて実装や違反に対する修正の慣習が異なるため，異なる組織の開発履歴が予測精度の低下を招くことも考えられる．この問題を解決するために，本研究では検証対象とするソースコードと類似する特徴量を有する異なる組織の規約違反を学習する方法を提案する．
 
@@ -207,7 +204,7 @@
 %-------------------------
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=1.0\linewidth]{Kameoka_fig/mokutekihensu.pdf}
+	\includegraphics[width=1.0\linewidth]{Kameoka_fig/kameoka_fig2.pdf}
 	\caption{目的変数の計測方法}
 	\label{fig:mokutekihensu}
 \end{figure}
@@ -215,14 +212,12 @@
 
 本研究では，分析対象期間中のコミット全てに静的解析ツールを実行し，コーディング規約に違反しているコード断片がはじめて検出されたコミットで説明変数を計測する．
 %機械学習モデルの学習，テストに用いる説明変数の計測方法について説明する．まず，説明変数の計測地点について，計測地点はコーディング規約に違反しているコードが生成されたリビジョンである．
-図\ref{fig:mokutekihensu}は，説明変数と目的変数の計測例を示す．この例では，コーディング規約への違反が3箇所で検出され，上2つはリビジョン1で発生し，下の1つはリビジョン2で発生しており，それぞれのリビジョンにおいて説明変数を計測する．説明変数の計測地点において，コーディング規約に違反しているコード断片を含むソースコードファイルの関数，クラス，モジュールに対して特徴量を計測する．本研究では，ソースコードの特徴量を静的解析ツールUnderstandを使用する．説明変数は，従来研究で使用される特徴量
-% \todo{コード行数，コメント行数，循環的複雑度，ネストの深さの最大値など含むソースコードに関する特徴量をX個，コーディング規約の違反検出時に得られる規約違反IDをOne-hotベクトル化した特徴量をX個．．．，合計X種類，44個}
-を使用する．
+図\ref{fig:mokutekihensu}は，説明変数と目的変数の計測例を示す．この例では，コーディング規約への違反が3箇所で検出され，上2つはリビジョン1で発生し，下の1つはリビジョン2で発生しており，それぞれのリビジョンにおいて説明変数を計測する．説明変数の計測地点において，コーディング規約に違反しているコード断片を含むソースコードファイルの関数，クラス，モジュールに対して特徴量を計測する．本研究では，ソースコードの特徴量を静的解析ツールUnderstandを使用する．説明変数は，従来研究で使用される特徴量コード行数，コメント行数，循環的複雑度，ネストの深さの最大値など含むソースコードに関する特徴量を43個に，コーディング規約の違反検出時に得られる規約違反IDをOne-hotベクトル化したものを加えた44種類の特徴量を使用する．
 
 \subsection{目的変数の計測方法}
 
 本研究では，分析対象期間中に修正されるか否かを目的変数とする．分析対象期間中に修正された規約違反のコード断片と修正されなかった規約違反のコード断片は表\ref{tab:pos_neg}に示すように正例と負例の2クラスに分類する．
-% 図\ref{fig:mokutekihensu}の例を，本分類に従うと上2つは\todo{...}，下1つは\todo{．．．}となる．
+図\ref{fig:mokutekihensu}の例を，本分類に従うと上2つは負例，下1つは正例となる．
 
 %----------------------
 \begin{table}[t]
@@ -256,19 +251,15 @@
 \subsection{規約違反しているコード断片のクラスタリング}
 
 本研究では，説明変数の特徴量が類似する規約違反しているコード断片をクラスタリングしたのちに，各クラスタに分類されたコード断片の学習データを用いてモデルを構築する．クラスタリングには，クラスタ間の類似度を確認するため階層的クラスタリングを用いる．
-% \todo{本当に確認する？}
-また，階層的クラスタリングにおける，クラスタ間の距離はユークリッド距離を用い，クラスタの連結法にはWard法を用いる．また，本研究ではクラスタ数を5, 10, 15, 20の４段階に分けて検証を行う．階層クラスタリングにおける，枝切りの場所を変化させることによって，従来手法で予測できなかった修正予測が可能であるかを検証する．
-% \todo{最後の1文は考察で書きたい．}
+また，階層的クラスタリングにおける，クラスタ間の距離はユークリッド距離を用い，クラスタの連結法にはWard法を用いる．本研究ではクラスタ数を10として検証を行う．ここでクラスタ数を10とする理由は，検証に使用するオープンソースソフトウェアのプロジェクト数が10個であるためクラスタ数も10とした．階層クラスタリングによって，従来手法で予測できなかった修正予測が可能であるかを検証する．
 
 
 \subsection{機械学習モデルの構築と評価}
 
 予測モデルの構築には，
-% \todo{従来研究と同様に？}
-ロジスティック回帰モデルを用いる．本研究で取り扱うコーディング規約に違反しているコード断片は，修正されることが少なく不均衡なデータとなっている．したがって，本研究ではロジスティック回帰分析にはPythonパッケージであるsklearnのlinear\_model.LogisticRegression\footnote{https://scikit-learn.org/stable/modules/generated/\\sklearn.linear\_model.LogisticRegression.html}を使用し，パッケージのオプションclass\_weightsを使用することで2クラスデータの分類に重み付けし，不均衡による問題を解決する．
+Ruthruffらの従来研究と同様にロジスティック回帰モデルを用いる．\cite{JyuraiPre}本研究で取り扱うコーディング規約に違反しているコード断片は，修正されることが少なく不均衡なデータとなっている．したがって，本研究ではロジスティック回帰分析にはPythonパッケージであるsklearnのlinear\_model.LogisticRegression\footnote{https://scikit-learn.org/stable/modules/generated/\\sklearn.linear\_model.LogisticRegression.html}を使用し，パッケージのオプションclass\_weightsを使用することで2クラスデータの分類に重み付けし，不均衡による問題を解決する．
 
 予測モデルの予測性能を評価する指標として，従来研究で用いられている適合率，再現率，F1値，成果率を使用する．機械学習モデルの予測結果は以下の4つに分類することができ，分類結果に基づき各評価指標を算出する．
-% \todo{TPなどの定義はいらないかも．}
 \begin{itemize}
 \item True Positive（TP）： 修正された規約違反に対して，修正されると正しく予測するケース
 \item False Positive（FP）： 放置された規約違反に対して，修正されると誤って予測するケース
@@ -294,7 +285,7 @@
     \scalebox{1.0}{
     \begin{tabular}{l|r|r|r|r|r}
          \hline
-         \multirow{2}{*}{プロジェクト名} & \multirow{2}{*}{対象リビジョン数} & \multicolumn{1}{c|}{違反修正数} & \multicolumn{1}{c|}{違反放置数}& \multicolumn{1}{c|}{総違反数} & \multicolumn{1}{c}{違反修正率} \\ 
+         \multirow{2}{*}{プロジェクト名} & \multirow{2}{*}{対象リビジョン数} & \multicolumn{1}{c|}{違反修正数} & \multicolumn{1}{c|}{違反放置数}& \multicolumn{1}{c|}{\multirow{2}{*}{総違反数}} & \multicolumn{1}{c}{\multirow{2}{*}{違反修正率}} \\ 
                       &               &\multicolumn{1}{c|}{(正例)} & \multicolumn{1}{c|}{(負例)} &&\\ \hline
          \hline %
 python-bugzilla & 243 & 189 & 183 & 372 & 51\%\\
@@ -331,7 +322,7 @@ schematics & 524 & 6950 & 4829 & 11779 & 59\%\\
     \label{PrevPrediction}
     \begin{tabular}{l|ccc|ccc|ccc}
          \hline
-         \multirow{3}{*}{プロジェクト名}&\multicolumn{3}{c|}{従来手法} & \multicolumn{3}{c|}{提案手法} & \multicolumn{3}{c}{提案手法}\\
+         \multirow{3}{*}{プロジェクト名}&\multicolumn{3}{c|}{\multirow{2}{*}{従来手法}} & \multicolumn{3}{c|}{提案手法} & \multicolumn{3}{c}{提案手法}\\
          &\multicolumn{3}{c|}{} & \multicolumn{3}{c|}{（クラスタリングなし）} & \multicolumn{3}{c}{（クラスタリングあり）}\\ \cline{2-10}
           & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値\\ \hline
          \hline %
@@ -428,65 +419,70 @@ cluster 1やcluster 2は，分析対象とする全てのプロジェクトの�
     \caption{クラスタリングによる従来手法の予測結果分析(k=10)}
     \label{PrevPredictionCrustering}
     \scalebox{0.8}{
-    \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|}
+    \begin{tabular}{l|c|c|c|c|c|c|c|c|c|c}
          \hline
-         プロジェクト名 & cluster\_0 & cluster\_1 & cluster\_2 & cluster\_3 & cluster\_4 & cluster\_5 & cluster\_6 & cluster\_7 & cluster\_8 & cluster\_09\\ \hline
+         プロジェクト名 & cluster 1 & cluster 2 & cluster 3 & cluster 4 & cluster 5 & cluster 6 & cluster 7 & cluster 8 & cluster 9 & cluster 10\\ \hline
          \hline %
-         python-bugzilla & 0.67* & -- & 0.33* & -- & 0.13* & -- & --* & -- & -- & -- \\ \hline
-         python-cloudant & 0.95* & -- & 0.89* & -- & 0.89* & -- & 0.97* & -- & -- & -- \\ \hline
-         pynput & 0.70* & -- & 0.35* & -- & -- & -- & -- & -- & -- & 1.00* \\ \hline
-         pyscard & 0.76* & 1.00* & 0.78* & -- & -- & --* & -- & -- & 1.00* & -- \\ \hline
-         howdoi & 0.57* & -- & 0.91* & -- & -- & -- & -- & -- & -- & -- \\ \hline
+         python-bugzilla & \textbf{\underline{0.67}}* & -- & 0.33* & -- & 0.13* & -- & --* & -- & -- & -- \\ \hline
+         python-cloudant & \textbf{\underline{0.95}}* & -- & \textbf{\underline{0.89}}* & -- & 0.89* & -- & \textbf{\underline{0.97}}* & -- & -- & -- \\ \hline
+         pynput & 0.70* & -- & 0.35* & -- & -- & -- & -- & -- & -- & \textbf{\underline{1.00}}* \\ \hline
+         pyscard & \textbf{\underline{0.76}}* & \textbf{\underline{1.00}}* & \textbf{\underline{0.78}}* & -- & -- & --* & -- & -- & \textbf{\underline{1.00}}* & -- \\ \hline
+         howdoi & 0.57* & -- & \textbf{\underline{0.91}}* & -- & -- & -- & -- & -- & -- & -- \\ \hline
          hickle & -- & -- & 0.51* & -- & -- & -- & -- & -- & -- & -- \\ \hline
-         transitions & 0.82* & -- & 0.86* & -- & --* & -- & 0.80* & -- & -- & -- \\ \hline
-         OWSLib & 0.94* & 1.00* & 0.80* & -- & 1.00* & -- & 0.87* & 1.00* & -- & -- \\ \hline
-         schema\_salad & 0.72* & -- & 0.86* & 0.62* & 0.92* & -- & 0.26* & -- & -- & -- \\ \hline
-         schematics & 0.47* & -- & 0.47* & -- & -- & -- & 0.56* & -- & -- & -- \\
+         transitions & \textbf{\underline{0.82}}* & -- & \textbf{\underline{0.86}}* & -- & --* & -- & \textbf{\underline{0.80}}* & -- & -- & -- \\ \hline
+         OWSLib & 0.94* & \textbf{\underline{1.00}}* & \textbf{\underline{0.80}}* & -- & \textbf{\underline{1.00}}* & -- & \textbf{\underline{0.87}}* & \textbf{\underline{1.00}}* & -- & -- \\ \hline
+         schema\_salad & \textbf{\underline{0.72}}* & -- & \textbf{\underline{0.86}}* & 0.62* & \textbf{\underline{0.92}}* & -- & 0.26* & -- & -- & -- \\ \hline
+         schematics & \textbf{\underline{0.47}}* & -- & \textbf{\underline{0.47}}* & -- & -- & -- & \textbf{\underline{0.56}}* & -- & -- & -- \\
          \hline
     \end{tabular}
     }
-\vspace{1mm}
-    \centering
-    \caption{クラスタリングによる提案手法の予測結果分析(k=10)}
-    \label{AproPredictionCrustering}
-    \scalebox{0.8}{
-    \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|}
-         \hline
-         プロジェクト名 & cluster\_0 & cluster\_1 & cluster\_2 & cluster\_3 & cluster\_4 & cluster\_5 & cluster\_6 & cluster\_7 & cluster\_8 & cluster\_09\\ \hline
-         \hline %
-         python-bugzilla & 0.67* & -- & 0.37* & -- & 0.27* & -- & --* & -- & -- & -- \\ \hline
-         python-cloudant & 0.90* & -- & 0.77* & -- & 0.91* & -- & 0.73* & -- & -- & -- \\ \hline
-         pynput & 0.80* & -- & 0.64* & -- & -- & -- & -- & -- & -- & 1.00* \\ \hline
-         pyscard & 0.63* & 1.00* & 0.64* & -- & -- & --* & -- & -- & 1.00* & -- \\ \hline
-         howdoi & 0.57* & -- & 0.55* & -- & -- & -- & -- & -- & -- & -- \\ \hline
-         hickle & -- & -- & 0.67* & -- & -- & -- & -- & -- & -- & -- \\ \hline
-         transitions & 0.61* & -- & 0.21* & -- & --* & -- & 0.53* & -- & -- & -- \\ \hline
-         OWSLib & 0.95* & 1.00* & 0.80* & -- & 1.00* & -- & 0.86* & 1.00* & -- & -- \\ \hline
-         schema\_salad & 0.44* & -- & 0.51* & 0.62* & 0.03* & -- & 0.22* & -- & -- & -- \\ \hline
-         schematics & 0.23* & -- & 0.42* & -- & -- & -- & 0.55* & -- & -- & -- \\
-         \hline
-    \end{tabular}
-    }
+
 \vspace{1mm}
 
     \centering
+    \vspace{1mm}
     \caption{クラスタリングによる単純結合手法の予測結果分析(k=10)}
     \label{MergePredictionCrustering}
     \scalebox{0.8}{
-    \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|}
+    \begin{tabular}{l|c|c|c|c|c|c|c|c|c|c}
          \hline
-         プロジェクト名 & cluster\_0 & cluster\_1 & cluster\_2 & cluster\_3 & cluster\_4 & cluster\_5 & cluster\_6 & cluster\_7 & cluster\_8 & cluster\_09\\ \hline
+         プロジェクト名 & cluster 1 & cluster 2 & cluster 3 & cluster 4 & cluster 5 & cluster 6 & cluster 7 & cluster 8 & cluster 9 & cluster 10\\ \hline
          \hline %
-         python-bugzilla & 0.67* & -- & 0.42* & -- & 1.00* & -- & --* & -- & -- & -- \\ \hline
+         python-bugzilla & \textbf{\underline{0.67}}* & -- & \textbf{\underline{0.42}}* & -- & \textbf{\underline{1.00}}* & -- & --* & -- & -- & -- \\ \hline
          python-cloudant & 0.71* & -- & 0.72* & -- & 0.73* & -- & 0.73* & -- & -- & -- \\ \hline
-         pynput & 0.57* & -- & 0.56* & -- & -- & -- & -- & -- & -- & 1.00* \\ \hline
-         pyscard & 0.58* & 1.00* & 0.60* & -- & -- & --* & -- & -- & 1.00* & -- \\ \hline
+         pynput & 0.57* & -- & 0.56* & -- & -- & -- & -- & -- & -- & \textbf{\underline{1.00}}* \\ \hline
+         pyscard & 0.58* & \textbf{\underline{1.00}}* & 0.60* & -- & -- & --* & -- & -- & \textbf{\underline{1.00}}* & -- \\ \hline
          howdoi & 0.57* & -- & 0.62* & -- & -- & -- & -- & -- & -- & -- \\ \hline
          hickle & -- & -- & 0.59* & -- & -- & -- & -- & -- & -- & -- \\ \hline
          transitions & 0.69* & -- & 0.60* & -- & --* & -- & 0.52* & -- & -- & -- \\ \hline
-         OWSLib & 0.91* & 1.00* & 0.75* & -- & 1.00* & -- & 0.85* & 1.00* & -- & -- \\ \hline
-         schema\_salad & 0.54* & -- & 0.09* & 0.78* & 0.03* & -- & 0.78* & -- & -- & -- \\ \hline
+         OWSLib & 0.91* & \textbf{\underline{1.00}}* & 0.75* & -- & \textbf{\underline{1.00}}* & -- & 0.85* & \textbf{\underline{1.00}}* & -- & -- \\ \hline
+         schema\_salad & 0.54* & -- & 0.09* & \textbf{\underline{0.78}}* & 0.03* & -- & \textbf{\underline{0.78}}* & -- & -- & -- \\ \hline
          schematics & 0.20* & -- & 0.34* & -- & -- & -- & 0.45* & -- & -- & -- \\
+         \hline
+    \end{tabular}
+    }
+
+    
+\vspace{1mm}
+    \centering
+    \vspace{1mm}
+    \caption{クラスタリングによる提案手法の予測結果分析(k=10)}
+    \label{AproPredictionCrustering}
+    \scalebox{0.8}{
+    \begin{tabular}{l|c|c|c|c|c|c|c|c|c|c}
+         \hline
+         プロジェクト名 & cluster 1 & cluster 2 & cluster 3 & cluster 4 & cluster 5 & cluster 6 & cluster 7 & cluster 8 & cluster 9 & cluster 10\\ \hline
+         \hline %
+         python-bugzilla & \textbf{\underline{0.67}}* & -- & 0.37* & -- & 0.27* & -- & --* & -- & -- & -- \\ \hline
+         python-cloudant & 0.90* & -- & 0.77* & -- & \textbf{\underline{0.91}}* & -- & 0.73* & -- & -- & -- \\ \hline
+         pynput & \textbf{\underline{0.80}}* & -- & \textbf{\underline{0.64}}* & -- & -- & -- & -- & -- & -- & \textbf{\underline{1.00}}* \\ \hline
+         pyscard & 0.63* & \textbf{\underline{1.00}}* & 0.64* & -- & -- & --* & -- & -- & \textbf{\underline{1.00}}* & -- \\ \hline
+         howdoi & 0.57* & -- & 0.55* & -- & -- & -- & -- & -- & -- & -- \\ \hline
+         hickle & -- & -- & \textbf{\underline{0.67}}* & -- & -- & -- & -- & -- & -- & -- \\ \hline
+         transitions & 0.61* & -- & 0.21* & -- & --* & -- & 0.53* & -- & -- & -- \\ \hline
+         OWSLib & \textbf{\underline{0.95}}* & \textbf{\underline{1.00}}* & \textbf{\underline{0.80}}* & -- & \textbf{\underline{1.00}}* & -- & 0.86* & \textbf{\underline{1.00}}* & -- & -- \\ \hline
+         schema\_salad & 0.44* & -- & 0.51* & 0.62* & 0.03* & -- & 0.22* & -- & -- & -- \\ \hline
+         schematics & 0.23* & -- & 0.42* & -- & -- & -- & 0.55* & -- & -- & -- \\
          \hline
     \end{tabular}
     }
