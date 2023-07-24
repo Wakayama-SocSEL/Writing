@@ -266,6 +266,7 @@ Scratchは，2019年のバージョン3.0のリリースにおいて，大幅な
 \end{figure}
 
 \subsubsection{分析1：分類別の統計量}
+表1は4つに分類された作品対の数を示した
 
 \begin{table*}[ht]
     \centering
@@ -330,6 +331,38 @@ Scratchは，2019年のバージョン3.0のリリースにおいて，大幅な
 	\centering
 	\includegraphics[width=1.0\linewidth]{Okamoto_fig/distance-out.pdf}
 	\caption{分類別に編集距離の分布を示した箱ひげ図}
+	\label{fig:distance-boxplot}
+\end{figure}
+
+% プログラムも動作軌跡も類似しない作品対
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-1.pdf}
+	\caption{DTW距離が7.92，編集距離が0.81の作品対}
+	\label{fig:distance-boxplot}
+\end{figure}
+
+% プログラムは類似するが，動作軌跡は類似しない作品対
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-2.pdf}
+	\caption{DTW距離が4.27，編集距離が0.44の作品対}
+	\label{fig:distance-boxplot}
+\end{figure}
+
+% プログラムも動作軌跡も類似する作品対
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-3.pdf}
+	\caption{DTW距離が1.003e-15，編集距離が0.08の作品対}
+	\label{fig:distance-boxplot}
+\end{figure}
+
+% 動作軌跡は類似するが，プログラムは類似しない作品対
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=1.0\linewidth]{Okamoto_fig/quadrant-4.pdf}
+	\caption{DTW距離が0.087，編集距離が0.88の作品対}
 	\label{fig:distance-boxplot}
 \end{figure}
 
