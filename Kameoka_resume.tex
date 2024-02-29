@@ -5,7 +5,8 @@
 
 \usepackage{wuse_resume}
 \usepackage{url}	% \url{}コマンド用．URLを表示する際に便利
-%\usepackage[dvipdfmx]{graphicx}  % ←graphicx.styを用いてEPSを取り込む場合有効にする
+\usepackage[dvipdfmx]{graphicx}  % ←graphicx.styを用いてEPSを取り込む場合有効にする
+\usepackage{multirow}
 			% 他のパッケージ・スタイルを使う場合には適宜追加
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -14,20 +15,23 @@
 %% タイトル，学生番号，氏名などを設定する
 %%
 
-\タイトル{p\LaTeX によるレジュメの作成}
+\タイトル{複数プロジェクト規約修正履歴を用いた\\コーディング規約違反の修正予測精度の評価}
 \研究室{ソーシャルソフトウェア工学}
-\学生番号{60256000}
-\氏名{伊原 彰紀}
+\学生番号{60256065}
+\氏名{亀岡 令}
 
 \概要{%
-この文章は，和歌山大学システム工学部システム工学科社会情報学メジャーの卒業研究発表会に
-おいて配布されるレジュメをp\LaTeX を用いて作成するための方法を記述したものである．
-この文章もまた，統一されたレジュメの体裁に沿って作成されており，レジュメ作成の際の参考にされたい．
+本研究では，コーディング規約に違反しているソースコードの修正予測を行う際に，予測対象以外の複数のプロジェクトの開発履歴を学習することによる予測精度への影響を調査する．
+ソフトウェア開発では，プロジェクトにコーディング規約が頻繁に導入され，開発者はコーディング規約を遵守して開発を行う．自動的に検出されたコーディング規約違反は修正されないまま放置されることが多い．
+従来研究では，自動検出されたコーディング規約違反を，優先して修正すべき違反か否かの2クラスに自動分類する機械学習モデルを構築する手法を提案している．しかし，予測対象プロジェクトの過去の開発データを学習しているため，プロジェクトによっては学習不足によって予測精度が低下する場合がある．
+本研究では，予測対象プロジェクト以外の開発履歴も学習データに使用することによって学習データを補完し，予測精度への影響の評価を行った．また，提案手法によって再現率とF1値が共に向上したプロジェクトにおいて予測結果の差異について分析を行った．
 }
 
-\キーワード{レジュメ}
-\キーワード{和歌山大学システム工学部}
-\キーワード{卒業論文}
+\キーワード{コーディング規約}
+\キーワード{機械学習}
+\キーワード{GitHub}
+\キーワード{静的解析ツール}
+\キーワード{Python}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -43,163 +47,112 @@
 %% 本文 - ここから
 %%
 
-\section{レジュメ}
+\section{はじめに}
 
-レジュメは，A4用紙2枚を上限とし，卒業論文提出時に同時に提出することに
-なっている\footnote{平成15年度より，レジュメのスタイルは学科である程度統一されることになった．}．
-レジュメに記述しなければならないのは，本文に加えて次の各項目である．
+複数人で実装するソフトウェア開発では，コーディングスタイルを共通化するため，変数名の命名規則やコメント文の書き方などに関するコーディング規約に従って開発している．
+コーディング規約を導入することによって，ソフトウェア開発におけるソースコードの理解の促進，バグの早期発見などに効果があることが明らかにされている\cite{Beller2}
+コーディング規約に従って実装しているか否かの判定には，ソースコードを実行することなく，ソースコード中に含まれるコーディング規約の違反箇所を検出する静的解析ツールが使用されている．
+しかし，多くのプロジェクトでは，規約違反の指摘漏れを抑えるために規約違反の判定基準を厳しく設定しており，静的解析ツールは大量の規約違反を出力するため，静的解析ツールの誤検出を防ぐための研究が数多く発表されている\cite{Nguyen}．
+従来研究では，機械学習を用いて，大量に検出されたコーディング規約違反の中から優先して修正すべき違反を特定する手法を提案しているが，
+予測するプロジェクトと同じプロジェクトを学習データに用いるため，データセットサイズや修正される違反の割合が少ない場合に十分な学習ができずに予測精度が下がってしまうことが考えられる\cite{JyuraiPre}．
+ただし，同一プロジェクトのデータは，プロジェクトの実装方針が同一のため，異なるプロジェクトの開発履歴を用いるよりも高い精度が得られる．
 
-\begin{itemize}
-  \item タイトル
-  \item 所属研究室
-  \item 学生番号
-  \item 氏名
-  \item 概要
-  \item キーワード(5語程度)
-  \item 参考文献
-\end{itemize}
-
-本フォーマットでは，2ページという限られた領域を有効に利用するために，2段組のレイアウトを採用して
-いる．
-
-本レジュメフォーマットは，
-\begin{itemize}
-  \item {\tt wuse\_resume.sty}
-  \item {\tt resume\_sample.tex}
-\end{itemize}
-の2つのファイルから構成される．
-{\tt wuse\_resume.sty}ファイルは，\TeX を用いてレジュメを作成する際に，統一的なスタイルを
-与える
-\LaTeX のスタイルファイルである．
-{\tt resume\_sample.tex}ファイルは，このスタイルファイルを利用してレイアウトした文書の例であ
-る．
-
-以下では，本スタイルファイルを利用するための方法，および2段組のレイアウトを効果的に使うための手
-法を解説する．
-なお，本スタイルファイルの姉妹版として，
-卒業論文用スタイルファイル\cite{wusethesis}
-も用意しているので参考にされたい．
-\TeX や\LaTeX についての情報は，書籍\cite{latex_j,latexcomp,latex2e}や
-\TeX Wiki\footnote{\url{https://texwiki.texjp.org/}}が詳しい．
-
-\section{タイトル，氏名，概要など}
-
-タイトルや氏名などは，それぞれ``\verb|\タイトル|''や``\verb|\氏名|''コマンドを利用して指
-定する．
-この他に，
-  所属研究室(\verb|\研究室|)，
-  学生番号(\verb|\学生番号|)，
-  概要(\verb|\概要|)，
-  キーワード(\verb|\キーワード|)
-を指定するためのコマンドが用意されている．
-これらの情報は，\verb|\maketitle|によって1ページ目上部中央に出力される．
-
-\section{図，表}\label{chap:fig-tab-exp}
-
-論文/レジュメでは，図，表などを効果的に使用する．
-
-\subsection{図}
-
-{\tt figure}環境を利用することによって図にキャプション(\verb|\caption|)を付けることができ
-る．
-図には通し番号が付けられ，キャプションに\verb|\label|を設定しておくと，
-``図\ref{fig:sample}''のように\verb|\ref|によって図を番号で参照することができる．
-図\ref{fig:sample}に{\tt figure}環境を用いた記述例を示す．
-なお，図のキャプションは，図の下部に付けるのが一般的である．
-
-\begin{figure}[t]
-  \centering
-  %% EPS形式の図を入れる場合には，以下のminipageを \includegraphics{hoge.eps}
-  %% などに置き換える．
-  \begin{minipage}{0.45\textwidth}
-    \begin{verbatim}
-	  \begin{figure}
-	    \centering
-	    図(\includegraphics{hoge.eps}など)
-	    \caption{figure環境}\label{figenv}
-	  \end{figure}
-    \end{verbatim}
-  \end{minipage}
-  %% ここまで(置き換える範囲)
-  \caption{図の例}\label{fig:sample}
-\end{figure}
-
-\verb|includegraphics|を用いてPDF形式/PNG形式/JPEG形式/EPS形式等の図を文章の中に取り込むことができる．
-この場合には，\verb|\begin{document}|の前に\verb|\usepackage[dvipdfmx]{graphicx}|を追加する．
-
-\subsection{表}
-
-{\tt table}環境を利用することによって図と同じように，キャプションをつけたり，ラベルにより参照したり
-することができる．
-なお，表のキャプションは，表の上部に付けるのが一般的である．
-
-\subsection{横長の図・表}
-
-2段組の文書を作成していて，1段でレイアウトしたい横長の図や表を入れるためには，
-\verb|figure*|や\verb|table*|環境を利用する．
-表\ref{tab:long_sample}に横長の表の例を示す．
-
-\begin{table*}
-  \caption{横長の表}\label{tab:long_sample}
-  \centering
-  \begin{tabular}{lrrrr}
-  \hline
-  \multicolumn{1}{c}{条件} & \multicolumn{1}{c}{その1} & \multicolumn{1}{c}{その2} & \multicolumn{1}{c}{その3} & \multicolumn{1}{c}{その4}\\ 
-  \hline
-  条件1 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979\\
-  条件2 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979\\
-  条件3 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979\\
-  \hline
-  \end{tabular}
+\begin{table*}[ht]
+    \centering
+    \caption{各手法による評価指標で最も高い値で予測したプロジェクト数の一覧}
+    \label{tab:gen}
+    \vspace{3mm}
+    \scalebox{0.75}{
+        \begin{tabular}{l|p{7em}p{7em}p{7em}|p{7em}p{7em}p{7em}|p{7em}p{7em}p{7em}}
+            \hline
+            \multirow{2}{*}{手法}&\multicolumn{3}{c|}{{ロジスティック回帰}} & \multicolumn{3}{c|}{RandomForest} & \multicolumn{3}{c}{SVM}\\ \cline{2-10}
+             & \multicolumn{1}{r}{{適合率}} & \multicolumn{1}{r}{{再現率}} & \multicolumn{1}{r|}{{F1値}} & \multicolumn{1}{r}{{適合率}} & \multicolumn{1}{r}{{再現率}} & \multicolumn{1}{r|}{{F1値}} & \multicolumn{1}{r}{{適合率}} & \multicolumn{1}{r}{{再現率}} & \multicolumn{1}{r}{{F1値}}\\ \hline
+            従来手法 & \multicolumn{1}{r}{{48}} & \multicolumn{1}{r}{{27}} & \multicolumn{1}{r|}{{38}} & \multicolumn{1}{r}{{28}} & \multicolumn{1}{r}{{43}} & \multicolumn{1}{r|}{{37}} & \multicolumn{1}{r}{{36}} & \multicolumn{1}{r}{{24}} & \multicolumn{1}{r}{{28}} \\
+            % 提案手法(クラスタリングなし) & 12 & 40 & 18 & 27 & 35 & 23 & 17 & 25 & 18 \\
+            提案手法(クラスタリングなし) & \multicolumn{1}{r}{{12}} & \multicolumn{1}{r}{{40}} & \multicolumn{1}{r|}{{18}} & \multicolumn{1}{r}{{27}} & \multicolumn{1}{r}{{35}} & \multicolumn{1}{r|}{{23}} & \multicolumn{1}{r}{{17}} & \multicolumn{1}{r}{{25}} & \multicolumn{1}{r}{{18}} \\
+            % 提案手法(クラスタリングあり) & 20 & 22 & 19  & 28 & 24 & 16 & 24 & 36 & 26 \\ \hline
+            提案手法(クラスタリングあり) & \multicolumn{1}{r}{{20}} & \multicolumn{1}{r}{{22}} & \multicolumn{1}{r|}{{19}}  & \multicolumn{1}{r}{{28}} & \multicolumn{1}{r}{{24}} & \multicolumn{1}{r|}{{16}} & \multicolumn{1}{r}{{24}} & \multicolumn{1}{r}{{36}} & \multicolumn{1}{r}{{26}} \\ \hline
+            % 重複数 & 12 & 21 & 7 & 15 & 34 & 8 & 9 & 17 & 4 \\ \hline
+            重複数 & \multicolumn{1}{r}{{12}} & \multicolumn{1}{r}{{21}} & \multicolumn{1}{r|}{{7}} & \multicolumn{1}{r}{{15}} & \multicolumn{1}{r}{{34}} & \multicolumn{1}{r|}{{8}} & \multicolumn{1}{r}{{9}} & \multicolumn{1}{r}{{17}} & \multicolumn{1}{r}{{4}} \\ \hline
+        \end{tabular}
+    }
+    \vspace{-3mm}
 \end{table*}
 
-\section{参考文献}
+% \begin{table*}[ht]
+%     \centering
+%     \caption{ロジスティック回帰モデルでの予測結果（総違反数上位5件を掲載）}
+%     \label{tab:logistic}
+%     \vspace{3mm}
+%     \scalebox{0.75}{
+%         \begin{tabular}{l||p{4em}|p{4em}|p{4em}||p{4em}|p{4em}|p{4em}||p{4em}|p{4em}|p{4em}}
+%             \hline
+%             \multirow{3}{*}{プロジェクト名}&\multicolumn{3}{c||}{\multirow{2}{*}{従来手法}} & \multicolumn{3}{c||}{提案手法} & \multicolumn{3}{c}{提案手法}\\
+%             &\multicolumn{3}{c||}{} & \multicolumn{3}{c||}{（クラスタリングなし）} & \multicolumn{3}{c}{（クラスタリングあり）}\\ \cline{2-10}
+%             & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値 \\ \hline
+%             % & \multicolumn{9}{c}{ロジスティック回帰} \\ \hline
+%             sockeye & \multicolumn{1}{r|}{\textbf{0.53}} & \multicolumn{1}{r|}{\textbf{0.81}} & \multicolumn{1}{r||}{\textbf{0.64}} & \multicolumn{1}{r|}{0.35} & \multicolumn{1}{r|}{0.56} & \multicolumn{1}{r||}{0.43} & \multicolumn{1}{r|}{0.49} & \multicolumn{1}{r|}{0.67} & \multicolumn{1}{r}{0.57} \\
+%             coretools & \multicolumn{1}{r|}{\textbf{0.04}} & \multicolumn{1}{r|}{0.63} & \multicolumn{1}{r||}{\textbf{0.07}} & \multicolumn{1}{r|}{0.02} & \multicolumn{1}{r|}{\textbf{0.88}} & \multicolumn{1}{r||}{0.04} & \multicolumn{1}{r|}{0.03} & \multicolumn{1}{r|}{0.83} & \multicolumn{1}{r}{0.05} \\
+%             howdoi & \multicolumn{1}{r|}{\textbf{0.64}} & \multicolumn{1}{r|}{\textbf{0.99}} & \multicolumn{1}{r||}{\textbf{0.78}} & \multicolumn{1}{r|}{0.12} & \multicolumn{1}{r|}{0.33} & \multicolumn{1}{r||}{0.17} & \multicolumn{1}{r|}{0.22} & \multicolumn{1}{r|}{0.25} & \multicolumn{1}{r}{0.23} \\
+%             schema\_salad & \multicolumn{1}{r|}{\textbf{0.55}} & \multicolumn{1}{r|}{0.27} & \multicolumn{1}{r||}{0.37} & \multicolumn{1}{r|}{0.51} & \multicolumn{1}{r|}{\textbf{0.64}} & \multicolumn{1}{r||}{\textbf{0.56}} & \multicolumn{1}{r|}{\textbf{0.55}} & \multicolumn{1}{r|}{0.54} & \multicolumn{1}{r}{0.54} \\
+%             serverless-application-model & \multicolumn{1}{r|}{\textbf{0.76}} & \multicolumn{1}{r|}{0.45} & \multicolumn{1}{r||}{0.57} & \multicolumn{1}{r|}{0.55} & \multicolumn{1}{r|}{\textbf{0.83}} & \multicolumn{1}{r||}{0.66} & \multicolumn{1}{r|}{0.64} & \multicolumn{1}{r|}{\textbf{0.83}} & \multicolumn{1}{r}{\textbf{0.72}} \\ \hline
+%         \end{tabular}
+%     }
+% \end{table*}
 
-レジュメには，参考文献も含める．
-ここでは，一般的な\verb|thebibliography|環境を利用している．
+% \begin{table*}[ht]
+%     \centering
+%     \caption{RandomForestモデルでの予測結果（総違反数上位5件を掲載）}
+%     \label{tab:RandomForest}
+%     \vspace{3mm}
+%     \scalebox{0.75}{
+%         \begin{tabular}{l||p{4em}|p{4em}|p{4em}||p{4em}|p{4em}|p{4em}||p{4em}|p{4em}|p{4em}}
+%             \hline
+%             \multirow{3}{*}{プロジェクト名}&\multicolumn{3}{c||}{\multirow{2}{*}{従来手法}} & \multicolumn{3}{c||}{提案手法} & \multicolumn{3}{c}{提案手法}\\
+%             &\multicolumn{3}{c||}{} & \multicolumn{3}{c||}{（クラスタリングなし）} & \multicolumn{3}{c}{（クラスタリングあり）}\\ \cline{2-10}
+%             & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値 \\ \hline
+%             sockeye & \multicolumn{1}{r|}{0.75} & \multicolumn{1}{r|}{\textbf{0.83}} & \multicolumn{1}{r||}{\textbf{0.79}} & \multicolumn{1}{r|}{\textbf{0.76}} & \multicolumn{1}{r|}{0.79} & \multicolumn{1}{r||}{0.78} & \multicolumn{1}{r|}{\textbf{0.76}} & \multicolumn{1}{r|}{0.80} & \multicolumn{1}{r}{0.78} \\
+%             coretools & \multicolumn{1}{r|}{\textbf{0.14}} & \multicolumn{1}{r|}{0.24} & \multicolumn{1}{r||}{\textbf{0.18}} & \multicolumn{1}{r|}{0.04} & \multicolumn{1}{r|}{\textbf{0.41}} & \multicolumn{1}{r||}{0.08} & \multicolumn{1}{r|}{0.04} & \multicolumn{1}{r|}{0.37} & \multicolumn{1}{r}{0.07} \\
+%             howdoi & \multicolumn{1}{r|}{\textbf{0.78}} & \multicolumn{1}{r|}{\textbf{0.99}} & \multicolumn{1}{r||}{\textbf{0.87}} & \multicolumn{1}{r|}{0.07} & \multicolumn{1}{r|}{\textbf{0.99}} & \multicolumn{1}{r||}{0.13} & \multicolumn{1}{r|}{0.07} & \multicolumn{1}{r|}{\textbf{0.99}} & \multicolumn{1}{r}{0.13} \\
+%             schema\_salad & \multicolumn{1}{r|}{\textbf{0.66}} & \multicolumn{1}{r|}{\textbf{0.58}} & \multicolumn{1}{r||}{\textbf{0.62}} & \multicolumn{1}{r|}{0.58} & \multicolumn{1}{r|}{0.31} & \multicolumn{1}{r||}{0.41} & \multicolumn{1}{r|}{0.46} & \multicolumn{1}{r|}{0.21} & \multicolumn{1}{r}{0.29} \\
+%             serverless-application-model & \multicolumn{1}{r|}{\textbf{0.72}} & \multicolumn{1}{r|}{\textbf{0.27}} & \multicolumn{1}{r||}{\textbf{0.39}} & \multicolumn{1}{r|}{0.70} & \multicolumn{1}{r|}{0.23} & \multicolumn{1}{r||}{0.34} & \multicolumn{1}{r|}{0.63} & \multicolumn{1}{r|}{0.24} & \multicolumn{1}{r}{0.35} \\ \hline
+%         \end{tabular}
+%     }
+% \end{table*}
 
-\section{質問等}
+本研究では，複数プロジェクトの開発履歴を用いて，複数プロジェクトにおける規約に違反したソースコードの特徴に基づき規約違反の修正予測をするモデルを構築し，予測精度を分析する．検証に使用するデータセットはPython言語で記述されたオープンソースソフトウェア68プロジェクトを対象に予測モデルを構築し予測性能を評価した．
 
-このレジュメ体裁(p\LaTeX 版)に関する質問は，
-メールにて，\verb|fukuyasu@wakayama-u.ac.jp|まで．
 
-\section{おためし}
+\section{修正を要する規約違反ソースコードの特定手法}
 
-\subsection{箇条書}
+\noindent\textbf{学習データと評価データの収集: }本研究では，複数のプロジェクトの開発履歴を統合し，類似する学習データを分類して，それぞれで機械学習モデルを構築することで予測精度の向上を図る．各プロジェクトの分析対象期間に発生するコミットのうち，前半8割を学習データ，後半2割を評価データとする．ここで時系列順に並べている理由は，学習時に本来得られない未来のデータを学習させないために時系列の古いものを学習データとしている．そのため，モデルの評価時に，交差検証は行なわない．時系列を考慮した時系列十分割交差検証という手法も存在するが，データサイズが小さいプロジェクトでは，学習データサイズが小さくなりすぎることが危惧されるため，時系列十分割交差検証も行わない．
 
-\begin{itemize}
-  \item 普通の箇条書1
-  \item 普通の箇条書2
-  \item 普通の箇条書3
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-\end{itemize}
+\noindent\textbf{説明変数の計測方法: }本研究では，分析対象期間中の各コミットで変更されたソースコード全てに静的解析ツールを実行し，特定のソースコード断片において初めて規約違反が検出されたコミットを，修正を要するか否かを判定する予測時点とし，説明変数を計測する．
+説明変数は，ソースコードの特徴量であるコード行数，コメント行数，循環的複雑度など含むソースコードに関する特徴量43種類に，コーディング規約の違反検出時に得られる違規約違反IDをOne-hotベクトル化した1種類の，合計44種類の特徴量を使用する．目的変数は，分析対象期間中に修正されるか否かとする．
 
-\subsection{番号付き箇条書}
+\noindent\textbf{規約違反しているコード断片のクラスタリング: }本研究では，複数プロジェクトのデータを結合し，モデルを作成した．また，説明変数の特徴量が類似する規約違反しているコード断片をクラスタリングした後に，各クラスタに分類されたコード断片の学習データを用いてモデルを構築する．クラスタリングには，クラスタ間の類似度を確認するため階層的クラスタリングを用い，クラスタ間の距離はユークリッド距離，クラスタの連結法にはWard法を用い，クラスタ数を10に設定した．
 
-\begin{enumerate}
-  \item 普通の箇条書1
-  \item 普通の箇条書2
-  \item 普通の箇条書3
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-\end{enumerate}
+\noindent\textbf{機械学習モデルの構築と評価: }予測モデルの構築は，ロジスティック回帰，RandomForest，SVMモデルを使用する．評価指標には，適合率，再現率，F1値を使用する．
 
-\begin{description}
-  \item[hoge] 普通の箇条書1
-  \item[foo] 普通の箇条書2
-  \item[var] 普通の箇条書3
-  \item[長い箇条書のタイトル] 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-  \item[長い箇条書のタイトル] 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-\end{description}
+\vspace{-2mm}
 
-\subsubsection{subsubsectionのタイトル}
+\section{結果}
 
-\paragraph{パラグラフ}
+本研究ではPythonで開発されているOSSライブラリで，Pythonの静的解析ツールであるpylintを用いて開発されている68プロジェクトを対象とする．分析対象は2018年12月から1,000日間のコミット履歴とする．表\ref{tab:gen}に検出されたコーディング規約違反の修正予測の結果を示す．実験の結果，RandomForestモデルが他のモデルと比較して最も高い予測精度を示したことが確認された．SVMモデルは最もモデル構築にかかる時間が長く，最も予測精度が低いため修正要否予測モデルには適していない．ロジスティック回帰モデルでは，多くのプロジェクトで提案手法によって従来手法より再現率が向上するプロジェクトが存在することが確認された．
 
-\subparagraph{サブパラグラフ}
+ロジスティック回帰モデルで予測精度が大きく変化した4プロジェクトの追加分析を行った．分析の結果から，予測精度が向上したプロジェクトでは，従来手法では予測できていなかったFalse Negativeに位置していたデータを提案手法によってTrue Positive(TP)に分類することが可能となった．しかし，TPの増加とともにFalse Positive(FP)が増加することも確認した．再現率が向上したことによってF1値が向上しているプロジェクトは，FPが増加したことによって低下した予測精度より，TPが増加したことによって向上する予測精度が上回った場合に提案手法によってコーディング規約の修正予測精度が向上する．予測精度が低下したプロジェクトは，予測精度が向上した場合とは反対に，TPの増加よりFPの増加が上回る場合や，TPが増加しない場合に提案手法によって予測精度が低下することを確認した．
 
-文章の構造は，section, subsection, subsubsection, paragraph, subparagraph である．
+
+\section{考察}
+
+実験結果から提案手法を用いることによって，一部プロジェクトで従来手法では予測ができなかった正例を正しく予想できるようになったことが確認できた．理由として，複数プロジェクトを学習し，単一プロジェクトでは十分に学習できなかったコーディング規約について学習ができたためであると考えられる．
+
+\section{おわりに}
+
+本研究では，コーディング規約の修正予測において，複数プロジェクトの開発データを学習に用いることによる修正予測精度への影響の分析を行った．
+結果として，提案手法にって従来手法より予測精度が向上するプロジェクトが68プロジェクトの半数程度存在することが明らかになった．
+提案手法によって予測精度が向上するプロジェクトでは，従来手法より優れた違反修正提案が可能であり，開発におけるコーディング規約違反修正のための人的コスト削減に役立つと考えられる．
+
 
 %%
 %% 本文 - ここまで
