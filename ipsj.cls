@@ -8,7 +8,11 @@
 % [2011/08/22-11/25 Test.ver IPSJ class]
 % [2011/12/15-2012/04/24 v1.01-v1.02e IPSJ class]
 % [2012/06/01-2018/03/22 v1.03-v3.05 IPSJ class]
- [2018/08/03 v4.0 IPSJ class]
+%%% <<< SES
+% [2018/08/03 v4.0 IPSJ class]
+ [2019/03/29 SES modify]
+%%% >>> SES
+
 
 
 
@@ -89,7 +93,9 @@
 %% v3.5 CDS
 \newif\ifDS@recommendeddevices \DS@recommendeddevicesfalse
 
-
+%%% <<< SES
+\newif\ifDS@ses \DS@sesfalse
+%%% >>> SES
 
 
 
@@ -196,6 +202,9 @@
 }
 %%%%%%%%%%%%%
 
+%%% <<< SES
+\DeclareOption{ses}{\DS@sestrue}
+%%% >>> SES
 
 
 
@@ -1897,7 +1906,7 @@ c}}}
 %\fontsize{10\Q}{0\h}\usefont{OT1}{ptm}{m}{n}%Times
 %\selectfont%
 {\bothashira%
-\copyright \ {\@footyear} Information Processing Society of Japan%
+\copyright \ {\@footyear} Information Processing Society of Japanx%
 }}%
 \hfil
 %\fontsize{13\Q}{0\h}\usefont{OT1}{ptm}{m}{n}%Times
@@ -5923,6 +5932,10 @@ $\langle$\nobreak{#2}\nobreak$\rangle$}
 \ifDS@techrep\def\next{\input{ipsjtech.sty}\endinput}\else\let\next\relax\fi
 \next
 
+%%% <<< SES
+\ifDS@ses\def\next{\input{ses.sty}\endinput}\else\let\next\relax\fi
+\next
+%%% >>> SES
 
 %% not use submit 
 \def\zdash{{\usefont{OT1}{cmr}{bx}{n}\selectfont\leavevmode \raise.1zh\hbox {---}}}

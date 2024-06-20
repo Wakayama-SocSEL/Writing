@@ -14,44 +14,6 @@
 
 \newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
 
-%ここからソースコードの表示に関する設定
-\definecolor{darkgray}{rgb}{.4,.4,.4}
-\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
-
-\lstdefinelanguage{JavaScript}{
-  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
-  keywordstyle=\color{blue}\bfseries,
-  ndkeywords={class, export, boolean, throw, implements, import, this},
-  ndkeywordstyle=\color{darkgray}\bfseries,
-  identifierstyle=\color{black},
-  sensitive=false,
-  comment=[l]{//},
-  morecomment=[s]{/*}{*/},
-  commentstyle=\color{purple}\ttfamily,
-  stringstyle={\small\ttfamily},
-  morestring=[b]',
-  morestring=[b]"
-}
-
-\lstset{
-  basicstyle={\ttfamily},
-  identifierstyle={\small},
-  commentstyle={\smallitshape},
-  keywordstyle={\small\bfseries},
-  ndkeywordstyle={\small},
-  stringstyle={\small\ttfamily},
-  frame={tb},
-  breaklines=true,
-  columns=[l]{fullflexible},
-  numbers=left,
-  xrightmargin=0zw,
-  xleftmargin=3zw,
-  numberstyle={\scriptsize},
-  stepnumber=1,
-  numbersep=1zw,
-  lineskip=-0.5ex
-}
-%ここまでソースコードの表示に関する設定
 
 \def\Underline{\setbox0\hbox\bgroup\let\\\endUnderline}
 \def\endUnderline{\vphantom{y}\egroup\smash{\underline{\box0}}\\}
@@ -74,860 +36,1279 @@
 \begin{document}
 
 
-\title{ライブラリのテストコード変更に基づく\\後方互換性の検出}
+\title{OSSリポジトリにおいて共変更関係を有するREADMEファイルとその他のファイルとの紐付け手法}
 
-\etitle{Detecting Backward Compatibility\\based on Test Code Changes in Software Library}
+\etitle{A linkage approach of co-change relationship between README file and the other files in OSS repositories}
 
-\affiliate{WA}{和歌山大学システム工学部\\
-Faculty of Systems Engineering, Sakaedani 930, Wakayama-city 640-8510, Japan}
+\affiliate{WA}{和歌山大学\\
+Wakayama University, Sakaedani 930, Wakayama-city 640-8510, Japan}
 
 
 % \paffiliate{WA}{和歌山大学\\
 % Johoshori University}
 
+\author{石岡 直樹}{Naoki Ishioka}{WA}[ishioka.naoki@g.wakayama-u.jp]
 \author{伊原 彰紀}{Akinori Ihara}{WA}[ihara@wakayama-u.ac.jp]
-\author{前川 大輝}{Daiki Maekawa}{WA}[maekawa.daiki@g.wakayama-u.jp]
-\author{松田 和輝}{kazuki Matsuda}{WA}[matsuda.kazuki@g.wakayama-u.jp]
 
 \begin{abstract}
-%ソフトウェア開発では，ライブラリと呼ばれる再利用可能なソースコードを利用することで，開発者が一部の機能を実装する必要がなくなり，開発効率が向上する．多くのソフトウェアで利用されるライブラリの開発者は，ライブラリのバージョンを更新時にクライアントソフトウェアに影響を与えないように，ライブラリ更新後に後方互換性を意図せず損失しないことが求められる．しかし，軽微なバグ修正などにより，ライブラリ開発者が意図しない部分でソースコードの動作が変わり，ライブラリの後方互換性が損失することがある．
-本研究では，「ライブラリの変更に伴いテストコードを変更したバージョンでは後方互換性を損失している」と仮説を立て，ライブラリのテスト変更有無に基づいて後方互換性の有無を判断する実証的分析を行った．さらにテストコードの変更内容に基づき，ソースコードの後方互換性が損失する自動検出ツールを開発した．その結果，テストの変更内容に基づき後方互換性を損失する51\%のライブラリバージョンの特定に成功した．
+本論文では，開発者のREADME変更支援のために，同時に変更されるREADMEとその他ファイルの紐付け手法を提案した．分析1では，提案手法の性能を低下させる要因になる，ソースコードの変更とは無関係なREADMEのリファクタリングを目的とした変更が行われているのかを調査した．52,292件のREADMEを対象に，初期版と最終版のREADMEの項目と説明文を比較した結果，READMEの変更において，ソースコードの変更とは無関係なREADMEの変更が行われる可能性は低く，ソースコードの変更とともに項目ごとに情報を追加していくことを明らかにした．
+分析2では，提案手法によってREADMEの変更とその他のファイルの変更を機械的に紐付けることができるのかを調査した．同時に変更されたREADMEの変更内容とファイルの変更内容を入力として，READMEとファイルの変更意図が一致するか否かの2クラス分類を行い，3つのモデル（BoW，BERT，CodeBERT）で比較した．その結果，CodeBERT（F1値=0.81），BoW（F1値=0.78），BERT（F1値=0.77）の順で高く，READMEとファイルの紐付けにおいて，CodeBERTモデルが適合率と再現率の両方で良好な性能を示した．
 \end{abstract}
 
 
 \begin{jkeyword}
-ソフトウェアライブラリ，後方互換性，ソースコード静的解析
+README，ソフトウェアドキュメント，ソフトウェア工学，OSS開発
 \end{jkeyword}
 
 \begin{eabstract}
-% In software development, developers do not implement some functions by using software libralies, then improves development efficiency. Library developers should avoid unintentional loss of backward compatibility after library updates because client software is affected when library versions are updated.
-% However,  backward compatibility of the library might be loss when library developers change the source code by minor bug fixes. 
-This study hypothesized ``When library developers change test codes in new library version, the library version contains the loss of backward compatibility'' and conducted an empirical analysis to predict whether or not the new library version with test code changes contains the loss of backward compatibility. Furthermore, this study developed an automatic detection tool for loss of backward compatibility based on the context of code changes. As a result, we successfully identify 51\% library versions with backward compatibility loss based on the context of code changes.
+\todo{hoge}
 \end{eabstract}
 
 \begin{ekeyword}
-Software library, Backward compatibility, Statistic code analysis
+\todo{hoge}
 \end{ekeyword}
 
 \maketitle
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{はじめに}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\textcolor{red}{henkoukasyo}
 
-ソフトウェア開発では，自身が実装するソースコードの機能の一部として，自身や他の開発者が作成したソースコード（以降，ライブラリ）を再利用することがある．
-%ライブラリは，汎用性の高いプログラムを再利用可能な形式でまとめたものであり，定型的な処理の実装を実現するためソフトウェア開発を効率化することができる．
-ライブラリは，ライブラリを使用するクライアントソフトウェア（以降，クライアント）とそれぞれ独立して開発される．開発によって変更が加えられた場合，クライアント開発者は必要に応じて，クライアントの開発に必要なライブラリ（以降，依存ライブラリ）のバージョンを更新する．
-%これらの関係を図\ref{fig:clientLibrary}に示す．
+%RM変更の２種類説明
+%RM変更をどのように支援するのか→紐づけ→リファクタリングみたいなやつは嫌→分析１でどのくらいあるか確認，分析２でモデル構築
 
-%\begin{figure}[h]
-%  \vspace{1zh}
-%  \centering
-%  \includegraphics[width=0.95\linewidth]{fig/client-library.pdf}
-%  \caption{クライアントとライブラリの関係}
-%  \label{fig:clientLibrary}
-%\end{figure}
 
-%クライアント開発者が依存ライブラリを更新する際，新しいバージョンに含まれる変更が脆弱性の修正などクライアントにとって重要な変更である場合，クライアント開発者は依存ライブラリのバージョン更新を余儀なくされることも多い．
-%一方で
-依存ライブラリの更新には，これまでの使用方法が変わるような既存機能の仕様変更を含むことがある．このような変更を含むバージョンに更新すると，クライアントの動作の変化やエラーの原因になることがある．
-このようにクライアントの既存機能に影響を与えるライブラリの変更は破壊的であると表現され，その変更は「破壊的変更 (Breaking Change) 」と呼ばれる．特に，ライブラリの更新後のバージョンが，更新前のバージョンとの互換性を失うことを後方互換性の損失と呼ぶ．
-ライブラリ開発者は，ライブラリのバージョンが後方互換性を損失しているか否か，つまり新しいバージョンの適用によってクライアントが影響を受ける可能性の有無を，バージョン名によってクライアント開発者に伝達する．
-%クライアント開発者は依存ライブラリを更新する際に，クライアントがライブラリの変更による影響を受けるか否かをあらかじめ把握しておくために，バージョン更新後の依存ライブラリに破壊的変更が含まれているか否かを確認する必要がある．
-%このような問題に対してライブラリ開発者は，ライブラリのバージョン更新の際に変更内容を確認し，バージョン名などによってクライアント開発者に破壊的変更の有無を伝達することがある．
-しかし，ライブラリ開発者による後方互換性の損失の判断は目視によって判断されるため誤りを含むことがあり，後方互換性の損失がないと判断されたはずのバージョン更新でクライアントの既存機能の破損を引き起こすことがある．
-%ライブラリを利用した開発において，ライブラリの後方互換性の判断が困難なために，脆弱性の修正などといった重要な変更がクライアントに適用されないことがある．
-%このような課題の解決に向けて，ライブラリの後方互換性を判断する研究が進められている．
-%既存研究は，ライブラリの変更内容の分析\cite{Efficient_Static_Checking}や，クライアントの動作を検証するテストに破壊的変更の影響が表れることを利用した手法\cite{Using_Others_Tests}による，後方互換性の判断方法を提案している．
-特に，プログラムの動的な性質によってライブラリの静的解析では後方互換性の判断ができない場合があることや，数多くのクライアントテストを用いても後方互換性の損失による影響が表れない場合があることなどの要因によって，後方互換性の正確な判断は困難となっている．
+オープンソースソフトウェア (OSS) は，プロジェクトの管理権を持っていない不特定多数の個人がプロジェクトに参加し，ソースコード修正やバグ報告，単に使用するなど様々な形で貢献している．多くのOSS開発プロジェクトは，ソフトウェアおよびプロジェクトに興味を持つ開発者の参加障壁を下げるために，ソースコードと併せてソフトウェアを説明するドキュメントを公開している．特に，GitHub\footnote[1]{https://github.com/}では，リポジトリ作成時にREADMEを作成することが推奨されている\footnote[2]{https://help.github.com/articles/about-readmes/}．READMEには，ソフトウェアを正しく利用するための情報（インストール方法，使用方法）や開発を促進するための情報（プロジェクトへの貢献方法）などが記述される．READMEはプロジェクトが所有するリポジトリのトップページに表示され，利用者や新規開発者にとって重要な役割を担っている\cite{Eco2011_Mens}．
 
-本研究では，ライブラリのテストコードの変更に基づき後方互換性の損失の有無を予測する実証的分析を行う．
-%後方互換性の判断を困難にする要因の一つであるプログラムの動的な処理は，ライブラリに付属するテストに記述されている．
-テストコードにはライブラリの動作検証を目的に実装されるため，ライブラリの機能変更と同時に，変更前の機能を検証するテストコードも変更後の機能に合わせて検証手順を変更する．このようなテストコードに影響を与えるライブラリの変更は，クライアントにも影響を与える破壊的な変更であると考える．
-本研究では，（分析1）ライブラリのバージョン更新でテストコードも変更しているとき，そのバージョンでのライブラリの変更には後方互換生の損失も含むと予測する．また，後方互換性の損失によって変更されたテストコードを明らかにし，（分析2）テストコード変更内容に基づき後方互換性の損失を予測する．各分析では人気の高い1,955件のJavaScriptライブラリを対象に行い，各ライブラリを使用するクライアントのテストコードが失敗するか否かによって後方互換性の有無を検証する．
+% オープンソースソフトウェア (OSS) は，ソフトウェアの開発や配布において，ソースコードが一般に公開され，誰でも自由に利用，修正，拡張，再配布が可能なライセンスの元で提供されるソフトウェアの総称である\cite{Ikeda_7}．OSSでは，ソフトウェア開発プロジェクトのメンバー以外にも，
+% プロジェクトに対して直接的な所有権や管理権を持っていない外部の個人や組織，つまり外部貢献者がプロジェクトに参加し，コード修正やバグ報告，テスト実行など様々な形でプロジェクトに貢献する．多くのOSS開発プロジェクトは，ソフトウェアおよびプロジェクトに興味を持つ外部の貢献者候補に向けて，ソースコードと併せてソフトウェアを説明するドキュメントを公開している．特に，GitHub~\footnote[1]{https://github.com/}では，プロジェクトを作成する際，最初にREADMEと呼ばれるドキュメントを作成することが推奨されている~\footnote[2]{https://help.github.com/articles/about-readmes/}．READMEには，ソフトウェアを正しく利用するための情報（インストール方法，使用方法）や開発を促進するための情報（プロジェクトへの貢献方法）などが記述される．READMEはプロジェクトが所有するリポジトリのトップページに表示され，利用者だけでなく新規開発者にとって重要な役割を担っている\cite{Kamei_7}．
 
-以降，本論文では\ref{sec:backward-compatibility}章でライブラリ開発における後方互換性の損失によるクライアントへの影響，および関連研究について述べ，本研究の立ち位置を説明する．\ref{sec:hypothesis}章で本研究の仮説を述べ，\ref{sec:analyticalMethod}章で仮説をもとにした分析手法を述べる．\ref{sec:prepare}章では，分析1としてテストコードの変更有無に基づく後方互換性の損失の検出手法およびその結果について述べる．\ref{sec:contentAnalysis}章では，後方互換性の損失にともなうテスト変更の内容の調査を述べ，\ref{chap:rq2}では，手法2としてテストコード変更内容に基づく後方互換性損失の検出手法およびその結果について述べる．\ref{sec:validity}章では本研究の妥当性を述べ，\ref{sec:conclusion}章で本研究をまとめる．
+プロジェクトの正しい情報を利用者や開発者に共有するために，ソフトウェアの進化に追従してREADMEを変更することが期待されるが，開発者にとってREADMEの作成や変更は多くの労力を要する\cite{Doc_maintenance1}\cite{Doc_maintenance2}．2017年に発表されたGitHubの調査結果~\footnote[3]{Open Source Survey: \url{https://opensourcesurvey.org/2017/}}では，開発者はREADMEを重要視している一方で，READMEの変更は頻繁に見落とされ，内容が不完全であったり，古いままになっていたりする問題を指摘している．READMEの変更は，ソースコードが変更に合わせて更新される場合と，ソースコードの変更とは無関係にREADMEの内部構造のリファクタリングのために更新する場合と2種類が考えられる．特に，ソースコードの変更とともにREADMEを更新する場合では，ソースコードの変更時に必ずしもREADMEを更新するとは限らないため，開発者はREADMEの更新を見落とすことが示唆される．
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{後方互換性の損失}\label{sec:backward-compatibility}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+従来研究\cite{prana_README}\cite{Ikeda_README}\cite{Kamei_README}では開発者のREADMEの作成支援を目的に，READMEの中で頻繁に記述される項目，また継時的に変化する項目を調査している．従来研究により，形式的なフォーマットが存在しないREADMEに記述する項目，またリポジトリ作成時に記述できない項目を明らかにすることは，新たにソフトウェアを公開する開発者にとって有用な知見である．しかし，READMEをどのように変更するのかは調査されておらず，開発者がソフトウェアの変更に伴いREADMEを変更しているのか否かも明らかにされていない．READMEはソフトウェアの進化に追従して変更されるべきドキュメントであるが，ソースコードを変更するたびにREADMEを変更するとは限らず，ファイルの変更に合わせて，開発者がREADMEを変更すべきか判断が困難であるため，開発者はREADMEの変更を見落とすと考えられる．開発者のREADME変更の作業負荷を低減させ，ソースコードの変更とともにREADMEが変更されるようにするためには，READMEの変更と直接関係があるファイルを把握する必要がある．
 
-\subsection{後方互換性の損失の原因}
-ライブラリが後方互換性を損失する原因の一つとして，ライブラリが提供するAPI（アプリケーションプログラミングインターフェース）の振る舞いの変更がある．メソッド，シグネチャ，例外，入出力データ形式など，APIの振る舞いの変更はクライアントに影響を与える可能性が高い．APIの機能拡張やバグ修正であっても，拡張された機能が存在しないことや，壊れている動作に依存していた場合，クライアントがエラーを引き起こす原因になる．一方，提供するAPIの追加や，ライブラリの内部で使用されるモジュールの変更では一般的にクライアントが影響を受けることは少ない．Java言語では，privateアクセス修飾子等を利用することで，クライアントに影響を与えることなく，ライブラリの内部で利用するモジュールを変更することができる．しかし，JavaScript言語ではAPIとしてクライアントに提供するモジュール，または内部で使用するモジュールかを明確に定義していることが少ない．その結果，ライブラリ開発者が内部で使用するモジュールと考え変更していたとしても，多数のクライアントが当該モジュールを使用しており変更の影響を受けることもある．ユーザインターフェースを構築するライブラリReactの15.3.2から15.4.0へのマイナーアップデート\footnote{\url{https://github.com/facebook/react/compare/v15.3.2...v15.4.0}}では，react/lib/ReactMountモジュールを刷新する変更が行われた．ライブラリ開発者は，内部使用のみを意図していたが，多数のクライアントが当該モジュールを使用しており，変更の影響を受けた事例もある\footnote{\url{https://github.com/rekit/rekit/issues/16}}．
+%\textcolor{red}{READMEはソフトウェアの進化に追従して変更されるべきドキュメントであるが，ソースコードを変更するたびにREADMEを変更するとは限らないため，開発者はREADMEの変更を忘れることが多いと考えられる．開発者のREADME変更の作業負荷を低減させ，ソースコードの変更とともにREADMEが変更されるようにするためには，READMEの変更と直接関係があるファイルを把握する必要がある．}
 
-\subsection{クライアントに与える影響}
-JavaScriptライブラリの後方互換性の損失がクライアントに与える影響を調査した研究\cite{impact-analysis-for-clients}では，npm\footnote{\url{https://www.npmjs.com/}}から384件のクライアントを調査し，11.7％が後方互換性の損失による影響を受けたことを示している．また，後方互換性を損失した全64件のリリースのうち，約44％がマイナーリリースとパッチリリースであり，ライブラリ開発者がバージョン名のみで適切に後方互換性の有無を判断することは困難である．ライブラリのバージョン名に誤った値が付与されている場合，クライアント開発者が後方互換性を維持することを期待してライブラリバージョンを適用し，エラーを引き起こしてしまうことになる．2016年12月，デバッグ用のAPIを提供するライブラリdebugの2.3.3から2.4.0へのマイナーアップデート\footnote{\url{https://github.com/debug-js/debug/compare/2.3.3...2.4.0}}では，ソースコード中に単純なスペルミスによるバグが混入し\footnote{\url{https://github.com/debug-js/debug/issues/347}}，新バージョンを適用したクライアントはエラーを引き起こした．バグは1時間以内に修正されたが\footnote{\url{https://github.com/debug-js/debug/pull/356}}，debugは12月だけでも2,700万回以上ダウンロードされ，多数のクライアントが影響を受けている．
 
+本論文では，開発者のREADME変更支援のために，同時に変更されるREADMEとその他ファイルの紐付け手法を提案する．本論文で提案するREADMEとその他のファイルの紐付け手法によって，READMEの変更とその他のファイルの変更を機械的に紐付けできれば，開発者のファイル変更に合わせて，README変更を開発者に推薦することで，開発者のREADME変更支援やREADMEを常に最新の状態にするといったREADMEの品質向上につながることを期待する．
+
+%本論文では，開発者のREADME変更支援のために，READMEにおける各項目の変更方法，およびREADMEの変更と紐づくファイルを明らかにする2つの分析を行い，同時に変更されるREADMEとその他のファイルの紐付け手法を提案する.
+
+
+
+%具体的には，XXXXXX．しかし，XXXXであると考えられる．そのため，分析一では，
+
+
+\noindent\textbf{（RQ1）READMEの項目はどのように変更されるのか？}
+%READMEの変更には，ソースコードの変更とともにREADMEを変更する場合と，READMEのリファクタリングを行う場合の2種類が考えられる．この内，READMEのリファクタリングを目的とした変更は，ソースコードの変更とは無関係で，本論文で提案する，READMEの変更とその他のファイルの変更の紐付け手法の性能を低下させる要因になると考える．分析1では，このようなソースコードの変更とは無関係なREADMEの変更が行われているかを明らかにする．具体的には，初期版と最終版のREADMEに記述される項目および説明文を比較し，READMEにおいて，各項目の説明文がどのように変更されるのかを分類する．
+%READMEの同一項目での変更（追加，削除）や異なる項目への説明文の移動が行われているのかを明らかにする．具体的には，初期版と最終版のREADMEに記述される項目および説明文を比較し，READMEにおいて，各項目の説明文がどのように変更されるのかを分類する．
+
+\noindent\textbf{（RQ2）READMEの変更と紐づくファイルは何か？}
+
+%本論文で提案するREADMEとその他のファイルの紐付け手法によって，READMEの変更とその他のファイルの変更を機械的に紐付けることができるのかを明らかにする．具体的には，READMEの説明文の変更内容とREADMEと同時に変更されたファイルの変更内容を比較し，READMEの変更と紐づくファイルを特定する．
+
+%同時に変更されるREADMEとその他のファイルの変更意図が一致しているのか，機械的にREADME変更とソースコードの変更を紐付けることができるのかを明らかにする．具体的には，READMEの説明文の変更内容とREADMEと同時に変更されたファイルの変更内容を比較し，READMEの変更と紐づくファイルを特定する．
+
+
+
+\noindent\textbf{}
+%本論文で提案するREADMEとその他のファイルの紐付け手法によって，READMEの変更とその他のファイルの変更を機械的に紐付けできれば，開発者のファイル変更に合わせて，README変更を開発者に推薦することで，開発者のREADME変更支援やREADMEを常に最新の状態にするといったREADMEの品質向上につながることを期待する．
+
+続く2章では本論文で対象とするソフトウェアドキュメントREADMEとそれに関連する従来研究について述べ，本論文の立ち位置を説明する．続く3章で本論文における事前分析について述べる．続く4章，5章では，それぞれの分析における分析手法と結果を述べる．続く6章では考察を述べ，最後に7章で本論文をまとめる．
+
+
+		
+%% 2章ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\section{OSS開発におけるREADME}
+%% 2-1ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{README}
+
+%1.OSSでの話
+多くのOSS開発プロジェクトは，ソフトウェアおよびプロジェクトに興味を持つ外部の貢献者候補に向けて，ソースコードと併せてソフトウェアの概要やプロジェクトへの貢献方法などを説明するREADMEを公開する．またREADMEは，ソフトウェアの利用者に対して，ソフトウェアのインストール方法や使用方法などの，ソフトウェアを正しく使用する方法を伝えるためのドキュメントである．READMEは開発者や利用者にこれらの情報を共有するための重要なドキュメントである．特にGitHubでは，プロジェクトが所有するリポジトリのトップページにREADMEが表示され，プロジェクトの訪問者がプロジェクトについて理解する最初の手がかりとなるため，他のソフトウェアドキュメントに比べ，公開するプロジェクトが多い\cite{Ikeda_2}．
+
+%2.構成（見出し＋説明文）の話
+READMEは主にMarkdown形式で記述する．特にGitHubのREADMEでは，GitHub Flavored Markdownで記述され，見出し機能，画像，ソースコードなどの特別な書式を用意している．図2.1は，READMEの事例として，Web標準を用いてデータを可視化するためのJavaScriptライブラリ「D3」~\footnote[4]{https://github.com/d3/d3}のREADMEを示す．図2.1のように，READMEは見出し（例：Installing）とその説明文（例：インストール手順やインストールコマンドなど）で構成され，画像やプログラム，リンクなどを用いて記述する．
+
+
+%3.RMめっちゃ重要，品質よくないという話
+READMEはプロジェクトの概要や，使用方法，貢献方法，ライセンス情報などの様々な情報を提供する必要がある．開発者だけでなく，利用者が読むことを想定して記述する必要があり，これらの情報を整理し，利用者が容易に理解できるように記述する必要がある．また新機能や変更点などを反映させるために，ソフトウェアの進化に伴って，定期的にREADMEを変更する必要がある．しかし，開発者にとってREADMEの作成や変更には多くの労力を要するため，最新の状態が維持できていないことが多い．2017年にGitHubで行われた調査~\footnote[3]{https://opensourcesurvey.org/2017/}では，GitHubの開発者はREADMEを重要視しているが，READMEの変更は頻繁に見落とされている工程であることが明らかとなった．READMEはソフトウェアの進化に追従して変更されるべきドキュメントであるが，ソースコードを変更するたびにREADMEを変更するとは限らないため，開発者はREADMEの変更を見落としてしまうと考えられる．
+
+
+
+% \begin{figure}[t]
+%  	\centering
+% 		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/README_D3.pdf}
+% 	\caption{READMEの例　JavaScriptライブラリ：D3}
+%         \ecaption{hoge}
+% 	\label{fig:oss_development}
+% \end{figure}
+
+
+%\textcolor{red}{henkoukasyo}
+
+%% 2-2ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 \subsection{関連研究}
-ライブラリ開発者が誤ったバージョン名を付与し，クライアントがエラーを引き起こすことを防ぐため，後方互換性の損失に関する研究が行われている\cite{How_Do_Api_Evolve}\cite{A_Study_on_Behavioral}\cite{How_to_Break_an_API}．
+\subsubsection{ソフトウェアドキュメントに関する研究}
+ソフトウェアの情報を記述したドキュメントにはREADMEのほかに，APIドキュメントやリリースノートなどがある．
 
-Fooらは，Java，Python，Ruby言語を対象に，ライブラリバージョン間のメソッドの差分を解析することによる後方互換性の有無の判定手法を提案した\cite{foo}．しかし，この手法はメソッドに行われた変更は全て後方互換性を損失したと検出するため，リファクタリングなど外部から見た振る舞いに変化がない変更であっても後方互換性を損失したと誤検出する．また，コールグラフ作成の困難さから，動的型付け言語であるRubyやPythonの後方互換性の有無はほとんど判断できていない．
+APIドキュメントには，ソフトウェアが提供するAPIのクラスやメソッド，細かな仕様などの情報が記述される．APIドキュメントを対象とした研究として，APIドキュメントの保守作業や作成支援のための研究が行われている．Maalejらは，JDK6と.NET4.0のプラットフォームにおけるAPIドキュメントの記述内容を調査している\cite{Ikeda_9_Maalej_API}．JDK6と.Net4.0から無作為に5,574件（JDK：2,792件，.NET：2,782件）抽出し，記述内容を調査した結果，APIドキュメントに記述される項目と項目ごとの記述傾向の違いを明らかにした．Zhouらは，APIドキュメントにおける欠陥の自動検出の手法を提案した\cite{APIDoc_Detection}．JDK1.8のAPIドキュメントを対象に手法の評価を行なった結果，適合率81.6\%，再現率82.0\%でAPIドキュメントの欠陥を検出することができた．
 
-Møllerらは，クライアント開発者がクライアントの動作を検証するために作成したテスト(以降，クライアントテスト)を利用し，動的型付け言語であるJavaScriptの型情報をクライアントテストによって補うことで後方互換性の損失の検出を試みた\cite{type-regression-testing}\cite{model-based-testing}．しかし，この手法ではクライアントテストを実行するためにかなりの時間がかかることがある．本研究では，クライアントテストといったライブラリ外の資源は利用せず，ライブラリに付属するテストを静的解析することで後方互換性の損失を検出する手法を提案する．
+リリースノートは，ソフトウェアの更新履歴を記述したドキュメントで，ソフトウェアの前バージョンからの変更点や利用上の注意点などが記述される．リリースノートを対象とした研究として，記述内容の分析によって，開発者のリリースノート作成支援のための研究が行われている．Nathらは，コミットメッセージとマージプルリクエスト（PR）のタイトルからリリースノートを自動生成する手法を提案した\cite{RN_gen}．GitHubから取得した13のプロジェクトを対象にリリースノートを生成することで，提案手法の有用性を評価している．Abebeらは，85件のリリースノートの記述内容を調査した結果，記述すべきと考えられる項目を明らかにした．また，リリースノートに記載する項目を，機械学習を用いて推薦する手法を評価した結果，平均精度84\%，平均再現率90\%で，リリースノートに記載する項目を自動判別できた\cite{Ikeda_1_Abebe_note}．Morenoらは，990件のリリースノートを目視で確認することで，リリースノートに記述すべき項目を選定し，自動的に生成する手法を提案した\cite{Ikeda_11_Moreno_note}．また，53人の開発者を対象に提案手法を評価した結果，提案手法によって自動生成されたリリースノートは手動で作成されたリリースノートよりも優れており，正確であることを示した．
 
-Kraaijeveldは，後方互換性を損失する変更を，ライブラリが定義している関数名やパラメータ数の変更と定義し，後方互換性の損失の検出を試みた\cite{detecting-breaking-changes-in-js-apis}．ただし，この手法では関数やクラスの入出力形式の変更や，例外処理の追加などによる後方互換性の損失を検出することができない．本研究では，ライブラリの動作を検証するテストコードを利用する．テストコードは，テスト対象となる関数やクラスの入出力の情報や例外の情報を有しており，ライブラリの後方互換性の損失の種類を絞ることなく検出することができると示唆される．
+MaalejらはAPIドキュメント，AbebeらやMorenoらはリリースノート，本論文ではREADMEを対象としており，ソフトウェアドキュメントを分析するという点，ドキュメントの記述内容を分析する点で共通する．しかし，READMEはAPIドキュメントやリリースノートのように決まった形式で記述されず，開発者やプロジェクトによって記述方法が様々である点で異なる．
+
+%% ーーーーーーーーーーーーーーーー
+\subsubsection{READMEに関する研究}
+開発者のREADME作成支援のための研究が行われている．
+
+Pranaらは，READMEの作成支援を目的に，READMEの記述内容がいずれのカテゴリに属するのか，見出しを用いて自動分類し，ラベル付けする手法を提案した\cite{prana_README}．OSSから取得した393件のREADMEの各見出しを，著者が目視によって8つのカテゴリに分類し，分類の正しさを検証した．さらに評価実験を行った結果，提案手法（マルチラベル分類器）はF1値0.746を達成している．さらに，有用性の評価に参加したソフトウェア開発者の多くはPranaらの手法が有用であると回答している．READMEの見出しを項目に分類し，記述内容を分析している点で本論文と共通するが，本論文では最新版のREADMEだけでなく初期版からのREADMEを対象としている点，READMEの継時的変化を分析している点が異なる．Ikedaらは，開発者のREADME作成支援のために，READMEに記述される項目を分析した\cite{Ikeda_README}．GitHubから取得した43,911件のREADMEの各見出しを20項目に分類し，全体のプロジェクトに対する各項目の記述率について調査した．表2.1はIkedaらが分類した項目と記述率，分類された見出しの例を示す．調査の結果，対象プロジェクトの30％以上のREADMEに``Usage''（使用方法），``Install''（インストール方法），``License''（ライセンス）の項目が記述されていることが明らかとなった．READMEの見出しを項目に分類し，分析している点で共通するが，本論文では見出しだけでなく説明文の記述内容を対象としている点，最新版のREADMEだけでなく初期版からのREADMEを対象としている点，READMEの継時的変化を分析している点が異なる．亀井らは，開発者のドキュメント作成方法の推奨を目的に，REAMDEがどのように進化しているのか分析した\cite{Kamei_README}．GitHubから取得した365 件のプロジェクトを対象に，READMEの作成初期から最新版までの期間を4分割し，各期間でどのような項目が追加されたかを調査した.その結果，初期のREADMEにはプロジェクトの概要や利用方法に関する項目が記述され，プロジェクトの状態や貢献者に関する情報など開発者のための項目がREADMEに追加されることを明らかにした．また，READMEに記述される項目が増えるほど，プロジェクト全体の変更に対するREADME変更の割合が高くなることも明らかとなった．READMEの見出しを項目に分類し，READMEの項目の継時的変化に着目している点で共通するが，本論文では見出しだけでなく説明文の記述内容の継時的変化を対象としている点が異なる．
 
 
-%\section{ライブラリバージョニング}
-%\label{sec:libraryVersioning}
 
-%\subsection{ライブラリ開発における課題}
-%\label{sec:subject}
-%ライブラリ開発者がライブラリの新しいバージョンを公開する際に，更新前のライブラリ仕様を前提とした既存のクライアントと，更新後のライブラリの仕様との間の食い違いによって，クライアントの実行エラーが発生するなどライブラリバージョンの更新前後で動作が異なることがある．
-%この問題に対してライブラリ開発者は，クライアントの動作に影響を与えるようなライブラリの変更，すなわち破壊的変更を意図せずにバージョン更新に含めないことが求められる．
+%\begin{table}[H]
+% 	\centering
+%	\caption{従来研究\cite{Ikeda_README}における記述項目一覧から引用}
+%		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/Ikeda_head_ieice.pdf}
+%	\label{fig:oss_development}
+%\end{table}
+
+%    \textbf{正しい項目} & \textbf{項目「使用方法」と予測}\\
+%    & \textbf{（16,590件）} \\ \hline \hline
+
+
+
+% \begin{table*}[t]
+% 	\centering
+% 	\caption{従来研究\cite{Ikeda_README}における記述項目一覧から引用}
+% 	\scalebox{0.7}{
+% 	\begin{tabular}{r |l| l|l |l}
+% 		\hline
+% 		\textbf{Rank} & \textbf{Merged content} & \textbf{Packages（PR）} & \textbf{Description} & \textbf{Content Theme}\\
+% 		 &\textbf{theme}&&\\
+% 		\hline
+% 		\hline
+% 			\textbf{1} & Usage & 26,758（60.83\%） & Basic usage example of & Usage, Basic Usage, How to Use,  \\
+% 			&&&the project&Use Case, Methods, Screenshot,  \\
+% 			&&&&Examples, Quick Examples,Tips, Syntax, \\
+% 			&&&&Sample, Hello World, Grunt tasks\\\hline
+% 			\textbf{2} & Install & 26,142（59.43\%） & How to install the project & How to Install?, Installation, \\
+% 			&&&& Getting Started, Get started now!, To setup, \\
+% 			&&&&Download, Initialization, Instructions, \\
+% 			&&&& npm, node.js\\\hline
+% 			\textbf{3} & License & 15,932（36.22\%） & Type of license applied & LICENSE, MIT License, Unlicense, License,\\
+% 			&&&to the project& Copyright, Legal\\\hline
+% 			\textbf{4} & API & 10,675（24.27\%） & API list of the project & API, API References, API Documents,  \\
+% 			&&&&Command Line, CLI, Build, Events, \\
+% 			&&&&Constructor, Action, To run, Objects, \\
+% 			&&&&  Interface, Commands, Function, Execute\\\hline
+% 			\textbf{5} & Option & 10,459（23.78\%） & Option list of the project & Options, Format, Style, Parameter, \\
+% 			&&&& Configure, Import, Custom, Compatibility, \\
+% 			&&&&Browser, Config, Client,Server, Router,\\
+% 			&&&& Module, Promise, Util, Class, Variables, \\\hline
+			
+% 			\textbf{6} & Release hitory & 5,874（13.35\%） & Release history of the project & Release History, ChangeLog,\\
+% 			&&&& Change logs, Version history, Versions, \\
+% 			&&&&Release Notes\\\hline
+% 			\textbf{7} & Contribute & 4,938（11.23\%） & How to contribute to the  & How to Contribute, Contribution Guides, \\
+% 			&&&project&Development, Donations, CONTACT, \\
+% 			&&&&Hacking\\\hline
+% 			\textbf{8} & Test & 4,374（9.94\%） & Test commands of the project & Run test, testing, To test, How to Test\\\hline
+% 			\textbf{9} & ToDo & 4,293（9.76\%） & TODO list of the project & TODO, Todos, To-Do List, To-do soon, \\
+% 			&&&&Task, In the future . . . , The future,\\
+% 			&&&& Requirements, Coming soon!\\\hline
+% 			\textbf{10} & Overview & 4,219（9.59\%） & Description of the project & Overview, Summary, Synopsis, \\
+% 			&&&&Description, Introduction, Why?,\\
+% 			&&&&  What’s this?, About The Name\\\hline
+			
+% 			\textbf{11} & Status & 3,491（7.94\%） & Build status by continuous & Build Status, Current Status\\
+% 			&&&integration&\\\hline
+% 			\textbf{12} & Document & 3,384（7.69\%） & Further Documentation for & Documentation, Doc, Doe, Notes, Info,\\
+% 			&&&using the project&Information, TL;DR, Notice, Detail, See also\\\hline
+% 			\textbf{13} & Author & 2,607（5.93\%） & Project author & Authors, About the Author, who am i?,  \\
+% 			&&&&Credits, Backers, Contributors,\\
+% 			&&&&Other Contributors, Resources\\\hline
+% 			\textbf{14} & Support & 1,555（3.53\%） & How to get support & Supports, FAQ?, Help, Troubleshooting, \\
+% 			&&&&Questions\\\hline
+% 			\textbf{15} & Feature & 1,379（3.13\%） & Features list of the project & Key Features, Attributions\\\hline
+			
+% 			\textbf{16} & Relate & 1,297（2.95\%） & Introduction of other projects & Related, Related Projects, Link, Inspirations,\\
+% 			&&&related to the project& Alternatives, Source, Other libraries\\\hline
+% 			\textbf{17} & Issue & 1,039（2.36\%） & Issues & Issues, Known issues, Problems, Warning, \\
+% 			&&&&Caveats, Bugs\\\hline
+% 			\textbf{18} & Demo & 839（1.91\%） & Example output of the project & Demo, Codepen demo, Example Output, \\
+% 			&&&&Result\\\hline
+% 			\textbf{19} & Purpose & 821（1.87\%） & Purpose of the project & Purpose, Goals, Solution, Motivation, \\
+% 			&&&&Background, Concepts, Key Ideas, \\
+% 			&&&&Philosophy, Rationale\\\hline
+% 			\textbf{20} & Refer & 772（1.75\%） & References and Acknowledge & References, Thanks, Special Thanks, \\
+% 			&&&&Acknowledgements\\
+% 		\hline
+% 	\end{tabular}}
+% 	\label{tab:file-comparison}
+% \end{table*}
+
+
+
+
+
+%% 2-3ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{本論文の位置付け}
+
+
+
+従来研究\cite{prana_README}\cite{Ikeda_README}\cite{Kamei_README}では開発者のREADMEの作成支援を目的に，READMEに頻繁に記述される項目，また項目別に継時的変化を調査している．従来研究により，形式的なフォーマットが存在しないREADMEに記述する項目，またリポジトリ作成時に記述できない項目を明らかにすることは，新たにソフトウェアを公開する開発者にとって有用な知見である．しかし，READMEをどのように変更するのかは調査されておらず，開発者がソフトウェアの変更に伴いREADMEを変更しているのか否かも明らかにされていない．READMEはソフトウェアの進化に追従して変更されるべきドキュメントであるが，ソースコードを変更するたびにREADMEを変更するとは限らず，ファイルの変更に合わせて，開発者がREADMEを変更すべきか判断が困難であるため，開発者はREADMEの変更を見落とすと考えられる．開発者のREADME変更の作業負荷を低減させ，ソースコードの変更とともにREADMEが変更されるようにするためには，READMEの変更と直接関係があるファイルを把握する必要がある．
+
+本論文では，開発者のREADME変更支援のために，同時に変更されるREADMEとその他ファイルの紐付け手法を提案する．本論文で提案するREADMEとその他のファイルの紐付け手法によって，READMEの変更とその他のファイルの変更を機械的に紐付けできれば，開発者のファイル変更に合わせて，README変更を開発者に推薦することで，開発者のREADME変更支援やREADMEを常に最新の状態にするといったREADMEの品質向上につながることを期待する．
+
+
+%従来研究では開発者のREADMEの作成支援を目的に，READMEに頻繁に記述される項目，また項目の継時的変化を調査している．従来研究により，形式的なフォーマットが存在しないREADMEに記述する項目，またリポジトリ作成時に記述できない項目を明らかすることは，新たにソフトウェアを公開する開発者にとって有用な知見である．しかし，READMEをどのように変更するのかは調査されておらず，開発者がソフトウェアの変更に伴いREADMEを変更しているのか否かも明らかにされていない．READMEを常に最新の状態に保つために，開発者のREADME変更支援を行うには，READMEをどのように変更するのかを明らかにする必要がある.
 %
-%ライブラリ開発者が更新したライブラリに破壊的変更が含まれているか否かを示す方法として，セマンティックバージョニング~\footnote{\url{https://semver.org/}}がある．
-%セマンティックバージョニングは，ライブラリ開発者がライブラリにバージョン名を付与するための規則で，後方互換性の有無をクライアント開発者に伝えるために有効である．
-%セマンティックバージョニングを適用したバージョン名は「1.0.0」などの3つの数字で表され，それぞれの数字は「メジャー.マイナー.パッチ」と呼ばれる．
-%破壊的変更を含む更新ではメジャー，破壊的変更を含まない更新ではマイナー，またはパッチの値を増やすことで新しいバージョン名を付与する．
-%しかし，ライブラリの新しいバージョンに破壊的変更を含むか否かの判断は開発者が手動で行うため，破壊的変更の見落としなどによって誤ったバージョン名が付与されることがある．
-%
-%セマンティックバージョニングを採用しているnpm~\footnote{\url{https://www.npmjs.com/}}の依存ライブラリを更新する機能~\footnote{\url{https://docs.npmjs.com/cli/v8/commands/npm-update}}では，マイナーまたはパッチの値のみが更新されたバージョン，つまり破壊的変更を含まないことが期待されるバージョンのうち，もっとも新しいバージョンに依存ライブラリを自動的に更新することができる．
-%この機能を利用することで，クライアント開発者は依存ライブラリが後方互換性を維持したまま行われたバグや脆弱性の修正を一括で適用しようとする．
-%しかし，ライブラリのバージョン名に誤った値が付与されている場合は破壊的な変更も自動的に適用され，クライアントの動作の変化やエラーを引き起こす．
-
-%\subsection{関連研究}
-%\label{sec:relatedResearches}
-%ライブラリ開発における課題を解決するために，ライブラリの後方互換性に関する研究が行われている\cite{How_Do_Api_Evolve}\cite{A_Study_on_Behavioral}\cite{How_to_Break_an_API}．
-%Fooらは，ライブラリのクラスや関数のようなAPIに対してバージョン間で行われた変更パターンを4つ（追加，削除，修正，変更なし）に分類し，分類結果から後方互換性の有無を判断する手法を提案した~\cite{Efficient_Static_Checking}．
-%ただし，この手法ではライブラリのAPIに対して行われた修正は全て破壊的変更と取り扱っているため，ライブラリの外部から見た振る舞いに変化がない変更であっても，後方互換性は損失したと判断されることが課題である．
-%また，コールグラフ作成の困難さから，動的な言語であるPython，Rubyにおいて後方互換性の有無をほとんど判断できない．
-%
-%Raemaekersらは，セマンティックバージョニングに関して，Maven Centralを対象に調査を行った~\cite{Impact_of_Breaking_Changes}．
-%セマンティックバージョニングにおける，メジャー，マイナー，パッチごとの更新の特性や，その他の規則である非推奨タグが実際には守られていないことなど，セマンティックバージョニングの現状を明らかにした．
-%
-%M\o{}llerらは，クライアント開発者がクライアントの動作を検証するために作成したテスト（以降，クライアントテスト）からライブラリの型をモデル化し，ライブラリの更新前後でのモデルの変更をテストする型回帰テスト~\cite{Type_Regression_Testing}~\cite{Model-Based_Testing}や，ライブラリへの変更を開発者が記述できるパターン言語~\cite{Detecting_Locations}を提案した．
-%動的型付け言語であるJavaScriptで記述されたライブラリの型情報を，クライアントテストや開発者の目視といったライブラリ外の資源によって補うことで破壊的変更の検出を試みた．
-%本研究では，ライブラリに付属するテストのみから後方互換性を判断可能か否かを分析する．
-%
-%Mujahidらは，ライブラリの後方互換性の損失をクライアントテストを実行することで検出する手法を提案した~\cite{Using_Others_Tests}．
-%破壊的変更が行われたライブラリでは，その影響を受けるクライアントテストの結果がライブラリの更新前後で成功から失敗に変化することを手法の根拠としている．
-%本研究でも，ライブラリの後方互換性を検証する際はMujahidらの提案手法と同じ根拠に基づき，後方互換性の損失の発見のためにクライアントテストを実行する．
-%ただし，クライアントテストを収集できたとしても破壊的変更の影響を受けるテストが含まれていない場合，後方互換性の損失を判断することはできない．
-%
-%Zaliaらは，テスト品質の評価指標として用いられている網羅率について，教育における生徒の答案評価に適しているかという観点でいくつかの指標を評価した\cite{Checked_Coverage_and_OBC}．
-%一般的に用いられる指標である，命令の網羅率であるステートメントカバレッジや，条件分岐の網羅率であるブランチカバレッジは，テスト品質の評価方法として十分でないという指摘がある\cite{Measuring_Unit_Test_Accuracy}．
-%Zaliaらはステートメントカバレッジとブランチカバレッジに加えてChecked CoverageとObject Branch Coverageを評価した．
-%いずれも生徒の評価の答案評価においてステートメントカバレッジやブランチカバレッジよりも優れていた．
-%本研究はクライアントテストを実行してライブラリの後方互換性を検証する．
-%クライアントテストの網羅率が高ければ高いほどライブラリの多くの機能を実行するため，ライブラリの破壊的変更を発見しやすくなることが期待できる．
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{仮説}
-\label{sec:hypothesis}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=1.0\linewidth]{Maekawa_fig/rq1/serialize-javascript/index.pdf}
-  \includegraphics[width=1.0\linewidth]{Maekawa_fig/rq1/serialize-javascript/index.test.pdf}
-  \caption{serialize-javascriptのバージョン2.1.0から2.1.1への変更}
-  \ecaption{hoge}
-  \label{fig:motivation}
-\end{figure}
+%本論文では，開発者のREADME変更支援のために，READMEにおける各項目の変更方法，およびREADMEの変更と紐づくファイルを明らかにする2つの分析を行い，同時に変更されるREADMEとその他のファイルの紐付け手法を提案する．本論文成果によって，開発者のファイル変更に合わせたREADME変更の推薦を目指す．
 
 
-%クライアント開発者は，利用するライブラリのバージョンを更新する際に引き起こされるエラーを回避するために，更新後のバージョンの後方互換性を判断する必要がある．しかしながら関連研究が示すとおり，後方互換性を正確に判断することは多くの場合に困難である．
-
-本研究では，「ライブラリの変更に伴いテストコードを変更したバージョンでは後方互換性を損失している」という仮説を立てる．テストへの変更内容から後方互換性を判断出来る例として，JavaScriptオブジェクトを文字列に変換する関数を提供するライブラリserialize-javascript\footnote{\url{https://github.com/yahoo/serialize-javascript/}}のバージョン2.1.0から2.1.1への更新を挙げる．
-この更新ではセキュリティ修正のために，特定の入力に対する関数の出力が変更されている\footnote{\url{https://github.com/yahoo/serialize-javascript/compare/v2.1.0...v2.1.1}}．
-実際の変更内容を図\ref{fig:motivation}に示す．
-図\ref{fig:motivation}上部{\verb|index.js|}はソースコード，下部の{\verb|test/unit/serialize.js|}はテストコードの変更内容である．
-ソースコードの191行目で，190行目の条件に合致する特定の入力に対する関数の返り値が変更されている．この変更に伴って，テストコードの254行目の変更では，テスト対象となる関数とパラメータはそのままで，期待する返り値のみ変更されている．後方互換性の損失に伴わないテストコード変更は，テストコードの実行手順の修正や，可読性向上のためのフォーマッティングなどが考えられる．ライブラリの後方互換性を判断する手段としてライブラリに付属しているテストへの変更を用いることができるが，頻繁に再利用されるライブラリに対して後方互換性を判断できるのかは明らかになっていない．また，テストコードの変更内容には後方互換性の損失に伴う変更と伴わない変更がある．本研究では仮説に基づき，継続的にテストが管理されているライブラリを対象として，ライブラリのテスト変更有無によって後方互換性を判断できるか否かを検証する．さらに，テストコードの変更内容をより詳細に分析することで，後方互換性の損失を正確に検出することを目指す．
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{分析手法}
-\label{sec:analyticalMethod}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-本章では\ref{sec:hypothesis}章の仮説を検証するために，ライブラリバージョンのテストコードに変更が加えられた場合に，当該ライブラリバージョンの適用によってクライアントが影響を受けるか否かを分析する．本分析は2つの手順で構成する．
-図\ref{fig:overview}は，分析手法の概略図を示す．
+%% 3章ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\section{事前分析}
+%% 3-1ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{データセット}
+\subsubsection{対象プロジェクト}
+本論文では，READMEにおける各項目の変更方法，およびREADMEの変更と紐づくファイルを明らかにする2つの分析において，大規模なソフトウェアエコシステムJavaScriptライブラリnpmで公開されるプロジェクトを対象として，次の手順で選定した．
 
-\begin{description}
-\item[手順1] 後方互換性を損失する変更を含むライブラリバージョンの特定
-\item[手順2] ライブラリバージョンが破壊的変更を含むか否かを検証
-\end{description}
 
-本論文では，クライアントがライブラリの新しいバージョンを利用することで，クライアントテストが失敗した場合に，ライブラリの新しいバージョンに破壊的変更が加えられたと判断する．
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.95\linewidth]{IPSJjournal_maekawa_fig/overview.pdf}
-  \caption{分析手法の概略図}
-  \ecaption{hoge}
-  \label{fig:overview}
-\end{figure}
-
-\subsection{手順1：後方互換性を損失する変更を含むライブラリバージョンの特定}
-\label{sec:step1}
-%本分析では，ライブラリのバージョン更新に伴って，テストケースに変更が加えられた場合に，当該ライブラリを使用するクライアントに影響する破壊的変更を含む可能性があると考える．
-%手順1では，ライブラリのバージョン更新におけるテストケースの変更有無を分析する．
-%具体的には，分析対象とするライブラリからテストケースを収集し（\ref{sec:step1-1}項を参照），テストケースの変更内容に応じて破壊的変更を含む変更を加えた可能性のあるライブラリバージョンを特定する（\ref{sec:step1-2}項を参照）．
-
-\subsubsection{テストケースの収集}
-\label{sec:step1-1}
-
-本分析では，ライブラリのバージョン更新に伴って，テストケースに変更が加えられた場合に，当該バージョンには後方互換性を損失する変更を含むと考える．分析対象とするライブラリの連続する2つのバージョンにおいて，古いバージョンを$L(X)$，新しいバージョンを$L(X+1)$とする．本研究では，ライブラリの変更に合わせて変更したテストケースが全て成功しているライブラリバージョンを対象とする．
-
-バージョン$L(X)$と$L(X+1)$のテストファイルからテストケースを抽出する．テストケースの動作はテストケース以外のプログラムに依存している場合があるため，テストファイル中のテストケース以外のソースコードも同時に抽出する．
-本研究ではJavaScript言語を対象とするため，JavaScript向けテストツールJest~\footnote{\url{https://jestjs.io/}}やMocha\footnote{\url{https://mochajs.org/}}で採用している慣習を基に，次の3つの手順で規則でテストファイルの収集とテストケースの抽出を行う．
 
 \begin{enumerate}
-  \item \textbf{テストファイル収集} - ファイルパスに「test」または「spec」を含み，かつファイル名の末尾が{\verb|.js|}または{\verb|.ts|}であるファイルをテストファイルとして収集する．
-  %例えば，{\verb|test.js|}や{\verb|src/index.spec.js|}などをテストファイルと判断する．
-  \item \textbf{テストケース抽出} - テストファイル内に記述されている，関数名が\verb|it|，\verb|test|，\verb|describe|である関数呼び出しをテストケースとして抽出する．
-  \item \textbf{テストケースに影響を与えるソースコード抽出} - 抽出したテストケースをテストファイルから削除し，残った文字列をテストケースに影響を与えるソースコードとして抽出する．
+  \item
+  Witternら\cite{Ikeda_EN_9}と同様の手順で，2013年から2016年にGitHubにリポジトリを作成したプロジェクトをnpmから収集する．
+%  \todo{これ本当？2016年までしか対象としないの？私のデータは2019年か2020年まであると思うけど．．．}
+%→Yes：READMEの最新版が2016ではなく，この期間にnpmで作成されたJavaScriptプロジェクトの選定に用いているだけ．2020とかでない理由は，この手法は2016年にちょうど廃止されてしまったため．
+
+  \item
+  READMEの変更方法を分析するために，GitHubからクローンできたプロジェクトが作成したREADMEの開発履歴を収集する．
+  
+  \item
+  リポジトリのトップページ以外に存在するREADMEは分析対象外とする．
+
+  \item
+  Markdown形式における見出し機能を利用していないREADMEは分析対象外とする．
+
+  \item
+  分析を容易にするため，英語以外の言語（日本語やハングル，キリル文字など）で記述されるREADMEは分析対象外とする．
+
+  \item
+  成熟したプロジェクトのREADMEを対象とするため，最終変更から1年以上経過しているREADMEを対象とする．
+  
 \end{enumerate}
 
-% Listing~\ref{testSample}はテストファイルの例を示す．
-% 抽出規則に従い，2行目から4行目のtest関数をテストケースとして抽出する．
-% その後，テストファイルからテストケースを除いて残った1行目がテストケースに影響を与えるソースコードとなる．
+最終的に，52,292件のプロジェクトのREADMEを分析対象とする．
 
-% \begin{figure}[h]
-%     \begin{lstlisting}[caption={[upper/lower text]%
-%                \begin{tabular}[t]{@{}l@{}}
-%                 test/sample.js \\[1.0\normalbaselineskip]
-%                \end{tabular}},frame={tb},numbers=left,label=testSample,identifierstyle={\small},xleftmargin=6mm]
-% const add = require("./add");
-% test("add arguments", function() {
-%     expect(add(1, 2)).toBe(3);
-% })
-% \end{lstlisting}
-% \end{figure}
 
-\subsubsection{テストケースの変更の分類と後方互換性の判断}
-\label{sec:step1-2}
+\subsubsection{READMEからの項目と説明文の抽出}
+READMEには本文を要約した見出しが文章の前に記述される．開発者はMarkdown形式で「\#」と共に見出しを記述する．本論文では，\#1つ（h1：大見出し）および\#2つ（h2：中見出し）を見出しとして抽出する．また本論文では，Ikedaら\cite{Ikeda_README}が分類した20項目を使用し，抽出した見出しを分類する．次に，見出しから次の見出しまでに記述される文章を説明文として抽出する．最終的に，167,782件の項目と説明文のペアをデータセットとする．
 
-本手法ではテストケースの変更を，従来研究\todo{[引用]}と同様に変更ありが3種類（追加，削除，修正）と変更なしの合計4種類に分類し，ライブラリバージョン間の後方互換性を判断する．
-% テストケースの変更内容を分類するために，テストケースとして抽出した関数について，第一引数はテストケースを一意に識別するラベル（Listing~\ref{testSample}では，{\verb|"add arguments"|}）とし，第二引数をテストケースの内容を示すボディ（Listing~\ref{testSample}では，{\verb|function() { ... }|}）とする．
-% テストケースのラベルとボディを用いて，$L(X)$から$L(X+1)$へのバージョン更新におけるテストケースの変更を4種類に分類する．
 
-% \begin{itemize}
-% \item \textbf{変更あり（追加）} $L(X)$のテストケースに存在しなかったラベルが，$L(X+1)$に存在する．
-% \item \textbf{変更あり（削除）} $L(X)$のテストケースに存在したラベルが，$L(X+1)$に存在しない．
-% \item \textbf{変更あり（修正）} $L(X)$のテストケースに存在したラベルが$L(X+1)$にも存在するが，ボディが異なる．
-% \item \textbf{変更なし} $L(X)$のテストケースに存在したラベルが$L(X+1)$にも存在し，ボディが同一である．
-% \end{itemize}
 
-テストファイル中のテストケース以外の部分はテストケースに影響を与えるソースコードとして抽出する．テストケースに影響を与えるソースコードの変更はライブラリの機能全体の振る舞いの変更と考え，テスト全体として変更ありと考える．
+%% 3-2ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{事前分析の概要}
+READMEの変更には，ソースコードの変更とともにREADMEを変更する場合と，READMEのリファクタリングを行う場合の2種類が考えられる．この内，READMEのリファクタリングを目的とした変更は，ソースコードの変更とは無関係で，本論文で提案する，READMEの変更とその他のファイルの変更の紐付け手法の性能を低下させる要因になると考える．事前分析では，このようなソースコードの変更とは無関係なREADMEの変更が行われる可能性のある項目を確認する．
 
-本研究では，変更（削除または修正）を含むテストケースを1つ以上含む，またはテストケースに影響を与えるソースコードに変更（削除または修正）を含む場合，新しいバージョンに後方互換性の損失を含むと予測する．
 
-\subsection{手順2：ライブラリ更新が破壊的変更を含むか否かを検証}
-\label{sec:step2}
+従来研究\cite{Ikeda_README}は，READMEの見出しを20項目に分類し，多くのプロジェクトで共通して記述する項目を明らかにしているが，各項目と説明文の内容が一致しているか否かは定量的に明らかにしていない．そこで，各項目と説明文の内容が一致している（項目と説明文に一貫性がある）場合，開発者はソースコードの変更とともに，その変更内容に関する記述を，READMEの項目ごとに変更（追加，削除）すると考える．一方で，各項目と説明文の内容が一致しない（項目と説明文に一貫性がない）場合は，READMEのリファクタリングを目的に，ソースコードの変更とは無関係に，説明文を異なる項目へ移動する修正を加えると考える．ソースコードの変更とは独立したREADME単体での変更が頻繁に行われる場合，ソースコードの変更との依存関係を考慮できないため，その変更意図や目的を正確に理解することが困難になる．各項目と説明文の内容が一致しているか否かを明らかにするために，事前分析ではREADMEの各項目に対する説明文の一貫性を調査する．具体的には，3.1節で抽出したプロジェクトのREADMEを対象に，READMEの説明文から20項目を分類するための多クラス分類モデルを構築することで，各項目の説明文がプロジェクト間で共通しているのかを明らかにする．
 
-本分析では，ライブラリのバージョン更新に伴いライブラリに付属するテストに変更が加えられた場合に，当該ライブラリを使用する任意のクライアント$C$のテストが一つ以上失敗するか否かによって，ライブラリ更新が破壊的変更を含むか否かを検証する．
 
-% $C$の依存ライブラリの連続する2つのバージョン$L(X)$，$L(X+1)$をそれぞれ使用したときの$C$のテスト結果と，テスト結果に基づく破壊的変更の有無の予測結果は，表\ref{fig:valid}に示す4つに分類する．
 
+%従来研究\cite{Ikeda_README}は，READMEの見出しを20項目に分類し，多くのプロジェクトで共通して記述する項目を明らかにしているが，各項目の説明文には同一の内容が記述されているか否かは定量的に明らかにしていない．各項目の説明文に同一の内容が記述される（項目と説明文に一貫性がある）場合，開発者はREADMEの項目単位で個別に修正（追加，削除）することが示唆される．一方で，同一の内容が異なる項目に記述されている（項目と説明文に一貫性がない）場合，開発者は説明文を異なる項目へ移動する修正を加えることも示唆される．説明文をREADMEの中で移動する場合，README単体で修正されるため，ソースコードの変更とソフトウェアの変更に伴う変更に限らないことがわかる．ソースコードの変更とは独立したREADME単体での変更が頻繁に行われる場合，ソースコードの変更やソフトウェアの変更との依存関係を考慮できないため，その変更意図や目的を正確に理解することが困難になる．各項目の説明文に同一の内容が記述されているか否かを明らかにするために，事前分析ではREADMEの各項目に対する説明文の一貫性を調査する．具体的には，3.1節で抽出したプロジェクトのREADMEを対象に，READMEの説明文から20項目を分類するための多クラス分類モデルを構築することで，各項目の説明文がプロジェクト間で共通しているのかを明らかにする．
+
+
+
+
+%% 3-3ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{事前分析の手法}
+
+%% 3-3-1ーーーーーーーーーーー
+\subsubsection{分析手順}
+同じ内容が異なる項目の説明文に記述されているか否か，項目と説明文の一貫性を確認するために，READMEの説明文から20項目を分類する多クラス分類モデルを構築する．READMEの説明文を分類モデルの説明変数として使用するために，説明文に対して，記号などの削除，分かち書き，ストップワードの除去，表記の統一，ベクトル化の順でデータを整形する．目的変数はREADMEに記述される見出しを分類した20項目を使用する．分類結果の評価は，再現率と適合率を用いて評価する．
+
+%% 3-3-2ーーーーーーーーーーー
+\subsubsection{説明変数のデータ整形}
+本節では，READMEの説明文に記述される単語を説明変数として使用し，分類モデルに入力するための前処理を行う．
+
+\begin{enumerate}
+  \item{\textbf{記号などの除去：}}
+  READMEはMarkdown形式で記述されるため，プログラムや記号などが含まれる．本論文では，自然言語で記述される単語を対象とするため，説明文に含まれるURLの削除，プログラムや記号の除去を正規表現を用いて行う．
+  \item{\textbf{形態素解析：}}
+  説明文を単語ごとに分解し，各単語の品詞を判別する．文章から，品詞ごとに分けてそれぞれを1つの単語とする．
+  \item{\textbf{ストップワード除去：}}  
+  Pythonのnltk.corpus.stopwordsに含まれる単語（前置詞や接続詞，代名詞，冠詞，助動詞）を除去する．
+  \item{\textbf{レンマ化：}}
+  形態素解析で判明した品詞をもとに，語幹の統一を行う．現在進行形や複数形，過去形の単語を標準形に統一することである．この処理には，Pythonのnltk.stem.wordnetのlemmatizeモジュールを利用して語幹の統一を行う．また，単語の大文字は全て小文字表記に統一する．
+  \item{\textbf{ベクトル化（Bag of Words）：}}
+  予測モデル構築において，READMEの説明文に記述される単語を説明変数として扱うためにベクトル化を行う．ベクトル化には，PythonモジュールであるgensimのBag of Words~\footnote[5]{https://www.tutorialspoint.com/gensim/gensim\_creating\_a\_bag\_of\_words\_corpus.html}を使用する．Bag of Wordsは自然言語で記述された文書に含まれる単語を出現回数に基づきベクトル化する手法である．
+\end{enumerate}
+
+%% 3-3-3ーーーーーーーーーーー
+\subsubsection{READMEの項目を分類するモデルの構築}
+分類モデル構築のために，READMEの20項目を目的変数として計測する．3.3.2でデータ整形を行ったREADMEの説明文を説明変数とし，READMEの項目に分類するモデルを構築する．データセットの8割を学習用データとしてモデルを構築し，残り2割をテスト用データとする．
+
+本論文では，分類モデルの構築に機械学習アルゴリズムであるランダムフォレスト\cite{random_forest}を用いる．ランダムフォレストは，学習データから複数の決定木を作成するアンサンブル学習法である．ランダムフォレストの利点としては，学習データの標準化を必要としない点，過学習を防ぎ汎化性能が高い点，予測精度に説明変数がどの程度寄与したかを示す特徴量の重要度を算出できる点などが挙げられる．ランダムフォレストの実装には，Pythonのsklearn.ensemble.RandomForestClassifier~\footnote[6]{https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html}を用いる．ランダムフォレストの木の数はデフォルト値である100，各決定木作成に使用する説明変数の数はすべての説明変数の数の平方根を使用する．
+
+
+%% 3-3-4ーーーーーーーーーーー
+\subsubsection{評価方法}
+% モデルの分類結果から，項目の分類結果と実際の項目を合わせた表3.1の混同行列を作成する．表3.1はTP，FP，TN，FNの4つで構成される．
+
+% %-----------------------
 % \begin{table}[t]
-%   \centering
-%   \caption{ライブラリバージョン$L(X)$または$L(X+1)$を使用したクライアント$C$のテスト結果に基づく破壊的変更の有無}
-%   \ecaption{hoge}
-%   \label{fig:valid}
-%   \scalebox{0.8}{
-%   \begin{tabular}{p{2.3cm}|p{2.6cm}|p{2cm}}\hline
-%     $L(X)$を使用した$C$のテスト結果 & $L(X+1)$を使用した$C$のテスト結果 & 破壊的変更 \\ \hline
-%     成功 & 失敗 & あり \\ \hline
-%     成功 & 成功 & 不明 \\ \hline
-%     失敗 & 失敗 & 不明 \\ \hline
-%     失敗 & 成功 & 不明 \\ \hline
-%   \end{tabular}
-%   }
-% \end{table}
-
-$L(X)$を使用した$C$のテストが成功し，$L(X+1)$を使用した$C$のテストが失敗した場合，ライブラリの変更のみによって$C$のエラーが引き起こされたと判断でき，$L(X)$から$L(X+1)$へのライブラリ更新には破壊的変更が含まれると予測する．
-一方で，$L(X)$と$L(X+1)$の両方で$C$のテストが成功する場合であっても，ライブラリの変更に破壊的変更が含まれないとは限らない．また，$L(X)$を使用した$C$のテストが失敗した場合，破壊的変更有無は不明となるため分析しない．手順1と手順2を分析対象とするライブラリのバージョン更新に適用し，結果を図~\ref{fig:overview}中の混同行列の4つに分類する．
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{手法1: テストコード変更有無に基づく後方互換性損失の検出}
-\label{sec:prepare}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% 分析対象とするライブラリバージョンと，後方互換性を判断するためのクライアントテストの実行結果を収集する．
-
-\subsection{分析対象ライブラリの決定}
-本研究ではMujahidらが公開するデータセット\cite{mujahid}を使用する．データセットには，GitHubリポジトリが記載されていることと，依存ライブラリを記述するファイル（{\verb|package.json|}）の変更履歴が2回以上あることを条件に，npmから収集した290,417件のJavaScriptライブラリが含まれている．
-本研究ではこのデータセットから，3つの条件を満たす238件のライブラリを対象とする．
-
-\begin{itemize}
-\item ライブラリがテストケースに加えた変更を利用して後方互換性を判断する（\ref{sec:step1}項を参照）ため，テストコードが公開されている．
-\item ライブラリの人気度合いを示すnpmスコア~\footnote{\url{https://npms.io/}}が上位500位以内であること．
-\item テストを継続的に管理しているライブラリを対象とするため，各バージョンがリリースされた変更のコミットステータス\footnote{\url{https://docs.github.com/en/rest/reference/repos#statuses}}におて，テスト実行時の成功率が100\%であること．
-\end{itemize}
-
-%ライブラリが持つGitHubリポジトリの各変更には，コミットステータスと呼ばれる，テストの実行結果を含むデータが紐付けられている．
-%例として，serialize-javascriptは変更履歴\footnote{\url{https://github.com/yahoo/serialize-javascript/commits/2b4f837}}に登録されているコミットステータスを確認できる．%図\ref{fig:commitStatus}に示す．
-%serialize-javascriptの2022年1月19日の変更では，依存ライブラリのバージョンが変更されている．
-%この変更が行われた際に，同時にテストが実行され，実行結果がコミットステータスに登録されている．
-%登録されている情報からテストはいずれも成功していると分かる．
-%コミットステータスを使用することで，分析のためにテストを再度実行することなく，既存のテスト実行結果を利用する．
-
-%\begin{figure}
 %  \centering
-%  \includegraphics[width=0.95\linewidth]{fig/commit-status.png}
-%  \caption{serialize-javascriptのGitHubリポジトリに登録されているコミットステータス}
-%  \label{fig:commitStatus}
-%\end{figure}
-
-
-\subsection{分析対象のライブラリバージョン別にクライアントテスト実行結果を収集}
-\label{sec:experiment}
-ライブラリバージョンの後方互換性を判断した後，後方互換性を検証するためにクライアントテスト実行結果を利用する（\ref{sec:step1-2}項を参照）ため，分析対象とするライブラリバージョン別にクライアントテストの実行結果を収集する．
-
-分析対象とする238件のライブラリと，各ライブラリのいずれかのバージョンに依存するクライアントとの組み合わせをMujahidらのデータセットから抽出した．
-%抽出結果について，各ライブラリごとのクライアント数を図\ref{fig:dependencies}に示す．横軸はクライアント数ごとに並べ替えた各ライブラリ，縦軸は各ライブラリのクライアント数を示す．
-238件のライブラリには平均93.6件，中央値36件のクライアントがあり，ライブラリバージョンとクライアントの組み合わせは22,271組を確認した．
-
-クライアントが各ライブラリバージョンのテスト実行結果は，2つの手順を繰り返して収集する．図\ref{fig:experimentExample}は，クライアント$C$とライブラリ$L$のバージョン$X$との組を使用し，手順を繰り返す例を示す．
-\begin{enumerate}
-  \item クライアントテストを実行する．テストが失敗した場合は手順を終了する．
-  \item ライブラリのバージョンを一つ新しいものに更新し，(1)に戻る．新しいバージョンが無ければ手順を終了する．
-\end{enumerate}
-例では，手順1と手順2を2回繰り返した後，クライアントテスト実行が失敗することで終了し，最終的にクライアントテスト結果を3件収集する．3件のテスト結果において，$L(X+1)$を使用して成功した$C$のテストが$L(X+2)$使用時に失敗しているため，$L(X+2)$にクライアントのテスト結果を変化させる破壊的な変更が含まれていたと予測する．一方で，$L(X)$を使用して成功していた$C$のテストは，$L(X+2)$使用時にも成功しているため，$L(X+1)$の後方互換性は不明と考える．
-
-
-
-
-
-%\begin{figure}
-%  \centering
-%  \includegraphics[width=0.6\linewidth]{IPSJjournal_maekawa_fig/dependencies.pdf}
-%  \caption{分析対象ライブラリ(238件)ごとのクライアント数の分布（1≦n≦238）}
-%  \label{fig:dependencies}
-%\end{figure}
-
-%---------------------
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=1\linewidth]{IPSJjournal_maekawa_fig/experiment-example1.pdf}
-  \caption{クライアントテスト実行結果収集の例}
-  \label{fig:experimentExample}
-\end{figure}
-%---------------------
-
-クライアントテストが失敗したライブラリ以降にリリースされたバージョンは，同じクライアントテストで成功することが見込めないため分析対象としない．
-%上記手順によって71,342件のクライアントテストを実行し，結果を収集した．
-
-\subsection{テスト結果に基づいて分析対象ライブラリバージョンを決定}
-
-\ref{sec:experiment}項で収集した結果に基づいて，後方互換性を判断するライブラリバージョンを決定し，後方互換性を検証するための各クライアントテストの結果を次の3つの手順で集計する．
-\begin{enumerate}
-  \item \ref{sec:experiment}項で，最終的にテスト結果を1件しか収集できず，$L(X)$と$L(X+1)$の組ができないものを除く．
-  \item 全てのクライアントテスト結果について，$L(X)$と$L(X+1)$，$L(X+1)$と$L(X+2)$のようにバージョン更新ごとの組を作る．
-  \item 異なるクライアントが同じライブラリバージョンの組を使用した場合はクライアントテスト実行結果を統合する．
-\end{enumerate}
-集計の結果，ライブラリバージョンとクライアントの組み合わせ2,111組を分析対象とする．
-
-\subsection{分析結果}
-
-% \subsection{概要}
-% 本章では，後方互換性の損失を含むライブラリ更新に伴うテストコードの変更内容を分析し，後方互換性の損失を検出する手掛かりとなるテストコードの変更内容を明らかにする．具体的には，各ライブラリバージョンに対して，後方互換性の有無とテストコードの変更内容を目視で調査する．
-
-表\ref{fig:result}ライブラリバージョンとクライアントの組み合わせ2,111組に対して\ref{sec:analyticalMethod}章で述べた分析手法を適用した結果を示す．
-本手法により，後方互換性が損失しているライブラリバージョン223件中140件（約63\%）を正しく予測できた．223件中83件（約37\%）はライブラリ更新時のテスト変更漏れなどが考えられる．一方で，後方互換性なしと予測したライブラリバージョン905件中140件（約15\%）のみを正しく予測できた．905件中765件（約85\%）が不明に分類された原因として，クライアントが後方互換性が損失している関数を使用していない，クライアントのテストケースが不十分であることが示唆される．
-
-本手法は，ライブラリバージョンのテストケースの変更方法のみに着目し，後方互換性の損失の予測を試みているが，テストケースの変更内容によってはリファクタリングのような後方互換性の損失に関係しない変更も存在すると考える．\ref{sec:contentAnalysis}章では，後方互換性の損失に影響するテストケースの変更内容を調査する．
-
-%実際にテストを調査した内容については，\ref{sec:discussion}章で言及する．
-
-% \begin{table}[t]
-%   \centering
-%   \caption{分析結果}
-%   \label{fig:result}
+%  \caption{モデルの分類結果と正解の比較}
+%  \ecaption{hoge}
+% \label{tab:result}
 %   \scalebox{1.0}{
-%   \begin{tabular}{l|r|r|r}\hline\hline
-%      & \multicolumn{2}{c|}{テスト変更}  & \multirow{2}{*}{合計} \\ \cline{2-3}
-%      & あり & なし &  \\ \hline
-%     クライアントテストが一つ以上失敗 & 183 & 85 & 268 \\ \hline
-%     クライアントテストが全て成功 & 856 & 987 & 1,843 \\ \hline
-%     合計 & 1,039 & 1,072 & 2,111 \\ \hline
+%   \begin{tabular}{c|c|c} \hline
+%      & \textbf{正しい項目と予測} & \textbf{別の項目と予測} \\ \hline
+%     \textbf{正しい項目} & TP & FN \\ \hline
+%     \textbf{別の項目} & FP & TN \\ \hline
 %   \end{tabular}
-%   }
-%   %\vspace{-5mm}
+%     \label{tab:result}
+%    }
 % \end{table}
+% %-----------------------
 
-\begin{table}[t]
-  \centering
-  \caption{分析結果}
-  \label{fig:result}
-  \scalebox{1.0}{
-  \begin{tabular}{l|r|r|r}\hline\hline
-     & \multicolumn{2}{c|}{後方互換性}  & \multirow{2}{*}{合計} \\ \cline{2-3}
-     & なし & 不明 &  \\ \hline
-    後方互換性なしと予測 & 140 & 765 & 905 \\ \hline
-    後方互換性ありと予測 & 83 & 967 & 1,050 \\ \hline
-    合計 & 223 & 1,732 & 1,955 \\ \hline
-  \end{tabular}
-  }
-  \vspace{-5mm}
-\end{table}
 
-% \subsection{分析結果}\label{seq:rq1-result}
+% \begin{itemize}
+%   \item TP （True Positive） : 対象の項目を，正しい項目に分類
+%   \item FP （False Positive） : 別の項目を，対象の項目であると誤って分類
+%   \item TN （True Negative） : 別の項目を，別の項目であると正しく分類
+%   \item FN （False Negative） : 対象の項目を，別の項目であると誤って分類
+% \end{itemize}
 
-% \subsubsection{後方互換性の有無の判定}\label{subsec:kouhougokanseinohantei}
-% 後方互換性の有無の判定には，従来手法と同様，Mujahidらの手法を使用する．Mujahidらは，ライブラリの後方互換性の損失をクライアントテストを実行することで検出する手法を提案した\cite{mujahid}.後方互換性を損失する変更を加えられたライブラリバージョンでは，その影響を受けるクライアントテストの結果が更新前後で成功から失敗に変化することを手法の根拠としている．本分析も同様に，対象ライブラリのクライアントに対し，次の手順で後方互換性の有無を判定する．
 
-% \begin{enumerate}
-%   \item クライアントテストを実行する．テストが失敗した場合は分析対象外とする．
-%   \item ライブラリのバージョンを新しいものに更新し，クライアントテストを実行する．クライアントテストが失敗した場合，後方互換性を損失したと判定する．
-% \end{enumerate}
+評価指標には，一般的に機械学習モデルの評価に用いられる適合率，再現率，F1値を用いる．
+% それぞれの評価指標を以下に示す．
 
-%%%%%%%%%%%%%%%%%%%%%%
-\section{テストコード変更内容の分析}\label{sec:contentAnalysis}
-%%%%%%%%%%%%%%%%%%%%%%
+% 適合率とは，項目を分類した結果が，対象の項目であった割合を示す．
+% \begin{equation}
+% \label{calculate_Precision}
+%  適合率 = \frac{TP}{TP + FP}
+% \end{equation}
 
-本研究では，後方互換性の損失を検出する手掛かりとなるテストコードの変更内容を明らかにするために，後方互換性の有無とテストコードの変更内容を著者らが目視で調査する．分析対象とするテストコードの変更内容として，本研究では後方互換性の損失に関係することを示唆するテストコードの構成要素5項目，変更内容11種類，および後方互換性の損失に関係しないと示唆する変更内容1種類（リファクタリング），の合計12種類の変更内容を分析する．
+% 再現率とは，対象の項目のうち，分類モデルによって正しく分類された割合を示す.
+% \begin{equation}
+% \label{calculate_Recall}
+% 再現率 = \frac{TP}{TP + FN}
+% \end{equation}
+
+% 適合率と再現率はトレードオフの関係であるため，再現率と適合率の調和平均であり，総合的な評価の際に利用されるF1値でも評価を行う．F1値は0から1の間の値で示され，値が高いほどモデルの評価も高くなる．
+% \begin{equation}
+% \label{calculate_F}
+%  F値 = \frac{2 * 再現率 * 適合率}{再現率 + 適合率}
+% \end{equation}
+
+% 以上の評価指標を基に，適合率と再現率の解釈について述べる．
+
+
+
+
+%\begin{itemize}
+%  \item 適合率，再現率ともに高い項目: 特定の内容が特定の項目に記述され，項目と説明文に一貫性がある
+%  \item 適合率が高く，再現率が低い項目 : 項目と説明文に一貫性はあるが，多様な内容が特定の項目に記述される
+%  \item 再現率が高く，適合率が低い項目 : 特定の内容が異なる項目にも記述され，項目と説明文に一貫性がない
+%\end{itemize}
+
+%\begin{itemize}
+%  \item 適合率，再現率ともに高い項目: 説明文がプロジェクト間で共通しており，項目と説明文に一貫性がある．
+%  \item 適合率が高く，再現率が低い項目 : 項目と説明文に一貫性はあるが，多様な内容が特定の項目に記述され，説明文がプロジェクト間で共通しない
+%  \item 適合率が低く，再現率が高い項目 : 説明文がプロジェクト間で共通するが，特定の内容が異なる項目にも記述され，項目と説明文に一貫性がない
+%\end{itemize}
+
+%P↑　→　項目Aに記述される固有の内容はあるが，それが複数ある．　→一貫性はある（各項目の内容が記述される，種類がたくさんなだけ）
+%R↑　→　項目Aに記述される内容が，他の項目に登場する．→一貫性はある（各項目の内容が記述される，他にも出てくるだけ）
+
+%\begin{itemize}
+%  \item 適合率，再現率ともに高い項目: 説明文がプロジェクト間で共通しており，項目と説明文に一貫性がある．
+%  \item 適合率が高く，再現率が低い項目 : 項目と説明文に一貫性はあるが，多様な内容が特定の項目に記述される．
+%  \item 適合率が低く，再現率が高い項目 : 項目と説明文に一貫性はあるが，特定の内容が異なる項目にも記述される．
+%\end{itemize}
+
+%\begin{itemize}
+%  \item 適合率，再現率ともに高い項目: 説明文がプロジェクト間で共通しており，項目と説明文に一貫性がある．
+%  \item 適合率が高く，再現率が低い項目 : \textcolor{red}{項目と説明文に一貫性はあるが，多様な内容が項目に記述されるため，説明文がプロジェクト間で共通しない．}
+%  \item 適合率が低く，再現率が高い項目 : \textcolor{red}{説明文がプロジェクト間で共通しているが，項目の内容が異なる項目にも記述されており，ソースコードの変更と無関係なREADME単体での変更が行われる可能性がある．．}
+%\end{itemize}
+
 
 \begin{itemize}
-  \setlength{\itemsep}{0cm}
-  \item テストスイート（追加，削除）
-  \item テストケース（追加，削除）
-  \item アサーション（追加，削除，入力値の変更，期待値の変更)
-  \item テストの前提条件の変更
-  \item テストフィクスチャの変更
+  \item 適合率： 適合率は，項目を分類した結果が，対象の項目であった割合を示す．適合率が高い場合，項目と説明文に一貫性があり，ソースコードの変更とともに，項目ごとに説明文を変更する．適合率が低い場合，項目の内容が異なる項目にも記述されており，ソースコードの変更と無関係なREADME単体での変更が行われる可能性がある
+  \item 再現率： 対象の項目のうち，分類モデルによって正しく分類された割合を示す.再現率が高い場合，説明文がプロジェクト間で共通している．再現率が低い場合，プロジェクトの特性によって異なり，多様な内容が項目に記述されるため，一般的な結論を導くことが難しい．
 \end{itemize}
 
 
-% テストコード変更内容を目視分類するために，テストコードの構成要素をまとめる．本研究では，プログラムのテストの中でも単体テストを対象とする．単体テストとは，関数やクラスなどのプログラムを構成する単位(ユニット)が開発者の期待通りに動作するかを検証するテスト手法である．単体テストを実施する際は，テスト対象ユニットに対応するテストスイートを用意する必要がある．テストスイートとは，テストの目的や条件が似ているテストケースの集合を指す．テストケースは，テスト項目の最小単位であり，テスト対象への入力と期待される結果(期待値)の組み合わせで構成する．入力値と期待値を受け取ってプログラムが正しく動作しているか検証する仕組みをアサーションと呼ぶ．
 
-% \begin{figure}[t]
-% \begin{lstlisting}[caption=Calculator.js, label=Calculator.js]
-% class Calculator {
-%   add(a, b) {
-%     return a + b;
-%   }
-% }
-% \end{lstlisting}
-% \end{figure}
 
-% \begin{figure}[t]
-% \begin{lstlisting}[caption=Calculator.test.js, label=Calculator.test.js]
-% import { Calculator } from './Calculator';
 
-% describe('Calculator', () => {
-%   let calculator;
+%% 3-4ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{事前分析の結果}
+図3.1はモデルが分類した各項目の適合率と再現率を表す．横軸は適合率，縦軸は再現率を表し，各点がそれぞれの項目を表す．また，表3.2は各項目の適合率，再現率，F1値，データ数を示す．結果から，項目「ライセンス（適合率=0.89，再現率=0.99，F1値=0.94）」や「貢献方法（適合率=0.89，再現率=0.88，F1値=0.89）」，「テスト（適合率=0.87，再現率=0.76，F1値=0.81）」は他の項目と比べ，適合率，再現率，F1値が高く，これらの項目の説明文はプロジェクト間で共通しており，項目と説明文に一貫性があることが示唆される．
 
-%   beforeEach(() => {
-%     calculator = new Calculator();
-%   });
+また，項目「使用方法」を除く多くの項目は適合率が高く，項目と説明文に一貫性があり，ソースコードの変更とともに，項目ごとに説明文を変更することが考えられる．
 
-%   test('should add two positive numbers', () => {
-%     if (calculator) {
-%       expect(calculator.add(1, 1)).toBe(2);
-%     }
-%   });
-% });
-% \end{lstlisting}
-% \end{figure}
+適合率が低く再現率が高い項目「使用方法」の説明文に記述された内容は，他の項目の説明文にも記述されていると考えられる．表3.3は，図3.1および表3.2において，どの項目と誤分類したかを示す．分析の結果，API（1,671件）や概要（1,007件），オプション（976件）などの項目は，項目「使用方法」であると誤分類されており，項目「使用方法」の説明文には類似する内容（例：使用するAPIの説明，オプションの設定方法など）が記述されていると考えられる．項目「使用方法」では，異なる項目（API，概要，オプション）への説明文の内容の移動を行うことが考えられる．
 
-% Program~\ref{Calculator.js}，Program~\ref{Calculator.test.js}は，JavaScriptにおけるテストコードの例を示す．Program~\ref{Calculator.js}は，テスト対象となるクラス{\verb|Calculator|}が定義されている．このクラスに含まれるメソッド{\verb|add()|}は，2つの引数を受け取り足し合わせた値を返す．Program~\ref{Calculator.test.js}は,{\verb|Calculator|}クラスを単体テストによって検証するファイルで，JavaScript向けテストフレームワークJest\footnote{\url{https://jestjs.io/}}を使用して記述している．
 
-% Program~\ref{Calculator.test.js}は，3行目の{\verb|describe|}関数でテストスイートを宣言し，10行目の{\verb|test|}関数により1つのテストケースを定義している．テストスイートやテストケースは，何を検証するかが記述されるラベルと，動作を検証するテスト用関数を引数に取る．6行目から7行目の{\verb|beforeEach|}関数で，テストフィクスチャと呼ばれる，テストデータの初期化などのテストの事前条件を定義する．例では，{\verb|Calculator|}クラスをインスタンス化している．10行目から12行目で定義されるテストケースは，11行目で{\verb|if|}文によりテストの前提条件を記述し，12行目のアサーションで{\verb|Calculator.add()|}に対し1と1を入力したときの動作を検証している．この場合，期待する結果は2であるため，{\verb|toBe|}節で結果が2となる．以上より，本研究ではJavaScript言語のテストコードの構成要素として次の5件を定義する．
+事前分析の結果から，項目「ライセンス」や「貢献方法」などの多くの項目は，項目と説明文に一貫性があり，開発者はソースコードの変更とともに，項目ごとに説明文の内容の追加や削除を行うと考えられる．項目「使用方法」の説明文に記述された内容は，他の項目の説明文にも記述されている可能性があるため，項目「使用方法」は，説明文の内容の追加や削除だけでなく，異なる項目への説明文の内容の移動を行うことが考えられる．異なる項目への説明文の移動を行うのであれば，READMEはソースコードの変更に伴う変更だけでなく，README単体で変更を行う可能性がある．ソースコードの変更とは独立したREADME単体での変更が頻繁に行われる場合，ソースコードの変更との依存関係を考慮できないため，その変更意図や目的を正確に理解することが困難になる．また，本論文で提案する，READMEの変更とその他のファイルの変更の紐付け手法の性能を低下させる要因になると考える．分析1では，このようなソースコードの変更とは無関係なREADMEの変更が行われているか，また，項目ごとに説明文の内容の追加や削除が行われているのかを明らかにする．分析2では，本論文で提案するREADMEとその他のファイルの紐付け手法によって，READMEの変更とその他のファイルの変更を機械的に紐付けることができるのかを明らかにする．
 
-% \begin{itemize}
-%   \setlength{\itemsep}{0cm}
-%   \item テストスイート
-%   \item テストケース
-%   \item アサーション(入力値，期待値を含む)
-%   \item 前提条件
-%   \item テストフィクスチャ
-% \end{itemize}
 
-% テストコードの変更内容として，テストコードの構成要素それぞれを追加，変更，削除する変更内容が考えられる．アサーションの期待値，入力値はテストコードの最小単位であるため変更のみ考慮し，前提条件については追加，削除も前提条件が変更されたと考えられるため変更のみを考慮する．テストスイート・テストケースのラベルの変更，テストフレームワークの変更，可読性向上のためのフォーマッティングなどテストコードの振る舞いに関わらない変更については，リファクタリングとする．以上を踏まえ，本研究ではテストコードの変更内容として次の11件を考慮する．
 
-% \begin{itemize}
-%   \setlength{\itemsep}{0cm}
-%   \item テストスイートの追加
-%   \item テストスイートの削除
-%   \item テストケースの追加
-%   \item テストケースの削除
-%   \item アサーションの追加
-%   \item アサーションの削除
-%   \item アサーションの入力値の変更
-%   \item アサーションの期待値の変更
-%   \item テストの前提条件の変更
-%   \item テストフィクスチャの変更
-%   \item リファクタリング
-% \end{itemize}
+%分析1では，READMEの項目単位での変更（追加，削除）や異なる項目への説明文の移動が行われているのかを明らかにする．分析2では，README変更がソースコードの変更と紐づいているのか，機械的にREADME変更とソースコードの変更を紐付けることができるのかを明らかにする．
 
-\subsection{データセット}\label{rq1:datasets}
 
-\ref{sec:prepare}章で分析対象とした1,955件のライブラリバージョンからライブラリテストに変更があるライブラリバージョン1,027件を抽出し，ランダムサンプリング（信頼区間95\%，信頼度5\%）した280件を目視調査することでテスト変更内容ごとの後方互換性が維持，または損失したバージョン数を明らかにする．
 
-% データセットとして，従来研究\cite{matsuda}で収集されたライブラリバージョン群を使用する．従来研究では，ライブラリの人気度を示すnpmスコア~\footnote{\url{https://npms.io}}が上位500件以内で，各バージョンのコミットにおけるテスト実行時の成功率が100％であることを条件にnpm\footnote{\url{https://www.npmjs.com/}}から2,111件のライブラリバージョンを収集した．本調査では，このデータセットから，ライブラリテストに変更があるライブラリバージョン1,027件を抽出し，95％の信頼区間でサンプリングした280件を対象とする．分析対象とするライブラリと，各ライブラリのいずれかに依存するクライアントとの組み合わせは，Mujahidらのデータセットから抽出した．
 
-%--------------------
+
+%-----------------------
 \begin{figure}[t]
-  \centering
-  \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/barh-test-pattern.pdf}
-  \caption{テスト変更内容ごとの実際の後方互換性\todo{フォントサイズ大きく．エクセル？}}
-  \ecaption{hogehoge}
-  \label{fig:test_pattern}
+ 	\centering
+		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/maluti_PR.pdf}
+	\caption{事前分析の結果}
+	\label{fig:oss_development}
 \end{figure}
-%--------------------
-
-\subsection{分析結果}
-
-図\ref{fig:test_pattern}は，テスト変更内容ごとの後方互換性の有無を横棒積み上げ棒グラフで示す．横軸は各テストコード変更のライブラリバージョン数，縦軸は各ライブラリバージョンにおけるテストコード変更内容である．破線より上は，従来手法で後方互換性を維持すると判定するテスト変更内容であり，破線より下は従来手法で後方互換性を損失すると判定するテスト変更内容である．
-
-後方互換性の損失しているライブラリバージョンにおいてテスト変更内容は，テストコード（テストスイート，テストケース）の追加，テストコード（テストスイート，テストケース）の削除，テストコードの変更（アサーションの追加，アサーションの入力値/期待値の変更，テストフィクスチャの変更）が多いことがわかった．これらについては，\todo{X節からX節}においてそれぞれ事例を挙げながら説明する．これら以外に，リファクタリングが後方互換性を損失するライブラリバージョンも多いが，後方互換性を損失するライブラリ更新に伴って，無関係にテストがリファクタリングされることがあったため，従来手法で誤検出となる主な原因ではなかった．
-
-% \subsubsection{従来手法で後方互換性を維持すると判定するテスト変更内容}
-% 従来手法で後方互換性を維持すると判定するテスト変更内容は，テストスイートの追加，テストケースの追加である．これらは，後方互換性を維持するライブラリ更新に伴う場合が多いため，従来手法で誤検出となる主な原因ではない．ただし，後方互換性を損失するライブラリ更新に伴ってテストスイートやテストケースを追加する場合もある．具体的な例は\ref{subsec:add-test}項で述べる．
-
-% \subsubsection{従来手法で後方互換性を損失すると判定するテスト変更内容}
-% 従来手法で後方互換性を損失すると判定するテスト変更内容は，テストスイートの削除，テストケースの削除，アサーションの追加，アサーションの削除，アサーションの入力値の変更，アサーションの期待値の変更，前提条件の変更，テストフィクスチャの変更，リファクタリングである．このうち，リファクタリングは後方互換性を維持するライブラリ更新に伴う場合が多く，件数も多いため従来手法で誤検出となる主な原因であるとわかる．一方，リファクタリングが後方互換性を損失するライブラリ更新に伴う場合もある．これは，後方互換性を損失するライブラリ更新に伴って，無関係にテストがリファクタリングされることがあることを示す．テストスイートの削除，テストケースの削除は，後方互換性を損失するライブラリ更新に伴う場合が多いため，従来手法で誤検出となる主な原因ではない．ただし，後方互換性を維持するライブラリ更新に伴ってテストスイートやテストケースを削除する場合もある．具体的な例は\ref{subsec:delete-test}項で述べる．アサーションの追加，アサーションの入力値の変更，アサーションの期待値の変更，前提条件の変更は，後方互換性を維持するライブラリ更新に伴う場合が多く，従来手法で誤検出となる主な原因である．ただし，後方互換性を損失するライブラリ更新に伴って，アサーションを追加したり，アサーションの入力値，アサーションの期待値を変更する場合もある．具体的な例は，それぞれ\ref{subsec:add-test}項，\ref{subsec:change-test}項で述べる．テストフィクスチャの変更は，テストデータの初期化や事前条件を定義する性質上，変更時のテストコードの影響範囲が広く，後方互換性の損失との関係を分析することが困難であるため，本研究では対象としない．
-
-% 続く\ref{rq2:kousatu}節では，テスト変更内容をテストコード追加，テストコード削除，テストコード変更に分けて，後方互換性を損失するライブラリ更新に伴うテストコード変更内容，伴わないテストコード変更内容をそれぞれ例を挙げる．
-
-\subsubsection{テストコード追加}\label{subsec:add-test}
-
-% %-----------
-% \begin{figure}[t]
-%   \centering
-%   \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/rq1/set-map/map.pdf}
-%   \caption{serialize-javascriptのバージョン1.6.1から1.7.0のソースコード変更差分}
-%   \label{fig:rq1.insert-test-src}
-
-%   \centering
-%   \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/rq1/set-map/map.test.1.eps}
-%   \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/rq1/set-map/map.test.2.eps}
-%   \caption{serialize-javascriptのバージョン1.6.1から1.7.0のテストコード変更差分}
-%   \label{fig:rq1.insert-test-test}
-% \end{figure}
-% %-----------
-
-テストコード追加は，テスト対象となるAPIの追加など後方互換性を維持するライブラリ更新に伴う場合が多い．ただし，後方互換性を損失するライブラリ更新に伴ってテストコードが追加されることがある．JavaScriptオブジェクトを文字列に変換するAPIを提供するライブラリserialize-javascriptのバージョン1.6.1から1.7.0へのマイナーアップデート\footnote{\url{https://github.com/yahoo/serialize- javascript/compare/v1.6.1...v1.7.0}}では，関数{\verb|serialize|}に，JavaScriptの{\verb|Map|}型のデータを文字列に変換する機能が追加された（ファイル{\verb|index.js|}，155行目から157行目)．この変更に伴って，関数{\verb|serialize|}に関するテストスイートに，新しく{\verb|Map|}型のデータが正確に文字列に変換されるかを検証するテストスイートが追加された（ファイル{\verb|test/unit/serialize.js|}，201行目から220行目）．バージョン1.6.1では，関数{\verb|serialize|}は{\verb|Map|}型の入力を文字列に変換する機能を持っていないため，文字列に変換されないことに依存しているクライアントはバージョン更新の際に返り値が新しくなったことによる影響を受ける．このようなAPIの機能拡張による後方互換性の損失は，図\ref{fig:rq1.insert-test-test}で示すように既存のテストスイート内にテストコードが追加されるという特徴があるため，既存のテストスイート内にテストスイート，テストケース，アサーションが追加された場合，ライブラリの後方互換性が損失したと判断できると考えられる．
-
-\subsubsection{テストコード削除}\label{subsec:delete-test}
-
-% %-----------
-% \begin{figure}[t]
-%   \centering
-%   \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/rq1/uuid/randomBytes2.pdf}
-%   \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/rq1/uuid/randomByte.pdf}
-%   \caption{uid-safeのバージョン2.0.0から2.1.0のソースコード変更差分}
-%   \label{fig:rq1.delete-test-src}
-
-%   \centering
-%   \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/rq1/uuid/randomByte-test.pdf}
-%   \caption{uid-safeのバージョン2.0.0から2.1.0のテストコード変更差分}
-%   \label{fig:rq1.delete-test-test}
-% \end{figure}
-% %-----------
-
-テストコード削除は，テスト対象となるAPIの削除など後方互換性を損失するライブラリ更新に伴う場合が多い．ただし，後方互換性を維持するライブラリ更新に伴ってテストコードが削除されることがある．暗号化されたUIDを生成するAPIを提供するライブラリuid-safeのバージョン2.0.0から2.1.0へのマイナーアップデート\footnote{\url{https://github.com/crypto-utils/uid-safe/compare/2.0.0...2.1.0}}では，セキュリティ上の問題から，ランダムなバイト列を生成する関数{\verb|randomBytes|}を削除し，同等のモジュールに置き換えている（ファイル\verb|index.js|，16行目）．この変更に伴って，関数{\verb|randomBytes|}の動作を検証するテストスイートが削除されている（ファイル\verb|test/test.js|，40行目から54行目）．モジュールの置き換え前後で関数{\verb|randomBytes|}の振る舞いが全く同じ場合，後方互換性が維持される．本研究では，\ref{sec:prepare}章で述べた通り，後方互換性の有無の判定にクライアントテストを利用している．このようなモジュールに置き換える例では，振る舞いの変化が限定的になるため，クライアントテストが捉えられず後方互換性を維持したと誤判定されることが考えられる．誤判定を防ぐには実際に影響を受けるクライアントの特定が必要になるが，容易ではない\cite{detecting-locations-in-js}．従って，本研究では今後の課題とする．
-
-\subsubsection{テストコード変更}\label{subsec:change-test}
-
-% %-----------
-% \begin{figure}[t]
-%   \centering
-%   \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/rq1/rejection/rejection-test.pdf}
-%   \caption{loud-regectionのバージョン1.2.1から1.3.0のテストコード変更差分}
-%   \label{fig:rq1.change-test-rejection-test}
-% \end{figure}
-% %-----------
-
-% \begin{figure}[t]
-%   \centering
-%   \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/rq1/rgb/rgb-src.pdf}
-%   \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/rq1/rgb/rgb-src-1.pdf}
-%   \caption{color-stringのバージョン0.4.0から1.0.0のソースコード変更差分}
-%   \label{fig:rq1.change-test-input-src}
+%-----------------------
 
 
-%   \centering
-%   \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/rq1/rgb/rgb-test.pdf}
-%   \caption{color-stringのバージョン0.4.0から1.0.0のテストコード変更差分}
-%   \label{fig:rq1.change-test-input-test}
-% \end{figure}
-% %-----------
+%---------------------------------------------------------
 
-アサーションの入力値，期待値の変更やリファクタリングなどのテストコード変更は，ライブラリの更新とは無関係に行われることが多い．ライブラリの更新とは無関係にアサーションの入力値，期待値が変更される例として，非同期処理のエラー内容を追跡するAPIを提供するライブラリloud-regectionのバージョン1.2.1から1.3.0へのマイナーアップデート\footnote{\url{https://github.com/sindresorhus/loud-rejection/compare/v1.2.1...v1.3.0}}では，アサーションメソッドを{\verb|true()|}から{\verb|regex()|}に変更しており，アサーションの入力値と期待値が同時に変更されている．ただし，テストコードの振る舞いは変わっておらず，ソースコードの変更とは無関係のテストコード変更である（ファイル\verb|test.js|，73行目）．一方，\todo{X節で説明した図Xのように}後方互換性を損失するライブラリ更新に伴って，アサーションの入力値，期待値が変更されることがある．
-%アサーションの期待値が変更される例は，\ref{sec:key-idea}節で示したので割愛する．後方互換性を損失するライブラリ更新に伴ってアサーションの入力値が変更される例として，CSSの色文字列を解析するAPIを提供するライブラリcolor-stringのバージョン0.4.0から1.0.0のメジャーアップデート\footnote{\url{https://github.com/Qix-/color-string/compare/0.4.0...1.0.0}}を挙げる．図\ref{fig:rq1.change-test-input-src}はソースコードの変更差分，図\ref{fig:rq1.change-test-input-test}はテストコードの変更差分を示す．この変更では，関数{\verb|rgbString|}を{\verb|to.rgb|}に置き換えている(図\ref{fig:rq1.change-test-input-src}，154行目から160行目，129行目から135行目)．この変更に伴って，関数{\verb|rgbString|}に関するアサーションの入力値が変更されている．図\ref{fig:rq1.change-test-input-test}の62行目から68行目と68行目から74行目は1行ずつ対応しており，アサーションの{\verb|equal|}関数の第一引数の入力値が変更され，第二引数の期待値は変更されていない．以上から，APIの入出力形式の変更による後方互換性の損失は，アサーションの期待値もしくは入力値のいずれか一方だけ変更されるという特徴があるため，アサーションの入力値と期待値のいずれか一方が変更された場合，後方互換性を損失したと判断できると考えられる．
-
-
-\subsection{まとめ}
-本章では，後方互換性を損失するライブラリ更新に伴ってどのようなテストコード変更が行われているかを分析し，後方互換性の損失を検出する手掛かりとなるテストコード変更内容を明らかにした．結果「既存のテストスイート内でのテストコード追加」「テストコード削除」「アサーションの入力値と期待値のいずれか一方の変更」の3つが後方互換性の損失を検出する手掛かりになる，機械的に検出可能なテストコード変更であると考える．
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{手法2: テストコード変更内容に基づく後方互換性損失の検出}\label{chap:rq2}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-{sec:contentAnalysis}章において，後方互換性を損失するライブラリバージョンでは，テストコードの追加，削除，変更が後方互換性の損失を検出する手掛かりとなることを明らかにした．本章では，これらのテストコードの変更を自動検出するツールを開発し，後方互換性の損失の検出精度を評価する．
-｀
-% \subsection{ルール構築}\label{sec:rq2.teian}
-
-% 本研究が提案する自動検出ツールは，入力を全てのソースファイル，出力を後方互換性の有無の予測とする．まず，入力として与えられた変更前後の全てのソースファイルから，変更されていないファイルを除外し，テストコードが記述されたファイルを抽出する．従来研究\cite{matsuda}では，テストコードが記述されたファイルの条件を，ファイルパスに{\verb|test|}または{\verb|spec|}を含み，ファイル名の末尾が{\verb|.js|}または{\verb|.ts|}であるファイルとする．本研究ではこの条件に加え，ファイル名の末尾が{\verb|.d.ts|}でないファイルを条件とする．ファイル名の末尾が{\verb|.d.ts|}であるファイルは型定義ファイルであり本研究では除外する．次に，抽出したソースファイルにおける，プログラムの変更箇所とその変更方法を\ref{subsec:rq2.astseisei}項の方法で特定する．最後に，プログラムの変更箇所とその変更方法が\ref{subsec:rq2.jouken}項で述べる3つの条件に1つでも一致すれば，後方互換性が損失していると判定し，いずれにも一致しなければ後方互換性を維持していると判定する．
-
-\subsection{ソースコードの変更箇所と変更方法の特定}\label{subsec:rq2.astseisei}
-本研究では，ライブラリバージョンにおけるテストコードの変更箇所，および変更方法を特定する．テストコードが記述されたファイルの特定は，{sec:analyticalMethod}章と同様に，ファイルパスに{\verb|test|}または{\verb|spec|}を含み，ファイル名の末尾が{\verb|.js|}または{\verb|.ts|}であるファイルとする．また，ファイル名の末尾が{\verb|.d.ts|}であるファイルは型定義ファイルであるため本研究では対象外する．
-
-ソースコードの変更箇所と変更方法の特定のために，コミット間の差分解析ツールGumTree\cite{gumtree}を使用する．GumTreeはソースコードの構造を表す抽象構文木（以降，AST）に基づく差分解析ツールであり，構造単位で比較するため，行単位の差分解析に比べて細粒度な変更箇所の特定が可能である．また，他の抽象構文木に基づく差分解析ツール\cite{diff-1}\cite{diff-2}\cite{diff-3}と比べて精度が高く，JavaやJavaScriptなど複数のプログラミング言語に対応している．GumTreeは，変更前後のソースファイルまたはASTを受け取ると，それらを比較してASTのノード単位の編集操作を出力する．検出できる編集操作は，「削除」「挿入」「移動」「変更」である．ただし，GumTreeはファイル単位の差分しか検出することができず，ファイルを横断するソースコードの移動は「削除と挿入」として検出されてしまうため，藤本ら\cite{gumtreenoyatu}が提案するソースコードごとに生成されるASTの結合により問題を解決する．
-
-% \begin{enumerate}
-%   \setlength{\itemsep}{0cm}
-%   \item 変更のある各ファイルごとにASTを生成する
-%   \item 根となるノードを１つ作成する
-%   \item 各ファイルごとに生成したASTを子ノードとして加えていく
-%   \item 1から3を変更前後で実施し，2つASTを生成する
-%   \item 変更前後で生成された2つのASTをGumTreeに入力して出力を得る
-% \end{enumerate}
-
-% この方法により，バージョン間のテストコード変更に対して，プログラムの変更箇所(ノード)と，「削除」「挿入」「移動」「変更」の4つの変更方法をファイルを横断する移動操作も含めて特定することができる．
-
-
-\subsection{後方互換性を損失したバージョンの判定条件}\label{subsec:rq2.jouken}
-\ref{sec:contentAnalysis}章で述べた，テストコードの追加，テストコードの削除，テストコードの変更を自動で検出するために，それぞれ条件を定義する．
-
-テストコードの追加，テストコードの削除では，\ref{sec:contentAnalysis}章で述べたように，テストファイル内で記述されている関数名が{\verb|it|}，{\verb|test|}，{\verb|describe|}をテストケースとし，いずれかの関数呼び出しにおいて第一引数が文字列，第二引数が関数であるものをテストスイートまたはテストケースと定義する．
-
-% まず，「既存のテストスイート内でのテストコード追加」「テストコード削除」を判定するために，テストコードを定義する．従来研究\cite{matsuda}では，テストファイル内に記述されている，関数名が{\verb|it|}または{\verb|test|}である関数呼び出しをテストケースとしている．本研究では，テストスイートの追加・削除を含めるため，慣習的にテストスイートの宣言として使われる関数名{\verb|describe|}を加え，{\verb|it|}または{\verb|test|}または{\verb|describe|}のいずれかの関数呼び出しで，第一引数が文字列，第二引数が関数であるものをテストスイートまたはテストケースと定義する．
-
-テストコードの変更においては，JavaScript言語はアサーションの記述方法はフレームワークによって異なるため，State of JavaScript 2022\footnote{\url{https://2022.stateofjs.com/}}で紹介されている主要なテストフレームワーク13件のうち，単体テストで使われるフレームワーク5件(Jest\footnote{\url{https://jestjs.io/}},Mocha\footnote{\url{https://mochajs.org/}},AVA\footnote{\url{https://github.com/avajs/ava}},Jasmine\footnote{\url{https://jasmine.github.io/}},Vitest\footnote{\url{https://vitest.dev/}})で記述されたテストコードをを対象とする．Mochaは複数のアサーションの記述スタイルを利用できるため，Mochaで使用可能なアサーションのスタイルについても対象とする．テストフレームワーク毎のアサーションの書き方は，2つに大別できる．例をProgram\ref{bdd.test.js}，Program\ref{tdd.test.js}で示す．
-
-% 次に，「アサーションの入力値と期待値のいずれか一方の変更」を判定するために，アサーションの入力値と期待値を定義する．JavaScript言語では，アサーションの書き方はフレームワークによって異なる．本手法では，State of JavaScript 2022\footnote{\url{https://2022.stateofjs.com/}}で紹介されている主要なテストフレームワーク13件のうち，単体テストで使われるフレームワーク5件(Jest\footnote{\url{https://jestjs.io/}},Mocha\footnote{\url{https://mochajs.org/}},AVA\footnote{\url{https://github.com/avajs/ava}},Jasmine\footnote{\url{https://jasmine.github.io/}},Vitest\footnote{\url{https://vitest.dev/}})を対象とする．Mochaは複数のアサーションの記述スタイルを利用できるため，Mochaで使用可能なアサーションのスタイルについても対象とする．テストフレームワーク毎のアサーションの書き方は，大きく2つに大別できる．例をProgram\ref{bdd.test.js}，Program\ref{tdd.test.js}で示す．
-
-\begin{figure}[t]
-\begin{lstlisting}[caption=アサーション例1, label=bdd.test.js]
-expect(calculator.add(1, 1)).to.be.a('number').equal(2);
-expect(calculator.add(1, 1), 'to be', 2);
-calculator.add(1, 1).should.be.a('number').equal(2);
-\end{lstlisting}
-
-\vspace{-3mm}
-
-\begin{lstlisting}[caption=アサーション例2, label=tdd.test.js]
-assert.equal(calculator.add(1, 1), 2);
-t.is(calculator.add(1, 1), 2);  
-t.true(calculator.add(1, 1) === 2);
-\end{lstlisting}
-\vspace{-3mm}
-\end{figure}
-
-
-
-Program\ref{bdd.test.js}は，自然言語に似た構文を使用してテストを記述する記述形式で，Jest，Mocha，Jasmine，Vitestで使用される．その中でも，1行目のように，{\verb|expect|}関数にメソッドチェーンで振る舞いを記述する形式，2行目のように{\verb|expect|}関数の引数にそのまま振る舞いを記述する形式，3行目のように入力値に{\verb|should|}プロパティを追加して振る舞いを記述する形式がある．1,2行目の形式に対しては，{\verb|expect|}関数の第一引数を入力値，それ以降を期待値として扱い，3行目の形式に対しては，{\verb|should|}プロパティ以前を入力値，それ以降を期待値として扱う．
-
-
-Program\ref{tdd.test.js}は，Node.js\footnote{\url{https://nodejs.org/en}}標準の{\verb|assert|}文がメインの記述形式で，AVA，Mochaで使用される．その中でも，1行目や2行目のように，第一引数に入力値，第二引数に期待値を取る形式と，3行目のように入力だけを引数に取る形式がある．この記述形式に対しては，{\verb|assert|}，{\verb|t|}，{\verb|test|}をキーとして，アサーションメソッドの第一引数を入力，第二引数を期待値として扱う．3行目のように引数が1つの場合は，引数を入力，アサーションメソッド名を期待値とする．
-
-これらのテストコードを対象にテストコードの追加，テストコードの削除，テストコードの変更をそれぞれ検出する3つの条件を定める．
-
-\begin{description}
-  \item[\textbf{テストコードの追加}]：GumTreeで「挿入」と判定された変更箇所がテストコードまたはアサーションであり，かつ既存のテストコード内で追加されていること
-  \item[\textbf{テストコードの削除}]：GumTreeで「削除」と判定された変更箇所がテストコードであること
-  \item[\textbf{テストコードの変更}]：GumTreeで「変更」と判定された変更箇所がアサーションの入力値もしくは期待値であり，同一アサーションの入力値もしくは期待値がGumTreeで「変更」と判定されていないこと
-\end{description}
-
-ライブラリバージョンに含まれるテストコード変更内容が，以上3つの条件に1つでも当てはまれば，ライブラリバージョンは後方互換性を損失したと判定し，1つも当てはまらなければライブラリバージョンは後方互換性を維持したと判定する．
-
-\subsection{分析結果}
-
-% データセットは，\ref{rq1:datasets}節と同様の従来研究\cite{matsuda}で収集されたライブラリバージョン2,111件を使用し，削除や非公開になったことによりGitHub上でアクセスできないものと，GumTree上でエラーになるもの計156件を除いた1,955件を使用する．
-
+%-----------------------
 \begin{table}[t]
 \centering
-\caption{提案手法の結果}
-\ecaption{hoge}
-\label{fig:result}
-\begin{tabular}{l|r|r|r}
+\caption{20項目の分類結果}
+\label{tab:data}
+\begin{tabular}{l|r|r|r|r}
+\hline\hline
+項目 & 適合率 & 再現率 & F1値 & データ数 \\
 \hline
- & \multicolumn{2}{c|}{後方互換性}  & \multicolumn{1}{c}{\multirow{2}{*}{合計}} \\ \cline{2-3}
- & \multicolumn{1}{c|}{なし} & \multicolumn{1}{c|}{不明} & \multicolumn{1}{c}{} \\ \hline
- 後方互換性なしと判定      & 114 & 548 & 662 \\ \hline 
- 後方互換性ありと判定      & 109 & 1,184 & 1,293 \\ \hline 
- 合計              & 223 & 1,732 & 1,955 \\ \hline
-% \multicolumn{1}{c|}{\multirow{2}{*}{従来}} & 従来手法で後方互換性なしと判定 & 140 & 765 & 905 \\ \cline{2-5} 
-% \multicolumn{1}{c|}{\multirow{2}{*}{手法}}                                                      & 従来手法で後方互換性ありと判定 & 83  & 967 & 1,050 \\ \cline{2-5} 
-% \multicolumn{1}{c|}{}                                                      & 合計              & 223 & 1,732 & 1,955 \\ \hline
+使用方法 & 0.47 & 0.86 & 0.86 & 9,003 \\\hline
+インストール方法 & 0.76 & 0.76 & 0.76 & 4,196 \\\hline
+ライセンス & 0.89 & 0.99 & 0.94 & 2,420 \\\hline
+API & 0.64 & 0.47 & 0.54 & 3,615 \\\hline
+オプション & 0.69 & 0.35 & 0.47 & 1,771 \\\hline
+更新履歴 & 0.79 & 0.59 & 0.68 & 722 \\\hline
+貢献方法 & 0.89 & 0.88 & 0.89 & 2,093 \\\hline
+テスト & 0.87 & 0.76 & 0.81 & 493 \\\hline
+ToDo & 0.89 & 0.14 & 0.25 & 487 \\\hline
+概要 & 0.80 & 0.22 & 0.34 & 1,476 \\\hline
+状態 & 1.00 & 0.34 & 0.51 & 62 \\\hline
+ドキュメント & 0.81 & 0.20 & 0.33 & 593 \\\hline
+著者 & 0.79 & 0.64 & 0.71 & 318 \\\hline
+サポート & 0.96 & 0.24 & 0.39 & 193 \\\hline
+機能 & 0.78 & 0.27 & 0.40 & 941 \\\hline
+関連 & 0.97 & 0.61 & 0.75 & 189 \\\hline
+Issue & 1.00 & 0.28 & 0.43 & 112 \\\hline
+デモ & 0.90 & 0.34 & 0.50 & 76 \\\hline
+目的 & 0.94 & 0.06 & 0.12 & 265 \\\hline
+リファレンス & 0.88 & 0.30 & 0.45 & 201 \\
+\hline
 \end{tabular}
 \end{table}
-
-表\ref{fig:result}は，本手法によって検出した後方互換性を損失するライブラリバージョンを\ref{sec:prepare}章の結果と同じ形式で示す．本手法で後方互換性なし，つまり後方互換性の損失があると判定したライブラリバージョンは662件であった．そのうち114件（約17\%）を正しく判定することができ，\ref{sec:prepare}章は905件中140件（約15\%）であり本手法により改善することができた．\ref{sec:prepare}章に示す方法では，後方互換性を維持するライブラリバージョンに対し，後方互換性を損失したと誤検出した件数は765件である一方，提案手法は548件となり誤検出数が低下した．
-
-また，本手法は，後方互換性の損失があった223件中114件（約51\%）を正しく検出でき，\ref{sec:prepare}章に示す223件中140件（約63\%）より低下し，後方互換性を損失したライブラリバージョンの検出においては今後の課題である．予測結果を目視により調査した内容については，\ref{rq2:kousatu}章で言及する．
+%-----------------------
 
 
+%---------------------------------------------------------
 
 
 
-% データセットに対して，従来手法と\ref{sec:rq2.teian}節で述べた手法を適用した結果を表\ref{fig:result}に示す．分析対象とするライブラリバージョン1,955件中，提案手法で後方互換性なしと判定したライブラリバージョンは662件(約34％)，後方互換性ありと予測したライブラリバージョンは1,293件(約66％)であった．また，従来手法で後方互換性なしと予測したライブラリバージョンは905件(約46％)，後方互換性ありと予測したライブラリバージョンは1,050件(54％)であった．
 
-% 提案手法で後方互換性を損失したと判定したライブラリバージョン662件中，114件(約17％)は後方互換性を損失し(適合率)，662件中548件(約83％)は後方互換性を維持している．また，後方互換性を損失したライブラリバージョン223件中，114件(約51％)を正しく予測した(再現率)．従来手法では，後方互換性を損失したと予測したライブラリバージョン905件中，140件(約15％)が後方互換性を損失(適合率)し，後方互換性を損失したライブラリバージョン223件中，140件(63％)を正しく予測した(再現率)．
+%-----------------------
+\begin{table}[t]
+ \centering
+ \caption{項目「使用方法」の予測結果}
+\label{tab:result}
+  \scalebox{1.0}{
+  \begin{tabular}{l|r} 
+  \hline\hline
+    正しい項目 & 項目「使用方法」と予測\\
+    & （16,590件） \\ \hline
+    使用方法 & 7,723件（47\%）\\ \hline
+    その他 & 1,954件（12\%）\\ \hline
+    API & 1,671件（10\%）\\ \hline
+    概要 & 1,007件（6\%）\\ \hline
+    オプション & 976件（6\%）\\ \hline
+    インストール方法 & 937件（6\%）\\ \hline
+    機能の説明 & 594件（4\%）\\ \hline
+    　　： & ：　\\ 
+  \hline
+  \end{tabular}
+    \label{tab:result}
+   }
+\end{table}
+%-----------------------
 
-% 従来手法では，後方互換性を維持するライブラリバージョンに対し，後方互換性を損失したと誤検出した件数は765件であり，提案手法は548件が誤検出であった．これは，従来手法で誤検出となる，テストケースの移動やラベルの修正などのテストコードのリファクタリングによる影響を提案手法では受けないため，誤検出を減らすことができたことを示している．一方で，提案手法は従来手法に比べて，後方互換性を損失したライブラリバージョンの検出精度が低下している．従来手法では後方互換性を損失したライブラリバージョン223件中，140件を正確に検出できたのに対し．提案手法では114件のみを検出した．この結果から，提案手法は誤検出を減らすことには成功しているが，後方互換性を損失したライブラリバージョンの検出においては改善の余地があるとわかる．予測結果を目視により調査した内容については，\ref{rq2:kousatu}章で言及する．
 
-% \section{考察}
-% \label{sec:discussion}
-% 分析したライブラリバージョンを手動で確認し，確認したライブラリバージョンの例をあげて分析結果の適合率と再現率について考察する．
-% また，本研究の妥当性への脅威を述べる．
 
-% \subsection{適合率：テスト変更を含むライブラリバージョンにおける破壊的変更}
-% 破壊的変更を加えた可能性が高いと判断した1,039件のライブラリバージョンのうち，856件は全てのクライアントテストが成功しているため，実際の後方互換性は判断できない．
-% テストケースの削除や修正が行われたが，それに伴って影響を受けるクライアントが存在しなかった原因を考察する．
-% まず，ライブラリバージョンの後方互換性が維持されていたため，全てのクライアントに影響を与えなかったことが考えられる．
-% 例として，値がStreamオブジェクトであることを検証する関数を提供するライブラリであるis-streamのバージョン1.0.1から1.1.0への変更~\footnote{\url{https://github.com/sindresorhus/is-stream/compare/v1.0.1...v1.1.0}}を図\ref{fig:isStream}に示す．
-% この変更ではライブラリに新しいAPIが追加されており，既存のクライアントに影響を与えない．
-% is-streamへの変更は破壊的変更ではないが，変更と同時にテストを実行するツールのバージョンも更新され，更新に伴ってテストケースが変更されている．
-% テストケースが変更されているため，本分析ではis-streamのバージョン1.1.0は後方互換性を損失していると誤って判断した．
-% テストの誤り修正や実行手順の変更など，ライブラリの変更とは無関係にテストにも変更が加えられることがあるため，テストの変更内容についても分類を行うことでさらに精度が向上すると期待できる．
 
-% \begin{figure}
-%   \vspace{1zh}
-%   \centering
-%   \includegraphics[width=0.95\linewidth]{IPSJjournal_maekawa_fig/is-stream.png}
-%   \caption{is-streamのバージョン1.0.1から1.1.0におけるライブラリの変更}
-%   \label{fig:isStream}
-% \end{figure}
+%% 4章ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\section{分析1: READMEの項目はどのように変更されるのか？}
+%% 4-1ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsubsection{概要}
+%3章の事前分析の結果から，項目「使用方法」以外の項目は，プロジェクト間で項目と説明文に一貫性があり，開発者はREADME変更時，項目ごとに説明文の内容の追加や削除を行うと考えられる．また，項目「使用方法」では，異なる項目への説明文の移動が行われる可能性がある．本章では，READMEの同一項目での変更 （追加，削除） や異なる項目への説明文の移動が行われているのかを明らかにする．具体的には，初期版と最終版のREADMEに記述される項目および説明文を比較し，READMEの変更において，各項目の説明文がどのように変更されるのかを分類する．READMEの変更方法には，同じ項目の説明文が変更される場合と異なる項目へ跨って説明文が変更される場合の2通り考えられる．
+3章の事前分析の結果から，項目「使用方法」以外の項目は，項目と説明文に一貫性があり，開発者はソースコードの変更とともに，項目ごとに説明文の内容の追加や削除を行うと考えられる．また，項目「使用方法」では，説明文の内容の追加や削除だけでなく，異なる項目への説明文の移動が行われる可能性がある．本章では，READMEの同一項目での変更 （追加，削除） や異なる項目への説明文の移動が行われているのかを明らかにする．具体的には，初期版と最終版のREADMEに記述される項目および説明文を比較し，READMEの変更において，各項目の説明文がどのように変更されるのかを分類する．READMEの変更方法には，同じ項目の説明文が変更される場合と異なる項目へ跨って説明文が変更される場合の2通り考えられる．
 
-% 次に，後方互換性を損失しているが，クライアントテストが実行するライブラリの機能が限定的であったためにその影響が確認できなかったことが考えられる．
-% 例として，値が絶対URLであることを検証するライブラリであるis-absolute-urlのバージョン3.0.0から3.0.1への変更~\footnote{\url{https://github.com/sindresorhus/is-absolute-url/compare/v3.0.0...v3.0.1}}を図\ref{fig:isAbsoluteUrl}に示す．
-% この変更では入力としてURLではなくWindows形式のファイルパスが与えられた場合に{\verb|false|}を返すよう関数が変更されている．
-% is-absolute-urlへの変更は特定の入力に対する結果が変化したという点で破壊的な変更であるが，本分析でis-absolute-urlのバージョン3.0.1を使用してテストを実行したクライアントは4件しかなかったため，破壊的変更の影響が現れなかったと考えられる．
-% 破壊的変更が行われた機能をクライアントが利用していなかった場合，後方互換性の損失は確認できない．
-% クライアント数が不足しているライブラリを除外した場合の結果については\ref{sec:line}節で述べる．
 
-% \begin{figure}[t]
-%   \vspace{1zh}
-%   \centering
-%   \includegraphics[width=0.95\linewidth]{IPSJjournal_maekawa_fig/is-absolute-url.png}
-%   \caption{is-absolute-urlのバージョン3.0.0から3.0.1におけるライブラリの変更}
-%   \label{fig:isAbsoluteUrl}
-% \end{figure}
+\subsubsubsection{同じ項目の説明文が変更される場合}
+ソースコードの変更とともに，説明文の内容の追加や削除を行うと考えられる．
+\begin{itemize}
+  \item 追加 : 既存の説明文に新しい情報を説明文に追加
+  \item 削除 : 不要な情報を説明文から削除
+\end{itemize}
 
-% \subsection{実行したクライアント数に基づく再現率と適合率の推移}
-% \label{sec:line}
+\subsubsubsection{異なる項目へ説明文が移動される場合}
+異なる項目へ跨った変更は説明文の記述内容が類似する項目間で起こると考えられる．ソースコードの変更とは無関係な，READMEのリファクタリングを行うと考えられる．
+\begin{itemize}
+  \item 細分化 : 1つの項目の内容を，複数の項目に分割して移動
+  \item 統合 : 複数の項目の内容を，1つの項目に統合して移動
+\end{itemize}
 
-% テストケースの削除や修正が行われたが，それに伴って影響を受けるクライアントが存在しなかった原因の一つとして，分析に用いた一部のライブラリバージョンでクライアント数が不足していたことをあげた．
-% 分析対象としたライブラリバージョンから，クライアント数が一定数以下だったライブラリバージョンを除外した場合の結果を考察する．
-% 除外対象とするライブラリバージョンの最低クライアント数を0件から100件まで（100件で除外対象となるライブラリバージョンは全体の約95.6\%）とし，5件ごとに再現率と適合率を計算した．
-% 結果を図\ref{fig:line}に示す．
 
-% クライアント数の下限0件から100件の範囲では，再現率は0.7から0.6，適合率は0.2から0.5付近で推移している．
-% クライアント数が多ければ多いほど，クライアントがライブラリのより多くの機能を実行することになるため，クライアントが破壊的変更の影響を受ける可能性が高くなる．
-% 一方で，クライアント数が多くあるときにクライアントテストの実行が全て成功したライブラリバージョンは，後方互換性が維持されている可能性が高くなるといえる．
-% クライアントテストの実行が全て成功したライブラリバージョンは，本分析では後方互換性不明としている．
-% 後方互換性不明としたライブラリバージョンには，後方互換性を損失しているライブラリバージョンと，後方互換性を維持しているライブラリバージョンの両方が含まれている．
-% クライアント数が多いほど，クライアントテストの実行が全て成功し，後方互換性不明としたライブラリバージョンは後方互換性が維持されている可能性が高くなり，クライアントテストの結果から算出する適合率はより正確なものになっていると考える．
+追加，削除，細分化，統合を明確に分類することで，READMEの同一項目での変更 （追加，削除） や異なる項目への説明文の移動が行われているのかを明らかにする．
 
-% \begin{figure}[h]
-%   \vspace{1zh}
-%   \centering
-%   \includegraphics[width=0.8\linewidth]{IPSJjournal_maekawa_fig/line.pdf}
-%   \caption{実行したクライアント数に基づく再現率と適合率の推移}
-%   \label{fig:line}
-% \end{figure}
 
-% \subsection{再現率：破壊的変更と同時に行われるテストへの変更}
-% 後方互換性を損失していた268件のライブラリバージョンのうち，破壊的変更を加えた可能性が低いと判断したライブラリは183件だった．
-% 後方互換性を損失するような破壊的変更が加えられていたが，それに伴ってテストに変更が加えられることが無かった原因を考察する．
-% 原因として，破壊的変更が行われた箇所に対応するテストが存在しなかったことが考えられる．
-% 値が真であることを検証する関数を提供するライブラリであるinvariantのバージョン2.1.3から2.2.0への変更~\footnote{\url{https://github.com/zertosh/invariant/compare/v2.1.3...v2.2.0}}を図\ref{fig:invariant}に示す．
-% この変更では一部の検証エラーの名前が変更されたが，エラーの名前を検証するテストがないためにテストへの変更は行われなかった．
-% テストが変更されなかったため，本分析ではinvariantのバージョン2.2.0は後方互換性を維持していると誤って判断した．
-% 対策として，テストを自動生成することで不足分を補填することが考えられる．
 
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.95\linewidth]{IPSJjournal_maekawa_fig/invariant.png}
-%   \caption{invariantのバージョン2.1.3から2.2.0におけるライブラリの変更}
-%   \label{fig:invariant}
-% \end{figure}
+%% 4-2ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{データセット}
+3章の事前分析同様に，52,292件のプロジェクトのREADMEを分析対象とし，READMEから項目と説明文を抽出する．本章では，READMEの変更を分析するために，初期版と最終版のREADMEに記述される項目および説明文を抽出し，データセットとして使用する．
 
-\subsection{考察}\label{rq2:kousatu}
 
-%分析したライブラリバージョンを目視で確認し，ライブラリバージョンの例を挙げて分析結果について考察する．
 
-\subsubsection{従来手法と提案手法の検出精度}
 
+%% 4-3ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{手法}
+初期版と最終版のREADMEの項目数および各項目に記述される説明文を比較し，READMEの変更方法（追加，削除，細分化，統合）を分類する．具体的には，初期版と最終版のREADMEの説明文の一致率，連続一致率，文字数を比較する．同一項目間と異なる項目間で説明文の比較方法が異なるため，それぞれの分析手法を順に記述する．
+
+
+%% ーーーーーーーーーーーーーーーー
+\subsubsection{同じ項目の説明文が変更される場合}
+初期版と最終版READMEにおける同一項目間で説明文を比較する．比較方法には，文章の一致率を用いる．文章の一致率とは，同一項目間でどれだけ説明文が共通するかを表す指標である．一致率が高く，文字数が初期版から最終版READMEにかけて増加している場合は，READMEの変更「追加」が行われている．一致率が高く，文字数が初期版から最終版READMEにかけて減少している場合は，READMEの変更「削除」が行われていると判断する．
+
+%
+
+\begin{equation}
+\label{calculate_rate}
+\mbox{一致率} = \frac {\mbox{最長共通部分列}} {\mbox{初期版READMEの文字数}}
+\end{equation}
+\vspace{5pt}
+
+
+
+最長共通部分列（Longest Common Subsequence）は，初期版と最終版READMEの同一項目における説明文で共通する文字列の最大値（文字列は不連続でも出現する順序のみを考慮）のことである．図4.1は，項目「使用方法」の初期版から最終版で追加された箇所が，連続する場合と不連続する場合の例を示す．左の例では，初期版に存在した110文字を元に，後ろに文章を追加した例で，元の内容が100\%含まれているため，最長共通部分列は110，この時の一致率は110/110（100\%）となる．この例では，一致率が100\%と高く，文章量が初期版と比べ増加しているため，READMEの変更「追加」が行われていると判断する．右の例では，初期版に存在した110文字の間に文章が追加され，元の文章が連続しないが，元の内容が100\%含まれていることを，最長共通部分列の値から確認できる．情報の追加，削除箇所に関わらず，同一項目間の変更（追加，削除）を捉えることができるため，同一項目間での比較の際には最長共通部分列を使用する．
+
+
+%--------------------------------
 \begin{figure}[t]
-  \centering
-  \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/rq2/ansi-regex.pdf}
-  \caption{ansi-regexのバージョン4.1.0から5.0.0のテストコード変更差分}
-  \label{fig:rq2.ansi-regex}
-
-  \centering
-  \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/rq2/source-map-1.pdf}
-  \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/rq2/source-map-2.pdf}
-  \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/rq2/source-map-3.pdf}
-  \caption{convert-source-mapのバージョン1.3.0から1.4.0のテストコード変更差分}
-  \label{fig:rq2.convert-source-map}
+ 	\centering
+		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/LCS_add.pdf}
+	\caption{同じ項目での比較例}
+	\label{fig:oss_developments_eq}
 \end{figure}
-
-手法2は手法1に比べて後方互換性の損失を検出する基準が厳しいため，後方互換性が損失しているライブラリバージョンを検出できないケースが手法1（83件）よりも手法2（109件）の方が多い結果となってしまった．手法1は，テストコードが変更されれば後方互換性の有無に関係なく，後方互換性を損失と判定することが発生する．例えば，コマンドライン出力などで使用されるANSIコードを識別するAPIを提供するライブラリansi-regexのバージョン4.1.0から5.0.0のメジャーアップデート\footnote{\url{https://github.com/chalk/ansi-regex/compare/v4.1.0...v5.0.0}}でを挙げる．このメジャーアップデートでは，Node.jsのバージョン更新などの後方互換性を損失する変更を含み，テストコード\verb|test.js|はラベルの変更（70行目）や変数名の変更（5行目）などのリファクタリングのみである．\todo{従来手法では，テストコード変更内容を考慮しないため後方互換性を損失したと判定するが，提案手法ではテストコード変更内容を考慮するため，例のように後方互換性の損失とテストコード変更内容が無関係である場合検出することはできない．従来手法の検出精度は，ライブラリ本体の変更とテストコードの変更の関連性を十分に評価していないことに起因し，提案手法の検出精度の低下は，後方互換性を損失したと判定する条件を絞り込んだ結果と解釈できる．}\textcolor{blue}{【この例は，手法1（従来研究）はテストコードの変更が後方互換性の損失と無関係だけどテストコードが変更されているため正解，手法2（提案手法）は期待値が変わったような変更ではないから後方互換性の損失にならない（つまり不正解），ということで手法2の精度が下がる，という理解で良い？】}
-%クライアントの開発者は依存ライブラリを不必要に検証することが増える．
+%--------------------------------
 
 
 
-% 提案手法のライブラリの後方互換性損失の検出精度が従来手法より低下した原因を考察する．精度低下の原因として，後方互換性を損失したと判定する条件を絞り込んだことが考えられる．従来手法では，テストコードの任意の変更を後方互換性の損失を判定する指標としていたため，より多くのライブラリバージョンを後方互換性を損失したと判定する．しかし，従来手法のアプローチは後方互換性の有無の状況を正確に反映していないことがある．例として，コマンドライン出力などで使用されるANSIコードを識別するAPIを提供するライブラリansi-regexのバージョン4.1.0から5.0.0のメジャーアップデート\footnote{\url{https://github.com/chalk/ansi-regex/compare/v4.1.0...v5.0.0}}を挙げる．図\ref{fig:rq2.ansi-regex}はテストコードの変更差分を示す．この変更では，サポートするNode.jsのバージョン更新など，メジャーアップデートであることからもわかる通り後方互換性を損失する変更を含む．一方，テストコード変更差分は，図\ref{fig:rq2.ansi-regex}で示すように，テストコードのラベルの変更(70行目)や変数名の変更(5行目)によるリファクタリングに留まっている．従来手法では，テストコード変更内容を考慮しないため後方互換性を損失したと判定するが，提案手法ではテストコード変更内容を考慮するため，例のように後方互換性の損失とテストコード変更内容が無関係である場合検出することはできない．従来手法の検出精度は，ライブラリ本体の変更とテストコードの変更の関連性を十分に評価していないことに起因し，提案手法の検出精度の低下は，後方互換性を損失したと判定する条件を絞り込んだ結果と解釈できる．
-
-手法2の精度が低下した理由として，手法2で定義した条件では，後方互換性の損失を検出できないことがある．
-例として，異なるフォーマットのソースマップを相互に変換するAPIを提供するライブラリconvert-source-mapのバージョン1.3.0から1.4.0のマイナーアップデート\footnote{\url{https://github.com/thlorenz/convert-source-map/compare/v1.3.0...v1.4.0}}では，メモリ不足によるエラーを解消するためのフラグを追加し既存APIの機能を拡張している．テストファイル\verb|test/convert-source-map.js|は，94行目から95行目の変数{\verb|map|}，{\verb|otherMap|}が変更されている．変数{\verb|map|}，{\verb|otherMap|}は続く102行目以降のアサーションの入力値として使用されており，入力値が変更されているため，提案手法で検出すべきテストコード変更内容である．しかし，GumTreeを利用した差分検出のみでは変数の中身を追跡できないため，後方互換性の損失と判定することはできない．コールグラフを利用した追跡を組み合わせて検出することが考えられるが，JavaScript言語では動的な性質からコールグラフ作成は困難であるため\cite{js-call-graph}，今後の課題とする．
 
 
-% 次に，\ref{subsec:rq2.jouken}項で定義した条件では，検出すべきテストコード変更内容を検出できなかったことが考えられる．例として，異なるフォーマットのソースマップを相互に変換するAPIを提供するライブラリconvert-source-mapのバージョン1.3.0から1.4.0のマイナーアップデート\footnote{\url{https://github.com/thlorenz/convert-source-map/compare/v1.3.0...v1.4.0}}を挙げる．図\ref{fig:rq2.convert-source-map}はテストコードの変更差分を示す．この変更では，メモリ不足によるエラーを解消するためのフラグを追加し既存APIの機能を拡張している．テストコードは，図\ref{fig:rq2.convert-source-map}の84行目のテストケースに対して，94行目から95行目の変数{\verb|map|}，{\verb|otherMap|}が変更されている．変数{\verb|map|}，{\verb|otherMap|}は続く102行目以降のアサーションの入力値として使用されており，入力値が変更されているため，提案手法で検出すべきテストコード変更内容である．しかし，GumTreeを利用した差分検出のみでは変数の中身を追跡できないため，後方互換性の損失と判定することはできない．コールグラフを利用した追跡を組み合わせて検出することが考えられるが，JavaScript言語では動的な性質からコールグラフ作成は困難であるため\cite{js-call-graph}，今後の課題とする．
 
-手法1，手法2の両方の課題として，後方互換性の有無の検出にはクライアントのテストコードを利用している．ライブラリの後方互換性が損失していても，影響を受けるクライアントが存在しない場合，後方互換性の損失を確認することができず，分析の精度を低下させる原因になる．今後の研究では正解データをより正確に収集し分析することが必要となる．
+%% ーーーーーーーーーーーーーーーー
+\subsubsection{異なる項目へ説明文が移動される場合}
+初期版と最終版READMEにおける異なる項目間で説明文を比較する．比較方法には，文章の連続一致率を用いる．文章の連続一致率とは，異なる項目間で初期版の説明文の内容がどれだけ存在するかを表す指標である．連続一致率が高い場合は，READMEの変更「細分化，統合」が行われている可能性がある．連続一致率が低い場合は，READMEの変更「細分化，統合」は行われていないと判断する．
 
-\subsubsection{提案手法の有効性\todo{クライアント数別の結果に差し替え}}
+\begin{equation}
+\label{calculate_rate}
+\mbox{連続一致率} = \frac {\mbox{最長共通部分文字列}} {\mbox{初期版READMEの文字数}}
+\end{equation}
+\vspace{5pt}
 
+ここで用いられる最長共通部分文字列（Longest Common Substrings）とは，初期版と最終版READMEの異なる項目における説明文で連続して共通する文字列の最大値のことである．図4.2は，異なる項目への移動が行われていない場合の例を示す．この例だと，初期版の項目「使用方法」に存在した110文字が，最終版の項目「オプション」の説明文内に5文字一致，3文字一致，など合計して90文字共通する文字が存在し，最大で共通する文字列の長さが5文字であることを表す．ここで，同じ項目での比較時同様に最長共通部分列を用いた場合，一致率は90/110（82\%）となってしまい，情報の移動の可能性があると誤検出してしまう．一方で，最大共通部分文字列を用いた場合，連続一致率が5/110（5\%）となり，関係がないと判断できる．誤検出を防ぐことができるため，異なる項目間での比較の際には最長共通部分文字列を使用する．
+
+%--------------------------------
 \begin{figure}[t]
+ 	\centering
+		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/LCS_split.pdf}
+	\caption{異なる項目での比較例}
+	\label{fig:oss_developments_eq}
+\end{figure}
+%--------------------------------
+
+
+%% 4-4ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{結果}
+表4.1は初期版と最終版READMEの項目数の平均，中央値を示す．表4.2は初期版から最終版READMEにかけて追加，削除された項目数の平均，中央値，項目数が変化したリポジトリ数を示す．結果から，多くのリポジトリにおいて項目の追加が行われていた．
+
+%--------------------------------
+\begin{table}[t]
+ \centering
+ \caption{初期版と最終版READMEの項目数}
+\label{tab:result}
+  \scalebox{1.0}{
+  \begin{tabular}{l|r|r} \hline
+     & 平均値 & 中央値\\ \hline
+    初期版項目数 & 2.63 & 2.00\\ \hline
+    最終版項目数 & 4.06 & 4.00 \\ \hline
+    追加項目数 & 2.92 & 2.00 \\ \hline
+    削除項目数 & 2.24 & 2.00 \\ \hline
+  \end{tabular}
+     }
+\end{table}
+%--------------------------------
+\begin{table}[t]
+ \centering
+ \caption{初期版と最終版READMEの項目数の変化}
+\label{tab:result}
+  \scalebox{1.0}{
+    \begin{tabular}{l|r} \hline
+     & リポジトリ数\\ \hline
+    項目を追加 & 27,045\\ \hline
+    変更なし & 18,327\\ \hline
+    項目を削除 & 3,895\\ \hline
+    合計 & 49,267\\ \hline
+  \end{tabular}
+    \label{tab:result}
+   }
+\end{table}
+
+%--------------------------------
+
+\subsubsection{同じ項目での比較}
+図4.3は初期版と最終版READMEの説明文を同じ項目同士で比較した一致率の分布を示す．横軸は一致率を表し，縦軸は項目数を表す．一致率が高いほど，READMEの変更「追加」や「削除」が行われる可能性が高いことを示す．赤は初期版と最終版READMEの同一項目における説明文の一致率が高く，文字数が増加している変更「追加」，緑は初期版と最終版READMEの同一項目における説明文の一致率が高く，文字数が変化していない「変更なし」，青は初期版と最終版READMEの同一項目における説明文の一致率が高く，文字数が減少している変更「削除」を表す．結果から，同一項目において，初期版と最終版READMEの説明文は一致率が高く，初期版の説明文の内容を基に変更されていた．また，一致率が高い（90-100\%）説明文を確認したところ，69,986件のうち「追加」が行われたのが32,070件，「変更なし」が33,871件，「削除」が行われたのが4,045件であった．図4.3の結果から，README変更において「削除」が行われることは少なく，「追加」が行われることが多いことを確認した．
+
+%--------------------------------
+\begin{figure}[t]
+ 	\centering
+		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/header_equall2.pdf}
+	\caption{同じ項目での比較}
+	\label{fig:oss_developments_eq}
+\end{figure}
+%--------------------------------
+
+
+
+
+
+
+%% ーーーーーーーーーーーーーーーー
+\subsubsection{異なる項目での比較}
+図4.4は初期版と最終版READMEの説明文を異なる項目同士で比較した連続一致率の分布を示す．横軸は連続一致率を表し，縦軸は項目数を表す．連続一致率が高いほど，READMEの変更「細分化」や「統合」が行われる可能性が高いことを示す．結果から，異なる項目において，初期版と最終版READMEの説明文は連続一致率が低く，READMEの変更において「細分化」や「統合」が行われる可能性は低いと示唆される．
+
+%--------------------------------
+\begin{figure}[t]
+ 	\centering
+		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/header_differ2.pdf}
+	\caption{異なる項目での比較}
+	\label{fig:oss_developments_df}
+\end{figure}
+%--------------------------------
+
+
+
+
+
+%% ーーーーーーーーーーーーーーーー
+\subsubsection{項目「使用方法」同士の比較}
+図4.5は，3章事前分析で適合率が低かった項目「使用方法」同士で比較した一致率の分布を示す．横軸は一致率を表し，縦軸は項目数を表す．一致率が高いほど，READMEの変更「追加」や「削除」が行われる可能性が高いことを示す．赤は初期版と最終版READMEの項目「使用方法」における説明文の一致率が高く，文字数が増加している変更「追加」，緑は初期版と最終版READMEの項目「使用方法」における説明文の一致率が高く，文字数が変化していない「変更なし」，青は初期版と最終版READMEの項目「使用方法」における説明文の一致率が高く，文字数が減少している変更「削除」を表す．結果から，項目「使用方法」においても，初期版と最終版READMEの説明文は一致率が高く，初期版の説明文の内容を基に変更されていた．また，一致率が高い（90-100\%）説明文を確認したところ，9,402件のうち「追加」が行われたのが5,657件，「変更なし」が2,925件，「削除」が行われたのが820件であった．図4.5の結果から，項目「使用方法」においても，README変更において「削除」が行われることは少なく，「追加」が行われることが多いことを確認した．
+
+
+%--------------------------------
+\begin{figure}[t]
+ 	\centering
+		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/head_usag_equall2.pdf}
+	\caption{項目:使用方法同士での比較}
+	\label{fig:oss_developments}
+\end{figure}
+%--------------------------------
+
+
+
+
+
+
+%% ーーーーーーーーーーーーーーーー
+\subsubsection{項目「使用方法」と異なる項目の比較}
+図4.6から図4.9は，項目「使用方法」の初期版の説明文と3章事前分析で項目「使用方法」と類似する内容が記述される項目「API」，「概要」，「オプション」およびその他項目の最終版の説明文を比較した連続一致率の分布を示す．横軸は連続一致率を表し，縦軸は項目数を表す．連続一致率が高いほど，READMEの変更「細分化」や「統合」が行われる可能性が高いことを示す．3章事前分析の結果から，項目「使用方法」は異なる項目（API，概要，オプション）への説明文の移動を行うことが考えられたが，図4.6から図4.9の結果から，項目「使用方法」においても，READMEの変更において「細分化」や「統合」が行われる可能性は低いと示唆される．
+%使用方法に関しては，再現率高かったし，そういう細分化みたいなものの可能性が十分考えられた．それでもなかった〜みたいな風に説明すればいいんじゃない？
+
+分析1の結果から，READMEの変更において，異なる項目への情報の移動は行われず，ソースコードの変更とともに項目ごとに情報を追加していくことを明らかにした．また，本論文で提案する，READMEとその他ファイルの紐付け手法の性能を低下させる要因になる，ソースコードの変更とは無関係なREADMEの変更が行われる可能性が低いことが示唆される．
+
+
+%分析1の結果から，READMEは初期版では完成されておらず，開発者が必要に応じて，初期版のREADMEの説明文を基に情報を継時的に追加していくことが示唆される．
+%結論これでいいの？→懸念していたリファクタリングのような変更はなさそう，項目ごとに追加されていくことが分かった．
+
+
+
+%--------------------------------
+\begin{figure}[t]
+ 	\centering
+		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/head_usag_API.pdf}
+	\caption{項目:使用方法（初期版）と項目:API（最終版）の比較}
+	\label{fig:oss_developments}
+\end{figure}
+%--------------------------------
+\begin{figure}[t]
+ 	\centering
+		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/head_usag_abst.pdf}
+	\caption{項目:使用方法（初期版）と項目:概要（最終版）の比較}
+	\label{fig:oss_developments}
+\end{figure}
+%--------------------------------
+\begin{figure}[t]
+ 	\centering
+		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/head_usag_opt.pdf}
+	\caption{項目:使用方法（初期版）と項目:オプション（最終版）の比較}
+	\label{fig:oss_developments}
+\end{figure}
+%--------------------------------
+\begin{figure}[t]
+ 	\centering
+		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/head_usag_all.pdf}
+	\caption{項目:使用方法（初期版）とその他項目（最終版）の比較}
+	\label{fig:oss_developments}
+\end{figure}
+%--------------------------------
+
+
+
+
+
+
+%% 5章ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\section{分析2: READMEの変更と紐づくファイルは何か？}
+
+%\textcolor{red}{
+
+%% 5-1ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{概要}
+%いつ変更するのかというのは，同時に変更されるファイルのタイミングを知ることで解決できる的な話
+%紐付けできるか試すために，この研究では，同じ変更意図であることが多い同一コミットに絞り，試すという話
+
+%README変更を開発者に推薦するためには，どのファイルを変更したときにREADMEを変更するのかという情報が必要である．
+
+
+
+%同時に変更されるといっても，ほんとに変更内容が共通している（紐づいてる）の？→紐づいてるなら機械的に紐付けできる？紐付けができるなら，どのファイルを変更したときに，RMを変更しないといけないのか推薦できる．的な文章にしたい
+%READMEには，新機能の使い方やAPIの説明，オプションの設定方法などの情報が記述されており，その他のファイルの変更に伴って，共にREADMEが変更されることが多い．しかし，同時に変更されたREADMEとその他のファイルの変更意図が共通しているかは明らかではない．本章では，READMEとその他のファイルの変更を機械的に紐付ける手法を提案し，その有用性を評価する．具体的には，READMEの説明文の変更内容とREADMEと同時に変更されたファイルの変更内容を比較し，READMEの変更と紐づくファイルを特定する．READMEの変更とその他のファイルの変更との紐付けができれば，READMEを変更すべきと開発者に推薦することができる．
+
+
+
+
+READMEはソフトウェアの進化に追従して変更されるべきドキュメントであるが，ソースコードを変更するたびにREADMEを変更するとは限らなず，ファイルの変更に合わせて，開発者がREADMEを変更すべきか判断が困難であるため，開発者はREADMEの変更を見落とすと考えられる．開発者のREADME変更の作業負荷を低減させ，ソースコードの変更とともにREADMEが変更されるようにするためには，READMEの変更と直接関係があるファイルを把握する必要がある．
+
+READMEには，新機能の使い方やAPIの説明，オプションの設定方法などの情報が記述されており，その他のファイルの変更に伴って，共にREADMEが変更されることが多い．しかし，同時に変更されたREADMEとその他のファイルの変更意図が共通しているかは明らかではない．READMEと同時に変更されるファイルのうち，READMEと変更意図が一致するファイルは，すぐにその変更内容をREADMEに反映した（READMEの変更と直接関係があるファイルである）と考え，本論文では，同時に変更されたREADMEとファイルを対象とする．本章では，READMEとその他のファイルの変更を機械的に紐付ける手法を提案し，その有用性を評価する．具体的には，READMEの説明文の変更内容とREADMEと同時に変更されたファイルの変更内容を比較し，READMEの変更と紐づくファイルを特定する．本論文で提案するREADMEとその他のファイルの紐付け手法によって，変更意図が一致するREADMEの変更とその他のファイルの変更を機械的に紐付けできれば，開発者のファイル変更に合わせて，README変更を開発者に推薦することで，開発者のREADME変更支援やREADMEを常に最新の状態にするといったREADMEの品質向上につながることを期待する．
+
+
+
+
+
+%% 5-2ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{データセット}
+\subsubsubsection{コミットの抽出}
+3章の事前分析および4章の分析1同様に，52,292件のプロジェクトのREADMEを分析対象とする．同時に変更されたREADMEとその他のファイルの変更意図が共通しているか確認するために，52,292件のプロジェクトのREADMEの変更履歴からREADMEが変更されたコミットを抽出する．その結果，得られた184,598コミットをデータセットとして使用する．
+
+\subsubsubsection{評価用データの作成}
+本章では，同時に変更されたREADMEの説明文の変更内容とその他のファイルの変更内容を比較し，機械的にREADMEの変更と紐づくファイルを特定する．正しく特定できているかを評価するために，データセットからランダムに抽出したコミットを目視で確認し，評価用データの作成を行う．具体的には，データセットからランダムに抽出した384コミット（信頼区間95\%，信頼度±5\%）で変更されたREADMEおよびファイルの変更内容およびコミットメッセージを目視で確認し，READMEとファイルの変更意図が同じであるか否かを分類する．
+
+
+%% 5-3ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{手法}
+本章では，同時に変更されたREADMEの説明文の変更内容とその他のファイルの変更内容を比較し，機械的にREADMEの変更と紐づくファイルを特定する．特定は次の手順で行う．
+%--------------------------------
+\subsubsection{手順1：変更差分の抽出}
+コミットからREADMEおよびファイルの変更差分の抽出を行う．分析1の結果より，READMEの変更において情報の追加が行われることがわかった．本論文ではREADMEの変更と紐づくファイルを特定するため，READMEおよびファイルの変更内容のうち，削除された部分ではなく追加された部分を対象とし，追加された行を変更差分として抽出する．
+%--------------------------------
+\subsubsection{手順2：モデル構築}
+手順1で抽出したREADMEおよびファイルの変更差分を入力として，READMEとファイルの変更意図が一致するか否かの2クラス分類モデルの構築を行う．モデルの構築には自然言語処理分野でよく使用されるBag of Words （BoW）とBERTに加え，CodeBERTを用いる．
+
+ \begin{itemize}
+    \item Bag of Words （BoW）: 自然言語で記述された文書に含まれる単語を出現回数に基づきベクトル表現を得る．BoWはシンプルで理解しやすいが，単語の順序や文脈を考慮していないため，文の意味の一部が失われる可能性がある．
+
+    \item BERT\cite{BERT}: 自然言語処理のタスクにおいてよく使用される事前学習モデル．Transformer\cite{Transfomer}ベースのモデルであり，双方向の文脈を考慮している．大量のテキストデータで事前学習され，単語の文脈に基づいた豊富なベクトル表現を得る．本論文では，一般的に使用される標準的なモデルHugging Face Transformersの事前学習モデル「bert-base-uncased」を使用する．
+  \end{itemize}
+
+変更差分には，自然言語だけでなくソースコードも含まれるため，自然言語だけでなく複数のプログラム言語のコーパスを用いて事前学習されたCodeBERTも用いる．
+
+ \begin{itemize}
+    \item CodeBERT\cite{CodeBERT}: プログラムに特化したBERTベースのモデル．RoBERTa\cite{RoBERTa}をベースにしており，プログラミング関連のタスクに適したベクトル表現を獲得．大規模なプログラムと自然言語のペアのデータセットで事前学習される．事前学習には，CodeSerchNet\cite{CodeSerchNet}から収集された6言語（Ruby，JavaScript，Go，Python，Java，PHP）のメソッドとコメントのペアが用いられ，コード分類やコード要約，ドキュメント生成などで高い性能を発揮する．CodeBERTは，プログラムの文脈を理解し，自然言語とプログラムの間の意味的な関係を捉えることができる．本論文では，Hugging Face Transformersの事前学習モデル「codebert-base」を使用する．
+ \end{itemize}
+
+
+BoW，BERTおよびCodeBERTのモデル構築方法について順に記述する．
+
+\subsubsubsection{BoWモデル}
+ベクトル間の類似度が任意の閾値以上の場合に，READMEの変更内容とその他のファイルの変更内容を機械的に紐付けられると考え，READMEとファイルの変更意図が一致するか否かの2クラス分類モデルを構築する．具体的には，手順1で抽出した変更差分に対して，BoWを用いてベクトル化を行う．次に，READMEの変更とその他ファイルの変更内容が一致するのか確認するために，類似度を算出する．類似度の算出には，一般的にベクトル表現の類似度算出に使用されるコサイン類似度を用いる．算出した類似度が閾値以上であればREADMEとファイルの変更意図が一致する，閾値未満であれば一致しないと分類する．
+
+\subsubsubsection{BERTモデルおよびCodeBERTモデル}
+事前学習されたBERTおよびCodeBERTをファインチューニングし，READMEとファイルの変更意図が一致するか否かの2クラス分類を行うモデルの構築を行う．具体的には，BERTおよびCodeBERTの最後に全結合層（線形）を追加する．次に，手順1で抽出したREADMEおよびファイルの変更差分を入力として与え，READMEとファイルの変更意図が一致するか否か（0または1）を出力させる．図5.1はモデルの構成図を示す．5章2節で作成した評価用データからランダムに8割抽出し，ファインファインチューニングに用いる．残りの2割のデータを用いて，モデルの評価を行う．また，今回使用するBERTの事前学習モデル「bert-base-uncased」およびCodeBERTの事前学習モデル「codebert-base」の最大入力トークン長が512であるため，READMEおよびファイルの変更差分が512を超える場合は，512トークン分までを入力として用いる．
+
+%-------------------------
+\begin{figure}[t]
+ 	\centering
+		\includegraphics[width=0.4\linewidth]{./IPSJ202303_Ishioka/BERT_flow.pdf}
+	\caption{BERTモデルおよびCodeBERTモデルの構成図}
+	\label{fig:oss_developments}
+\end{figure}
+%-------------------------
+
+%--------------------------------
+\subsubsection{手順3：評価}
+手順2で各モデルが出力した結果が評価用データと一致しているかを確認するために，評価指標の値を比較する．評価指標には，適合率，再現率，F1値を用いる．また，BoWモデルは閾値によって評価結果が異なるため，AUC-ROC（Area Under the Curve - Receiver Operating Characteristic）を使用する．AUC-ROCは確率的な閾値に依存する適合率や再現率とは異なり，すべての可能な閾値を考慮する閾値に依存しない評価方法である．
+
+
+%上記手順で算出した類似度が任意の閾値以上の場合に，READMEの変更内容がその他のファイルの変更内容と機械的に紐付けられると考え，READMEと変更意図が一致するか否かの2クラス分類を行う．手法の類似度が評価用データと一致しているかを確認するために，評価指標の値を比較する．評価指標には，適合率，再現率，F1値，AUC-ROC（Area Under the Curve - Receiver Operating Characteristic）を使用する．AUC-ROCは確率的な閾値に依存する適合率や再現率とは異なり，すべての可能な閾値を考慮する閾値に依存しない評価方法である．
+
+
+
+%% 5-4ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{結果}
+表5.1は目視の結果得られたREADMEの変更と変更意図が一致するファイル数を示す．ランダムに抽出した384コミットから1,553件のファイルの変更差分が得られた．得られた1,553件のファイルの変更差分を評価用データとして用いて分析を行う．
+
+表5.2は，得られたファイルおよび拡張子数の上位5件を示す．本論文では，JavaScript言語を用いたプロジェクトを対象としているため，「.js」および「.json」ファイルが他拡張子よりも多くREADMEと同時に変更されている．また，自然言語で記述されることの多い「.md」ファイルが「.js」および「.json」ファイルに次いで，READMEと同じコミットで多く変更されている．データセットから，READMEはプログラムファイルだけでなく同じ自然言語で記述されるファイルと同時に変更されていることがわかる．
+
+
+
+
+
+%BoW_test_AUC.pdf
+%BoW_test_PR.pdf
+%BoW_testdata.pdf
+
+
+
+
+
+%\begin{itemize}
+%  \item 全てのファイル: 全てのファイル（1,553件）を対象に，READMEの変更と紐づくファイルを特定する．
+%  \item プログラムファイルのみ : プログラムファイルのみ（1,127件）を対象に，READMEの変更と紐づくファイルを特定する．プログラム言語に特化した手法であるCodeBERT，CodeT5+が，他の手法よりも精度が高いことが考えられる．
+%\end{itemize}
+%
+%\subsection{全てのファイルの結果}
+%表5.2は，得られたファイルおよび拡張子数の上位5件を示す．本論文では，JavaScript言語を用いたプロジェクトを対象としているため，「.js」および「.json」ファイルが他拡張子よりも多くREADMEと同時に変更されている．また，自然言語で記述されることの多い「.md」ファイルが「.js」および「.json」ファイルに次いで，READMEと同じコミットで多く変更されている．データセットから，READMEはプログラムファイルだけでなく同じ自然言語で記述されるファイルと同時に変更されていることがわかる．
+
+%--------------------------------
+\begin{table}[t]
+ \centering
+ \caption{評価用データ}
+\label{tab:result}
+  \scalebox{1.0}{
+  \begin{tabular}{l|r} 
+  \hline\hline
+     & ファイル数\\\hline 
+    READMEと変更意図が一致する（正解） & 781件\\
+    \hline 
+    READMEと変更意図が一致しない（不正解） & 772件\\
+    \hline 
+    合計 & 1,553件\\ \hline
+  \end{tabular}
+    \label{tab:result}
+   }
+\end{table}
+%--------------------------------
+
+%--------------------------------
+\begin{table}[t]
+  \caption{READMEと同時に変更されたファイル名/拡張子上位5件}
   \centering
-  \includegraphics[width=1.0\linewidth]{IPSJjournal_maekawa_fig/tuikabunseki.pdf}
-  \caption{ライブラリのメジャーバージョンに基づく適合率と再現率の推移\todo{メモリのフォントサイズ，凡例，軸名のフォントサイズを大きくしたい．縦軸の軸名もつけてほしい}}
+  \begin{tabular}{l|rll|r}
+%\hline
+    \cline{1-2}\noalign{\vspace{1pt}}\cline{1-2}\cline{4-5}\noalign{\vspace{1pt}}\cline{4-5}
+    ファイル名 & ファイル数 && 拡張子 & 拡張子数\\
+    \cline{1-2}\cline{4-5}
+    package.json       & 235 && js & 738\\
+    index.js           & 119 && json & 295\\
+    CHANGELOG.md       & 54 && md & 101\\
+    index.html         & 34 && ts & 69\\
+    package-lock.json  & 26 && html & 60\\
+    \cline{1-2}\cline{4-5}
+  \end{tabular}
+
+  % \begin{tabular}{l|r}
+  %   \hline\hline
+  %   拡張子 & 拡張子数\\
+  %   \hline
+  %   js    & 738 \\
+  %   json  & 295 \\
+  %   md    & 101 \\
+  %   ts    & 69 \\
+  %   html  & 60 \\
+  %   \hline
+  % \end{tabular}
+
+  \label{tab:file_comparison}
+\end{table}
+%--------------------------------
+
+%--------------------------------
+\begin{figure}[t]
+ 	\centering
+		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/BoW_testdata.pdf}
+	\caption{Bag-of-Wordsでの結果}
+        \ecaption{hoge}
+	\label{fig:oss_developments}
+\end{figure}
+%--------------------------------
+
+%%--------------------------------
+%\begin{figure}[t]
+% 	\centering
+%		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/BoW.pdf}
+%	\caption{Bag-of-Wordsでの結果}
+%	\label{fig:oss_developments}
+%\end{figure}
+%%--------------------------------
+%\begin{figure}[t]
+% 	\centering
+%		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/BERT.pdf}
+%	\caption{BERTでの結果}
+%	\label{fig:oss_developments}
+%\end{figure}
+%%--------------------------------
+%\begin{figure}[t]
+% 	\centering
+%		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/CodeBERT.pdf}
+%	\caption{CodeBERTでの結果}
+%	\label{fig:oss_developments}
+%\end{figure}
+%%--------------------------------
+%\begin{figure}[t]
+% 	\centering
+%		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/CodeT5.pdf}
+%	\caption{CodeT5+での結果}
+%	\label{fig:oss_developments}
+%\end{figure}
+%%--------------------------------
+
+
+
+図5.2の左図は，BoWのROC（Receiver Operating Characteristic）曲線を表す．ROC曲線は2クラス分類の性能を評価するためのグラフで，横軸は偽陽性率（実際にはREADMEの変更意図と一致しないファイルを，一致すると誤分類した割合），縦軸は真陽性率（実際にREADMEの変更意図と一致するファイルを，正しく一致すると分類できた割合）を示す．ROC曲線が左上隅に近い凸型で，AUC（曲線下面積）の値が大きいほど性能が高く，READMEとファイルを紐付けられていると解釈する．図5.2の右図は，BoWの閾値ごとの適合率，再現率，F1値の変化を表す．横軸は閾値，縦軸は適合率，再現率，F1値の結果を示す．BERTおよびCodeBERTの結果と比較するために，BoWの結果は，図5.2の右図において最も性能が高かった値を用いる．
+
+表5.3は各手法の適合率，再現率，F1値の結果を示す．
+適合率においては，BERT（適合率=0.91），CodeBERT（適合率=0.86），BoW（適合率=0.74）の順で，BERTが最も良い結果となった．
+BERTおよびCodeBERTがBoWよりも高い適合率を示していることから，自然言語の文脈を考慮することで，より正確な分類が可能になることが示唆される．また，1つの単語だけでなく複数単語で構成される専門用語をフレーズとして扱うことができたため，高い適合率を示したと考えられる．
+再現率においては，BoW（再現率=0.83），CodeBERT（再現率=0.76），BoW（再現率=0.67）の順で，BoWが最も良い結果となった．
+BoWは単語の出現頻度に基づくモデルであり，一般的な特徴を捉えやすい．BoWが最も高い再現率を示していることから，固有名詞や関数名などの有無が性能に強く寄与していることが示唆される．また，BERTの再現率が他と比較して低くなっている原因として，BERTの事前学習で行われるサブワード分割が，一般的なドキュメントを前提としているため，低くなったと考えられる．一方でCodeBERTはプログラムに使用されるフレーズなどを考慮できたため，BERTよりも高い再現率を示したと考えられる．
+F1値においては，CodeBERT（F1値=0.81），BERT（F1値=0.78），BoW（F1値=0.77）の順で，CodeBERTが最も良い結果となった．CodeBERTは自然言語およびプログラムの文脈を考慮することで，適合率と再現率の両方で良好な性能を示している．このことから，自然言語とプログラムの文脈も考慮することで，コードに特化したトークン化や埋め込み表現によりプログラムの特徴を捉えることができ，READMEとその他のファイルの紐付け性能の向上につながったと考えられる．
+
+分析2の結果から，文脈を考慮することが全ての指標において最適であるわけではないが，自然言語やプログラムの文脈を考慮することで，モデルの性能向上につながることが明らかとなった．
+
+
+%また，BERTの再現率が他と比較して低くなっている原因として，BERTの事前学習で行われるサブワード分割が，一般的なドキュメントを前提としているため，低くなったと考えられる．一方でCodeBERTはプログラムに使用されるフレーズなどを考慮できたため，BERTよりも高い再現率を示したと考えられる．
+%また，BERTの再現率が他と比較して低くなっている原因として，文脈を考慮することによって，固有名詞や関数名などの有無といった情報の重要度が下がってしまい，正例を見逃してしまった可能性が考えられる．
+%
+%複数のプログラム言語のコーパスを用いて事前学習されたCodeT5+およびCodeBERTよりも，プログラム言語のコーパスで事前学習をしていないBoWおよびBERTの方が高い性能を発揮した．この結果については考察で述べる．
+%分析2の結果から，READMEとその他のファイルの紐付けを行う上で，プログラム言語の文脈を考慮して変更差分のベクトル化を行うよりも，変更差分に含まれる自然言語が重要であることが示唆される．
+
+
+
+%--------------------------------
+\begin{table}[t]
+  \centering
+  \caption{各手法の適合率，再現率，F1値}
   \ecaption{hoge}
-  \label{fig:tuikabunseki}
-  \vspace{-10mm}
+    \begin{tabular}{l|r|r|r}\hline\hline
+    手法 & 適合率 & 再現率 & F1値 \\\hline
+    BoW & 0.74 & \underline{\textbf{0.83}} & 0.78 \\
+    BERT  & \underline{\textbf{0.91}} & 0.67 & 0.77 \\
+    CodeBERT & 0.86 & 0.76 & \underline{\textbf{0.81}} \\\hline
+    \end{tabular}
+  \label{tab:performance_metrics}
+\end{table}
+%--------------------------------
+
+
+
+
+
+%図5.1から図5.4の左図は，各手法のROC（Receiver Operating Characteristic）曲線を表す．ROC曲線は2クラス分類の性能を評価するためのグラフで，横軸は偽陽性率（実際にはREADMEの変更意図と一致しないファイルを，一致すると誤分類した割合），縦軸は真陽性率（実際にREADMEの変更意図と一致するファイルを，正しく一致すると分類できた割合）を示す．ROC曲線が左上隅に近い凸型で，AUC（曲線下面積）の値が大きいほど性能が高く，READMEとファイルを紐付けられていると解釈する．
+%
+%図5.1から図5.4の右図は，各手法の閾値ごとの適合率，再現率，F1値の変化を表す．横軸は閾値，縦軸は適合率，再現率，F1値の結果を示す．図5.1はBoWでの結果，図5.2はBERTでの結果，図5.3はCodeBERTでの結果，図5.4はCodeT5+での結果を示す．ROC曲線の結果から性能は，BoW（AUC=0.81），BERT（AUC=0.73），CodeT5+（AUC=0.60），CodeBERT（AUC=0.53）の順となった．また，F1値の最大値の結果から，BoW（F1=0.76），BERT（F1=0.71），CodeT5+（F1=0.67），CodeBERT（F1=0.67）の順となった．表5.2より，拡張子が「js」や「json」といったプログラムファイルが変更ファイルの半数以上を占めているにも関わらず，複数のプログラム言語のコーパスを用いて事前学習されたCodeT5+およびCodeBERTよりも，プログラム言語のコーパスで事前学習をしていないBoWおよびBERTの方が高い性能を発揮した．この結果については考察で述べる．
+
+
+
+
+%%--------------------------------
+%\subsection{プログラムファイルのみの結果}
+%プログラムファイルにおける各手法の影響を比較するために，プログラムファイルのみを対象に各手法でベクトル化を行った結果を図5.5から図5.8に示す．図5.5はBoWでの結果（プログラムファイルのみ），図5.6はBERTでの結果（プログラムファイルのみ），図5.7はCodeBERTでの結果（プログラムファイルのみ），図5.8はCodeT5+での結果（プログラムファイルのみ）を示す．ROC曲線の結果から性能は，BoW（AUC=0.79），BERT（AUC=0.71），CodeT5+（AUC=0.60），CodeBERT（AUC=0.52）の順となった．また，F1値の最大値の結果から，BoW（F1=0.76），BERT（F1=0.72），CodeT5+（F1=0.69），CodeBERT（F1=0.68）の順となった．拡張子が「js」や「json」といったプログラムファイルのみを対象に行った結果も，複数のプログラム言語のコーパスを用いて事前学習されたCodeT5+およびCodeBERTよりも，プログラム言語のコーパスで事前学習をしていないBoWおよびBERTの方が高い性能を発揮した．この結果については考察で述べる．
+%
+%
+%
+%分析2の結果から，READMEとその他のファイルの紐付けを行う上で，プログラム言語の文脈を考慮して変更差分のベクトル化を行うよりも，変更差分に含まれる自然言語が重要であることが示唆される．
+%
+%
+%
+%%--------------------------------
+%\begin{figure}[t]
+% 	\centering
+%		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/BoW_Program.pdf}
+%	\caption{BoWでの結果（プログラムファイルのみ）}
+%	\label{fig:oss_developments}
+%\end{figure}
+%%--------------------------------
+%\begin{figure}[t]
+% 	\centering
+%		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/BERT_Program.pdf}
+%	\caption{BERTでの結果（プログラムファイルのみ）}
+%	\label{fig:oss_developments}
+%\end{figure}
+%%--------------------------------
+%\begin{figure}[t]
+% 	\centering
+%		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/CodeBERT_Program.pdf}
+%	\caption{CodeBERTでの結果（プログラムファイルのみ）}
+%	\label{fig:oss_developments}
+%\end{figure}
+%%--------------------------------
+%\begin{figure}[t]
+% 	\centering
+%		\includegraphics[width=1.0\linewidth]{./IPSJ202303_Ishioka/CodeT5_Program.pdf}
+%	\caption{CodeT5+での結果（プログラムファイルのみ）}
+%	\label{fig:oss_developments}
+%\end{figure}
+%%--------------------------------
+
+
+
+
+
+%% 6章ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\section{考察}
+%% 6-1ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{分析1の考察}
+本節では，4章で初期版READMEと最終版READMEを比較した結果を考察する．6.1.1では，一致率が高く，文字数が増えた項目を追加分析する．6.1.2では，初期版READMEには存在せず，最終版READMEにかけて追加された項目を追加分析する．
+
+\subsubsection{文字数が増加する項目は何か}
+図4.3の結果から，READMEの変更において，ソースコードの変更とは無関係な情報の移動は行われず，文章が追加されていくことが明らかとなった．一致率が高く，文字数が増えた項目を追加分析する．具体的には，図4.3における「追加」，つまり文章が初期版READMEと比べ増加している項目を明らかにした．表6.1は，初期版READMEと比べ最終版READMEで文字数が増加した上位5項目を示す．その結果は，使用方法，インストール方法，ライセンス，API，オプションの順で，文字数が初期版と比べ増加していることがわかった．これらの項目は，ソフトウェアの機能追加やAPI追加に伴って，利用者に新機能の使い方やAPIの詳細情報を伝えるために文章が追加されると考えられる．結果から，開発者はソフトウェアの利用方法やライセンスなどの，利用者にとって重要な情報を提供することに注力していることが示唆される．今後，READMEの項目ごとに，説明文の変更とファイルの変更を紐づけることで，開発者がファイルを変更する場合に，READMEの項目をどのように変更する必要があるのか推奨することができる．特に，利用者向けの項目（使用方法，インストール方法など）の説明文と紐づけることで，開発者のREADME変更を支援できると考える．
+
+
+%\textcolor{red}{今後，}開発者がファイルを変更する場合に，利用者向けの項目（使用方法，インストール方法など）の説明文の変更と紐付けることで，\textcolor{red}{開発者がREADMEのどの項目を変更する必要があるのか推奨することで，}開発者のREADME変更を支援できると考えられる．
+
+
+%開発者のREADME変更を支援する上で，既存の項目を変更する場合は，利用者向けの項目が変更される
+
+
+
+
+
+%--------------------------------
+%文字数が増えている項目
+\begin{table}[t]
+  \caption{文字数が増加した項目上位5件}
+  \ecaption{hoge}
+  \centering
+  \begin{tabular}{l|r}
+    \hline\hline
+    項目 & 文字量が増加した\\
+    & 項目数（37,648件）\\
+    \hline
+    その他       & 20,977 \\
+    使用方法           & 6,603 \\
+    インストール方法       & 3,535 \\
+    ライセンス         & 1,758 \\
+    API  & 1,421 \\
+    オプション  & 650 \\
+    \hline
+  \end{tabular}
+  \label{tab:file_comparison}
+\end{table}
+%--------------------------------
+
+
+\subsubsection{追加される項目は何か}
+表4.2で，初期版READMEから最終版READMEにかけて項目が追加されていることが明らかとなった．初期版READMEには存在せず，最終版READMEにかけて追加された項目を追加分析する．表6.2は，初期版READMEから最終版READMEにかけて追加された上位5項目を示す．その結果は，インストール方法，ライセンス，使用方法，貢献方法，APIの順で多く，これらの項目が追加されることがわかった．結果から，プロジェクトの成熟につれ，利用者向けの項目（使用方法，インストール方法など）だけでなく，開発者向けの項目（貢献方法，テストなど）が追加されると示唆される．今後，READMEの項目ごとに，説明文の変更とファイルの変更を紐づけることで，開発者がファイルを変更する場合に，READMEのどの項目を追加する必要があるのか推奨することができる．特に，開発者向けの項目（貢献方法，テストなど）の説明文と紐づけることで，開発者のREADME変更を支援できると考える．
+
+
+%これらの項目は，ソフトウェアがある程度成熟してから記述する内容であり，利用者にとって重要なソフトウェアの使用方法などの項目だけでなく，外部の開発者や貢献者に向けたプロジェクトを拡大するための内容も追加されている．結果から，プロジェクトの成熟につれ，利用者向けの内容だけでなく，外部の開発者や貢献者に向けた内容が追加されると示唆される．プロジェクトの成熟につれ，利用者向けの項目（使用方法，インストール方法など）だけでなく，開発者向けの項目（貢献方法，テストなど）の説明文の変更とファイルに変更を紐付けることが有効であると考えられる．
+
+
+%開発者のREADME変更を支援する上で，新規の項目を追加する場合は，利用者向けの項目だけでなく，貢献者向けの項目が追加される
+
+
+
+%--------------------------------
+%新しく追加された項目
+\begin{table}[t]
+  \caption{初期版READMEから最終版READMEにかけて追加された項目上位5件}
+  \ecaption{hoge}
+  \centering
+  \begin{tabular}{l|r}
+    \hline
+    項目 & 項目追加数\\
+    & （262,734件）\\
+    \hline
+    その他       & 167,044 \\
+    使用方法           & 23,321 \\
+    インストール方法       & 21,258 \\
+    ライセンス         & 9,183 \\
+    API  & 7,381 \\
+    貢献方法  & 6,011 \\
+    \hline
+  \end{tabular}
+  \label{tab:file_comparison}
+\end{table}
+%--------------------------------
+
+
+
+
+
+%% 6-2ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{分析2の考察}
+本節では，5章でREADMEとその他のファイルの紐付けを行った結果を考察する．BoW，BERT，CodeBERTの3つのモデルごとに紐付けられたファイルの違いを追加分析する．
+図6.1は，モデルごとに共通して紐付けできたファイルの数を示す．結果から，BoW，BERT，CodeBERTの3つのモデルで共通して紐付けできたファイル数は81件，BoWのみで紐付けできたファイル数は18件，BERTのみで紐付けできたファイル数は1件，CodeBERTのみで紐付けできたファイル数は7件であった．
+BoWのみで紐付けできたファイルを目視で確認した結果，依存関係の変更，関数の追加，機能の追加に伴うREADMEの変更があった．これらの変更には，関数名や機能の名前などのキーワードが複数回出現していたため，BoWのみで紐付けできたと考える．
+BERTのみで紐付けできたファイルを目視で確認した結果，ファイルでは関数を追加し，関数追加に伴う機能の説明がREADMEに追加されるという変更であった．この変更では，関数名や機能の名前などのキーワードの出現が少なく，文脈を考慮することができたため，BERTのみで紐付けできたと考える．
+CodeBERTのみで紐付けできたファイルを目視で確認した結果，関数の引数をコードを用いてREADMEに説明を加える変更，プログラムファイルでどのような変更をしたのか要約した文章をREADMEに追加する変更があった．これらの変更はプログラムの文脈を考慮することができたため，CodeBERTのみで紐付けできたと考える．
+
+
+
+
+
+%各手法のみで取れたやつ　各手法のみでしか紐付けできないファイル数
+%--------------------------------
+\begin{figure}[t]
+ 	\centering
+    		\includegraphics[width=0.8\linewidth]{./IPSJ202303_Ishioka/benz.pdf}
+	\caption{モデルごとに共通して紐付けできたファイルの数}
+        \ecaption{hoge}
+	\label{fig:oss_developments}
 \end{figure}
+%--------------------------------
 
-本手法は，ライブラリの変更とテストコードの変更の関連性を考慮するため，ライブラリとテストコードが伴って変更されるような，成熟したライブラリにおいて有効である場合がある．分析対象としたライブラリバージョンから，メジャーバージョンが一定以下だったライブラリバージョンを除外した場合の結果を考察する．除外対象とするライブラリバージョンの最低メジャーバージョンを0から10(分析対象ライブラリの最大値)までとし，1ごとに適合率と再現率を計算した．結果を図\ref{fig:tuikabunseki}に示す．
 
-再現率は，メジャーバージョンが上昇するにつれて，0.5から1.0の間で徐々に高くなる傾向が見られる．これは，メジャーバージョンが高く，成熟したライブラリでは，後方互換性が損失するライブラリ更新に伴ってテストコードが変更される可能性が高いことを示している．つまり，成熟したライブラリの開発者は，後方互換性のない変更をより慎重に扱い，それに伴うテストコードの更新を行う傾向があると考えられる．一方で，適合率は0.1から0.3の範囲で推移しており，比較的低い値を示している．適合率が低い理由として，分析対象となるライブラリのクライアント数が少なく，後方互換性の損失を確認することができなかったことが考えられる．
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{妥当性への脅威}\label{sec:validity}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \subsection{内的妥当性}
-% 分析対象のライブラリを決定するために，各コミットのコミットステータスからテスト成功率を確認した．
-% % ステータスは常にテストの実行結果を示しているわけではない．
-% コミットステータスはGitHubのAPIから書き込まれたデータであるため，Webサイトへのデプロイ結果などを示している場合もあるが，
-% 本研究ではライブラリを対象としているため，これらのステータスは全てテストの実行結果であるとみなした．
 
-% \subsection{外的妥当性}
-本研究で用いたテストケースへの変更から後方互換性を判断する分析手法は，ライブラリの変更に伴ってテストが修正されることを期待している．しかし，ライブラリ開発では様々な要因でテストが修正されないことがある．例えば，開発の初期段階であるために頻繁に変更される機能にテストの修正が追いつかないことが考えられる．本研究ではnpmで公開されている人気なライブラリを対象とし，ライブラリの人気度をあらわす指標であるQuality\footnote{\url{https://npms.io/about}}はテストが管理されているか否かも含まれている．したがって，本研究ではライブラリの変更に伴い，テストコードも変更しているプロジェクトを対象にしている．
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%\subsection{手法ごとで紐付けられたファイルの違い}
+%5章では，READMEとその他のファイルの紐付けを機械的に行うために，BoW，BERT，CodeBERT，CodeT5+の4つの手法を用いて，変更差分の類似度を算出した．図5.1から図5.8のAUCの結果から，BoWとBERTのAUCが，プログラムを事前学習したCodeBERTとCodeT5+よりも性能が高いことが明らかとなった．各手法でしか紐付けができないファイルがあるのか追加分析を行った．表6.3は各手法でしか紐付けができなかったファイル数を示す．結果から，各手法でしか紐付けできないファイルは，CodeBERTの1件のみであった．このファイルはプログラムファイルで，その変更内容はソフトウェアの機能追加に関するもので，READMEの項目「使用方法」が変更されていた．
+%
+%また，プログラムを事前学習したCodeBERTとCodeT5+のみでしか紐付けができないファイルは31件存在した．表6.4にその内訳を示す．その結果，「js」や「json」ファイルなどのプログラムファイルを紐付けできていた．その変更内容はソフトウェアの機能追加に関するものや依存関係の変更に関するもの，関数の追加に関する変更などがあった．図5.1から図5.8のAUCの結果から，CodeBERTとCodeT5+は，BoWとBERTのAUCの値を下回る一方で，ソフトウェアの機能追加や関数追加などのプログラムを事前学習したからこそ紐付けが可能となったファイルが存在する．そのため，READMEとその他のファイルの紐付けを行う上で，プログラムを事前学習させたモデルを用いることは有用であると言える．
+
+
+
+
+
+
+
+%%各手法のみで取れたやつ　各手法のみでしか紐付けできないファイル数
+%\begin{table}[H]
+%  \caption{各手法独自に紐付け可能なファイル数}
+%  \centering
+%  \begin{tabular}{l|r}
+%    \hline
+%    \textbf{ベクトル化手法} & \textbf{紐付けファイル数}\\
+%    & \textbf{（781件）}\\
+%    \hline
+%    BoWのみ       & 0件 \\
+%    BERTのみ           & 0件 \\
+%    CodeBERTのみ       & 1件 \\
+%    CodeT5+のみ         & 0件 \\    
+%    \hline
+%    BoWとBERTのみ         & 0件 \\
+%    CodeBERTとCodeT5+のみ         & 31件 \\
+%    \hline
+%  \end{tabular}
+%  \label{tab:file_comparison}
+%\end{table}
+%
+%
+%%コードモデルのみで取れたやつ
+%\begin{table}[H]
+%  \caption{プログラムを事前学習した手法のみで紐付けできたファイル}
+%  \centering
+%  \begin{tabular}{l|r}
+%    \hline
+%    \textbf{拡張子名} & \textbf{CodeBERTとCodeT5+のみで}\\
+%    & \textbf{紐付けできた数（31件）}\\
+%    \hline
+%    js       & 14件 \\
+%    json           & 6件 \\
+%    yml       & 2件 \\
+%    css         & 2件 \\    
+%    LICENSE         & 1件 \\    
+%    ts         & 1件 \\    
+%    vue         & 1件 \\    
+%    md         & 1件 \\    
+%    txt         & 1件 \\    
+%    lock         & 1件 \\    
+%    scss         & 1件 \\    
+%    \hline
+%  \end{tabular}
+%  \label{tab:file_comparison}
+%\end{table}
+
+
+
+
+
+%なぜP考慮モデルの性能が上がらなかったのか，どうすれば改善できそうか
+%どんな項目がファイルとともに更新されているのか→XXXXの項目→XXXXの項目はXXXの特徴がある，だからPモデルの性能が上がらなかったのでは？？
+%RMには1行だけ，他ファイルはたくさん更新の例　→　RMとファイルを完全に紐付けるのは難しい．．．
+
+
+%どういう目的で変更されたか（変更意図は？？）→リネームや新規の追加が多かった．
+
+
+%各手法で取れたやつ取れなかったやつの違いは？かぶりはある？Pファイルの割合は？？→そもそもファイルの類似低い？，RMが自然言語で書かれる＆書き方多様であるため，紐付けが難しい？？
+
+
+
+
+
+%% 6-3ーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+\subsection{妥当性の脅威}
+\subsubsection{内的妥当性}
+READMEおよびその他のファイルの変更差分の分散表現を得るために用いたベクトル化手法について議論する．本論文では，BoW，BERT，CodeBERTを使用したが，使用するベクトル化手法によって評価結果に違いが生じる可能性がある．しかし，本論文では，文脈を考慮していないBoW，事前学習されたモデルで文脈を考慮したBERT，複数のプログラムで事前学習されたモデルのCodeBERTを使用することでその脅威を削減する．
+
+正解データセット作成について議論する．本論文では，READMEおよびその他のファイルの変更意図が一致するのか否かを，著者が目視によって分類している．著者は一定のソフトウェア開発の知識を有するが，READMEおよびその他のファイルのすべての変更内容を把握して分類することは難しく，誤って分類している可能性がある．しかし，目視による分類は著者と共同研究者間で合意を形成することで行っており，その脅威を削減する．
+
+%また，目視による分類は信頼区間を考慮しているため，本論文の結果は妥当であるといえる．
+
+
+READMEとその他のファイルの紐付け手法について議論する．本論文では，紐付けを行うために，同時に変更されたREADMEおよびその他のファイルの変更差分に着目した．READMEとその他のファイルの紐付けを行う手法として，コミットメッセージの利用やREADME変更前後のコミットで変更されたファイル変更を利用することで，新たな知見を得られることが考えられる．しかし，READMEとその他のファイルの紐付け手法について，従来研究では明らかにされていないため，本論文により十分な知見を得ることができたと考える．
+
+
+
+%%ーーーーーーーーーーーーーーー
+\subsubsection{外的妥当性}
+正解データセット作成について議論する．本論文では，正解データセット作成の際，対象コミットのすべてを目視で調査したわけではない．しかし，目視対象とするデータは信頼区間95\%，信頼区間±5\%でランダムにサンプリングしているため，結果は一般化できる．
+
+
+対象プロジェクトについて議論する．本論文では，JavaScript言語を使用するプロジェクトのREADMEを対象としている．本論文の手法は，MarkDown形式で記述し，見出し機能を使用しているREADMEであれば，同様に実行できるため，JavaScript以外の言語を使用するプロジェクトにおけるREADMEを対象とした場合でも同様の結果が得られると考える．別言語で開発されたプロジェクトのREADMEを対象とすることで，言語間での手法の有用性の違いなどの新たな知見が得られると考える．
+
+
+
+
+
+
+
+%% 7章ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 \section{おわりに}
-\label{sec:conclusion}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+本論文では，開発者のREAME変更支援のために，同時に変更されるREADMEとその他のファイルの紐付け手法の提案を行った．分析1では，READMEをどのように変更するのかを明らかにするために，52,292件のプロジェクトを対象に，初期版READMEと最終版READMEの項目と説明文を比較した．その結果，READMEの変更において，ソースコードの変更とは無関係なREADMEの変更が行われる可能性は低く，ソースコードの変更とともに項目ごとに情報を追加していくことを明らかにした．具体的には，ソフトウェアの変更に伴って，使用方法やインストール方法，ライセンス，APIといった項目を追加し，説明文に文章を追加していくことを明らかにした．
 
-本論文では，ライブラリの機能変更に伴ってテストが変更されることから，テストの変更時にライブラリが後方互換性を損失しているという仮説に基づく分析を行った．
-% 分析では，テストの変更を4つ（追加，削除，修正，変更なし）に分類し，分類結果に基づく後方互換性の判断を行った．
-% 判断された後方互換性の有無は，ライブラリを使用するクライアントテストを実行し，ライブラリの変更前後でテストの結果が成功から失敗に変わるか否かによって検証した．
-% クライアントテストを実行することで実際の後方互換性を検証するのは，ライブラリの更新によってクライアントテストが失敗した場合，クライアントはライブラリの破壊的変更の影響を受けたといえるためである．
-分析の結果，人気なライブラリから収集した2,111件のライブラリバージョンにおいて，ライブラリバージョンにテストケース変更を含むか否かだけで，約68\%の再現率で後方互換性の損失を特定することができた．
-% ライブラリバージョンの後方互換性を正確に判断するためには，ライブラリの変更前後の動作を完全に把握する必要がある．
-% しかし，プログラミング言語の実行時に動作を変更する動的な性質のために，記述内容から動作を完全に把握することは困難である．
-% 本分析では，ライブラリ実行時の動作が記述されるテストの変更を利用することが，課題の解決に貢献できると考える．
-% ライブラリの実行結果とみなせる成功したテストを用いることで，単純な静的解析によって後方互換性を判断する手法について分析を行った．
-今後，テストの変更に基づく分類をテストケースの記述内容をもとにさらに詳細に行うことで，精度を向上させることも考えられる．
+分析2では，提案手法によってREADMEの変更とその他のファイルの変更を機械的に紐付けることができるのかを調査した．同時に変更されたREADMEの変更内容とファイルの変更内容を入力として，READMEとファイルの変更意図が一致するか否かの2クラス分類を行い，3つのモデル（BoW，BERT，CodeBERT）で比較した．その結果，CodeBERT（F1値=0.81），BoW（F1値=0.78），BERT（F1値=0.77）の順で高く，READMEとファイルの紐付けにおいて，CodeBERTモデルが適合率と再現率の両方で良好な性能を示した．
+
+本論文で提案するREADMEとその他のファイルの紐付け手法は，開発者のファイル変更に合わせて，README変更を開発者に推薦することで，開発者のREADME変更支援やREADMEを常に最新の状態にするといったREADMEの品質向上につながることを期待する．
+
+今後の発展として，対象とする言語を増やし，より一般的な結果を得ることが挙げられる．また，README変更前後のコミットで変更されたファイル変更との紐付けにより，より詳細な開発者へのREADME変更の推薦を行うことが挙げられる．また，READMEとその他のファイルの紐付け手法として変更差分以外の情報を利用することで，より正確な紐付けを行うことが考えられる．
+
 
 
 \bibliographystyle{ipsjunsrt}
-\bibliography{bibfile_IPSJjournal_maekawa}
+\bibliography{bibfile_IPSJjournal_ishioka}
 
 \begin{biography}
+\profile{n}{石岡 直樹}{2024年和歌山大学システム工学研究科在学中，ソフトウェア工学，特にソフトウェアドキュメント生成の研究に従事．}
+%
 \profile{m}{伊原 彰紀}{2009年奈良先端科学技術大学院大学情報科学研究科博士前期課程修了．2012年同大学博士後期課程修了．2012年同大学情報科学研究科助教．2018年和歌山大学システム工学部講師．博士（工学）．ソフトウェア工学，特にオープンソースソフトウェア開発・利用支援の研究に従事．電子情報通信学会，IEEE各会員．}
-%
-\profile{n}{前川 大輝}{2024年和歌山大学システム工学部在学中，ソフトウェア工学，特にプログラム検証の研究に従事．}
-%
-\profile{n}{松田 大輝}{2022年和歌山大学システム工学部卒業，ソフトウェア工学，特にプログラム検証の研究に従事．}
+
 \end{biography}
 
 
