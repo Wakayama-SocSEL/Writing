@@ -1,383 +1,265 @@
-% 英文で執筆する場合はクラスファイルへのオプションを[T,E]としてください．
-% If you want to write your paper in English, pass to [T,E] options to document class.
 \documentclass[T,J]{fose} % 「コンピュータソフトウェア」用のクラスファイルは compsoft です．
-\taikai{2024} % 固定です．出版委員長が毎年変更してAuthor Kitを配布してください．
+\taikai{2024}
+
 
 \usepackage [dvipdfmx] {graphicx}
 
-% ユーザが定義したマクロなどはここに置く．ただし学会誌のスタイルの
-% 再定義は原則として避けること．
-
-% 以下は説明のために使用したパッケージであるため，削除可能．
-\usepackage{listings}
-\usepackage{tabularx}
-\usepackage{fancyvrb}
-\usepackage{xurl}
+% ユーザが定義したマクロなどはここに置く．
 \usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{listings}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
-% 以下のマクロはサンプルファイル作成用のマクロです．不要であれば削除してください．
-\newcommand{\foseclassfile}{fose.cls}
-\newcommand{\fosestylefile}{fose.sty}
+\newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
+
+\lstset{
+basicstyle=\small\ttfamily,
+abovecaptionskip=0pt,
+captionpos=b,
+frame=tb,
+framexleftmargin=2em,
+numbers=left,
+numberstyle={\scriptsize},
+xleftmargin=\parindent
+}
+
+%ListingのキャプションがFigureになってしまうのをListingに直すコマンド
+\usepackage{caption}
+\makeatletter
+\let\MYcaption\@makecaption
+\makeatother
+\usepackage{caption}
+\makeatletter
+\let\@makecaption\MYcaption
+\makeatother
 
 
 \begin{document}
 
-% 論文のタイトル
-\title{\foseclassfile 使用サンプル}
-% 以下の \etitle（と\@etitle）はFOSE論文フォーマット独自のマクロです．
-% FOSEに投稿した論文を発展させてコンピュータソフトウェアに投稿される場合はコメントアウトしてください．
-% \setetitleは奇数ページのヘッダに表示する文字列（\etitle）を設定するためのマクロです．
-% タイトルが2行に渡る場合は "\\" を 使用することで任意の位置で改行をすることができます．
-\setetitle{Please provide the title of the paper in English}
-%\setetitle{Long Long Long Long Long Long \\ Long Long Long Long Long \\ Long Long Long Long Long Long Long Long Long Long Long Long Paper Title}
+\title{○○○○○○○○○○○○○○○○}
+\setetitle{○○○○○○○○○○○○○○○○}
 
-% タイトル，著者などが複数行にわたり，論文冒頭の著者名が日本語アブストと重複して描画された場合に以下のコメントアウトを外してください．
-%\longtitle
-
-% 著者
-% 和文論文の場合，姓と名の間には半角スペースを入れ，
-% 複数の著者の間は全角スペースで区切る
-%
-\author{徳川 家康　源 頼朝　源 頼家
-%
-% ここにタイトル英訳 (英文の場合は和訳) を書く．
-% 英語タイトルは論文1ページ目左下，著者らの名前・所属一覧の一番上に表示される
-%
-% 上記\setetitle中で改行した場合は "\etitle" を削除し，改行(\\)を入れていないタイトルを記載してください．
-% \ejtitleは1ページ目左下に挿入されるタイトルとして使用されます．
-% また，"\etitle"はFOSE論文フォーマット独自のマクロです．
+\author{大森 楓己　伊原 彰紀　柏 祐太郎
 \ejtitle{\etitle}
-%
-% ここに著者英文表記 および
-% 所属 (和文および英文) を書く．
-% 複数著者の所属はまとめてよい．
-%
-\shozoku{Ieyasu Tokugawa}{江戸幕府}
-{Edo Bakufu}
-% 複数著者の所属は以下のようにまとめてよい．
-\shozoku{Yoritomo Minamoto, Yoriie Minamoto}{鎌倉幕府}
-{Kamakura Bakufu}
+\shozoku{Fuki Omori, Akinori Ihara}{和歌山大学}
+{Wakayama University}
+\shozoku{Yutaro Kashiwa}{奈良先端科学技術大学院大学}
+{Nara Institute of Science and Technology}
 }
 
-%
 % 和文アブストラクト
-% In English paper, content of Jabstract will be ignored. 
-\Jabstract{%
-本稿はソフトウェア工学の基礎ワークショップのために，実践的IT教育シンポジウム rePiTの論文執筆キットおよび第29回ソフトウェア工学の基礎ワークショップの論文執筆キットを基に作成したものです．
-rePiTの論文執筆キットはそもそもソフトウェア科学会の論文執筆キットを基に作成したものです．
-具体的な変更箇所は\ref{sec:PaperStyle}章をご参照ください．}
-%
+\Jabstract{
+○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○
+}
 % 英文アブストラクト（本サンプルの原論文にはなし）
 \Eabstract{
-This document has been prepared as a sample for FOSE(Foundation of Software Engineering) based on the Author Kit for rePiT and FOSE2022.
-The author kit for rePiT was originally based on author kit of JSSST Computer Software.
-The detail changes are written in Sec.\ref{sec:PaperStyle}
+○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○○
 }
-%
 \maketitle \thispagestyle {empty}
+
 \section{はじめに}
-本稿はfose.clsスタイルファイルを利用し，\LaTeX でフォーマットした \foseabbrev の論文サンプルです．
-論文執筆の基本的な注意事項を以下に示します．
-\begin{itemize}
-\item 論文本文が和文の場合，和文・英文のいずれかでアブストラクトを
-書いて下さい．両方併記することもできます．英文アブストラクトを書かない場合は
-場合は{\tt eabstract}環境(\verb|\Eabstract|)を空にして使って下さい．
-\item 本文が英文の場合は，クラスファイルのオプションを{\verb|[T,E]|}として下さい．
-また，和文タイトル・和文著者名・和文アブストラクトを併記する必要はありません．
-\item カラーの図を使うことは可能ですが，論文集はJ-STAGEへの掲載（フルカラー）だけでなく近代科学社Digitalのプリントオンデマンド書籍（白黒印刷）として印刷されることも考慮して作成してください．
-白黒印刷時に図が認識可能か，文章中でフルカラー前提の図に関する特定の色を指す表現がないかなど注意してください．
-\item カラーの図を使用する場合は色モードをCMYKではなくRGBで画像を作成するようにしてください．
-\item 画像の解像度は300dpi以上で作成するようにしてください．
-\end{itemize}
-その他細かな論文執筆時の注意点については\ref{sec:PaperStyle}章を参照してください．
+プログラムは，その外的振る舞いが等しい別のプログラムに書き換えることで品質を高めることができる．そのような改良はリファクタリングと呼ばれ，保守性や性能効率性等さまざまな品質を高めるために行われる．例えば，Webアプリケーション開発ではリファクタリングを行うことでプログラムの実行を25\%から70\%高速化できる\cite{Selakovic_2016}．
+
+リファクタリングはプログラム開発における重要なステップであり，これを効率化するため欠陥箇所の検出や修正を自動化する手法が多数提案されている．例えばプログラムの可読性は，命名規則や文法上の欠陥を修正する静的解析ツール\footnote{https://eslint.org/}によって欠陥箇所を容易に特定することができ，それらを自動修正する研究は多数発表されている\todo{要引用}．一方で，実行速度の遅いプログラムに対する自動修正に関する研究は数少ない．速度上の欠陥はベンチマークテストを用いて定期的に実行速度を測定することで実行速度が低下する原因箇所を特定するが，実行速度を高めるための改良は糖衣構文や外部ライブラリ等の知識に依存した非自明な代替実装を発見するための知識を要する．特に，JavaScriptに代表される動的型付け言語は設計上，静的解析によるトレースが困難であるため代替実装の発見には一層の技術的課題が存在する．これは多くの動的型付け言語がインタプリタ言語であり，その実行速度がコンパイラ言語に比べて遅いことを考えると，非常に重要な問題である．
+
+実行速度の欠陥を修正する開発者はどのように代替実装の知識をどのように得ることができるか？JavaScript開発者にとっては，マイクロベンチマーク共有サービス\footnote{https://jsperf.app/}が学習手段の1つである．このサービスを介して，開発者はJavaScriptプログラムをブラウザ上で実行し，その実行速度を測定できる．開発者は外的振る舞いが互いに等しいJavaScriptプログラム同士の実行速度を比較することで，より高速な実装を確認できる．さらに，比較されたプログラムセットは保存され，すべてのユーザに公開される．このプログラムセット（大抵は非常に短いコードスニペット）はマイクロベンチマークと呼ばれる．開発者は，サービスに保存されているマイクロベンチマークを検索することで未知の実装を学習できる．以下にマイクロベンチマークの例を示す:\todo{listing1,2,3を1つにまとめたい．}
+
+%----------------------------------
+\begin{figure*}[t]
+\captionsetup{name=Listing}
+  \caption{Setup}\label{setup}
+\begin{lstlisting}
+var i, array = []
+for(i=0; i<10000; i++)
+    array[i] = i;
+\end{lstlisting}
+  \begin{minipage}[b]{0.48\linewidth}
+  \caption{Test Program 1}\label{test-a}
+\begin{lstlisting}[firstnumber=4]
+for(i=0; i<array.length; i++)
+    console.log(array[i]);
+\end{lstlisting}
+  \end{minipage}
+    \hspace{0.07\columnwidth} % ここで隙間作成
+  \begin{minipage}[b]{0.48\linewidth}
+    \caption{Test Program 1}\label{test-b}
+\begin{lstlisting}[firstnumber=4]
+array.forEach((item) => console.log(item));
+\end{lstlisting}
+  \vspace{3.5mm}
+  \end{minipage}
+\end{figure*}
+%----------------------------------
+
+マイクロベンチマーク全体は，1つのセットアッププログラムと1つ以上のテストプログラムからなり，各テストプログラムを実行する前にセットアッププログラムが実行される．マイクロベンチマーク共有サービス上では，セットアッププログラムの実行速度は測定されず，テストプログラムの実行速度のみが測定される．以下で両プログラムの役割について説明する．
 
 
-\section{FOSE: ソフトウェア工学の基礎研究会}
-情報技術の普及がソフトウェアの適用範囲をますます広げていく今，ソフトウェアを社会基盤となる知的資産として活用するため，ソフトウェア工学はさらに格段の進歩をとげなければなりません．
-FOSE\footnote{https://fose.jssst.or.jp}はこの挑戦に向けてさまざまな基礎技術を確立することをめざし，研究者・技術者の議論の場を提供します．
-
-主な活動として，FOSEでは毎年ソフトウェア工学の基礎ワークショップを開催し，開発に携わっている実務者と大学・研究機関の研究者の間でソフトウェア工学に関する活発な議論を行っています．
-第1回のワークショップが1994年に穂高で催されて以来，第2回は浜松，第3回は会津若松，第4回は越後湯沢と回数を重ね，2013年には第20回を記念したワークショップを盛大に行ないました．
-今年は第30回を迎えます．
-参加者も最近では，2012年度は103名，2013度は112名，2014年度と2015年度は108名，2016年度は119名，2017年度は106名，2020年度は100名と，ここ数年は100人を超えるまでに成長しました．日本におけるソフトウェア工学研究の活性化に大きく貢献しています．
-
-
-\section{ソフトウェア工学の基礎ワークショップ（FOSE）}
-\subsection{目的}
-情報技術の普及がソフトウェアの適用範囲をますます広げていく今，ソフトウェアを社会基盤となる知的資産として活用するため，ソフトウェア工学はさらに格段の進歩をとげなければなりません．
-FOSEはこの挑戦に向けてさまざまな基礎技術を確立することをめざし，研究者・技術者の議論の場を提供するものです．
-
-FOSEではソフトウェア工学の基礎技術に関連する発表を募集します．基礎技術の応用方策や実践からの基礎技術の抽出に関するものも含みます．
-積極的なご投稿を期待しております．また，投稿された論文のうち優れた論文は，研究会推薦論文としてコンピュータソフトウェア誌に推薦されます．
-
-
-\subsection{開催概要}
-% FIXME
-\foseabbrev\cite{fose2024}は以下の要領で開催する予定です.
 \begin{description}
-\item[日程] 2024年11月28日(木) -- 30日(土)
-\item[場所] ホテル龍登園\\
-{\footnotesize
-   〒840--0203 佐賀県佐賀市大和町大字梅野120
-}
-\item[主催] 日本ソフトウェア科学会 ソフトウェア工学の基礎研究会
-\item[共催（予定）] IEEE Computer Society Japan Chapter
-\item[協賛（予定）] 情報処理学会 ソフトウェア工学研究会，%\\
-	電子情報通信学会 ソフトウェアサイエンス研究会，%\\
-	電子情報通信学会 知能ソフトウェア工学研究会
+
+\item[セットアッププログラム]\mbox{}\\
+実行速度を測定する前に，テストプログラム中で用いる配列や関数を定義するプログラム部である．1つのセットアッププログラムが，すべてのテストプログラムに共通して使用される．例えばプログラム\ref{setup}では，後にテストプログラム\ref{test-a}および\ref{test-b}で使用する配列を定義している．
+
+\item[テストプログラム]\mbox{}\\
+実行速度を測定する1つ以上の実装を記述するプログラム部である．例えばプログラム\ref{test-a}および\ref{test-b}では，外的振る舞いが互いに等しい2つの実装をそれぞれ記述している．
+
 \end{description}
 
 
-\subsection{特集号の企画}
-日本ソフトウェア科学会 学会誌「コンピュータソフトウェア」において{\foseabbrev}と連動した「ソフトウェア工学の基礎」特集 を企画しています.
-{\foseabbrev}で推薦された論文は，特集号にご投稿いただけます．また，推薦論文以外でも，FOSEワークショップへご投稿いただいた論文を特集号へも投稿いただける連携投稿制度があります．
-FOSEワークショップへご投稿いただいた論文を特集号へも投稿（連携投稿）していただくと，推薦論文と同様の投稿締め切りの設定と，{\foseabbrev}の論文ならびに査読結果を参考とした迅速な査読が期待できます．
-{\foseabbrev}の査読情報をソフトウェア工学の基礎特集号編集委員に開示する場合がありますので，その旨ご了承ください．
+このサービスは膨大かつ多様なマイクロベンチマークを提供するが，これを用いた実行速度上の欠陥の自動検出・修正手法は筆者らの知る限り提案されていない．本研究では，マイクロベンチマーク共有サービスからリファクタリングのための大規模なデータセットを作成し，実行速度の向上のための2種の自動修正モデルを作成する．2種のモデルとは，パターンマッチを用いた自動修正モデルおよび深層学習を用いた自動修正モデルである．第1に，パターンマッチモデルを作成して従来手法と比較することでマイクロベンチマーク共有サービスをもとにした学習データセットの有用性を明らかにする．第2に，深層学習モデルを作成して提案パターンマッチモデルおよび従来手法と比較することで，リファクタリングタスクにおける最新の言語処理技術の有効性を明らかにする．特に，深層学習モデルはパターンマッチモデルとは異なり周辺のコンテキストを入力に含むため，より文意に沿った柔軟な修正が行えることが期待される．JavaScriptプログラムに対しては静的解析による実行フローの同定が困難であるため，このような特徴は深層学習モデルの大きな優位性になりうる．一方で，修正箇所が大規模である場合等には機械的なパターンマッチモデルがむしろ有効であることも考えられる．両モデルを比較することで，それぞれの適正な修正対象を明らかにする．
+
+\todo{続く，2章では．．．3章では．．．}
 
 
-\section{書式について} \label{sec:PaperStyle}
-本稿は \foseabbrev 用のスタイルファイルを使用したサンプルファイルです．
-論文執筆の際は \foseabbrev のWebサイトで配布されている論文執筆キットの使用を推奨します．
+%%%%%%%%%%%%%%%%
+\section{関連研究}\label{sec:related}
+%%%%%%%%%%%%%%%%
+Selakovicら\cite{Selakovic_2016}は，JavaScriptプロジェクトにおいて開発者が高速化のために行ったリファクタリングを調査した．その結果，広くリファクタリングが試まれているにも関わらず，実際には半数の改良が失敗していることを明らかにした．この結果は本研究課題の重要性を示している．また，\cite{Selakovic_2016}はJavaScriptプロジェクトの解析によって10件の頻出する改良パターンを得た．この正規表現パターンを用いた自動修正モデルは一定の高速化効果を示しているが，修正機会の網羅には至っていない．我々は，マイクロベンチマークから大規模なデータセットを構築することによってこのモデルを改良する．
 
-句読点，図表や数式の記述・表示等，論文執筆のルールにつきましては，
-日本ソフトウェア科学会が用意した「新しいスタイルファイルによる論文作成ガイド(本論文作成キットに含まれるcompsoft-guide.pdf)」をご参照下さい．
+Gongら\cite{Gong_2015}はJITコンパイラによる高速化のアンチパターンとなるプログラムをJIT-unfriendlyと形容し，JIT-unfriendlyなプログラムに対する修正パターンを7件提案した．この修正パターンのマッチングは動的解析によって取得した情報を用いる点で，我々の提案モデルに対して優位性を持つ．一方で，パターン数については提案モデルが大きく上回る．我々は，静的解析のみを用いた自動修正モデルの最新の修正性能を明らかにする．
 
-これまで，FOSEワークショップは長きにわたりシングルカラムフォーマットのクラスファイルを採用してきました．
-旧クラスファイルは現行の日本ソフトウェア科学会 学会誌「コンピュータソフトウェア」との乖離が大きく
-\footnote{歴史を辿るとfose2022.clsは1994年にコンピュータソフトウェアのクラスファイル（compsoft.cls）から派生したようです．}
-，FOSEワークショップと連動する「ソフトウェア工学の基礎」特集号への投稿を行う際に投稿者による手間が多く発生していました．
-そこで，FOSE2023から「コンピュータソフトウェア」の体裁に近づけたフォーマットを新たに作成しました．
-新フォーマットへの移行に伴い，これまで配布していたMicrosoft Wordフォーマットについては廃止となります．
-これまでWordフォーマットを用いて作成されていた方はお手数ですが \LaTeX での執筆をお願い致します．
-また， \LaTeX の執筆環境を用意することの負担軽減を目的としてOverleaf\footnote{\url{https://www.overleaf.com}}で利用可能なテンプレートを用意しました．
+Selakovicら\cite{Selakovic_2017}は条件式の演算順序に着目し，動的解析と探索的手法を用いて条件演算を最適化する自動修正モデルを提案した．このモデルは探索的手法を用いる点で，局所的な実装の修正による高速化の1つの上限を示すものである．したがって，\cite{Selakovic_2017}と我々の提案モデルを比較することで高速化効果を明らかにする．
 
-\subsection{論文執筆者向けの変更点解説}\label{subsec:forauthors}
-論文執筆者にとって必要な情報については，配布している {\texttt sample.tex} 内にコメントとして要点を記載しています．
-本節ではその内容を詳細に示します．
+また，近年では大規模な開発履歴を活用した深層学習によるプログラム自動生成手法が多く提案されていることも特筆に値する．特にOpenAIによって開発されたChatCPTモデルはソフトウェア開発のみならず，非常に広範なタスクで人間の専門家に近い性能を誇る．しかし，その詳細な学習データセットは公開されておらず，高速化修正タスクにおける性能は明らかではない．一般に開発者が行うリファクタリングは複数の品質を考慮することが多く，他の品質（例えば可読性）を向上させるために実行速度を低下させるような修正や，改良に失敗しているような修正も行われる場合がある．頻繁に行われる改良が必ずしも高速化にとって最適とは限らないため，既存の大規模学習モデルが最適な代替実装を学習しているとは限らない．提案手法は実行速度の観点からのみ学習データセットを作成するため，特定の領域では既存手法を上回ると考える．本研究では，従来モデルの中でも特に高い性能を持つGPTモデルと提案手法を比較し，実行速度の改良に特化した学習データセットの有用性を明らかにする．
 
-\foseclassfile は「コンピュータソフトウェア」の compsoft.clsに対して以下に示す変更を加えています．
-\begin{itemize}
-	\item 1ページ目上部に表示される罫線を単純な黒線に変更（従来のFOSE（ {\texttt fose2022.cls}）のスタイルを採用））
-	\item 奇数ページのヘッダ中央に {\textbf \foseabbrev } と表示するように変更．
-	\item 偶数ページのヘッダ中央に論文の英語タイトルを表示できるように変更．
-	\item タイトルおよび著者の表示が合計4行以上になった場合にレイアウトが崩れる問題に対応．
-\end{itemize}
-
-一つ目と二つ目の変更についてはそれぞれ自動で表示されるように設定しているため論文執筆の際に注意すべきことはありません．
+todo
 
 
-\subsubsection{奇数ページのヘッダ}
-奇数ページのヘッダ中央に表示される {\textbf \foseabbrev } は {\texttt sample.tex } 冒頭で呼び出している \verb|\taikai|\footnote{この名称はソフトウェア科学会の大会用の設定を流用した名残です} に渡す引数によって変化します．
-配布している論文執筆キットには適切な西暦があらかじめ記載されています．
+\section{方法論}
+
+自動修正モデルを作成するため，マイクロベンチマーク共有サービスから互いに代替可能な実装対を収集する．実装対の収集および自動修正モデルの作成概要を図\ref{fig-overview}に示す．また，以下で各ステップを説明する．
+
+\begin{figure*}[t]
+\centerline{\includegraphics[width=1.0\linewidth]{Omori_fig/dummy.pdf}}
+\caption{overview}
+\label{fig-overview}
+\end{figure*}
 
 
-\subsubsection{偶数ページのヘッダ}
-偶数ページのヘッダ中央には論文の英語タイトルを表示するようにしてください．
-そのためには \foseclassfile に独自に追加した \verb|\setetitle| マクロを使用してください．
-英語タイトルが長い場合は2行に分けることを検討してください．改行は \verb|\\| を使用することで任意の位置に挿入可能です．
-英語タイトルが2行に収まらない場合はヘッダ部分のタイトル表記に略称を使用するなどして2行に納めるように努めて下さい．
-具体的には，ComputerをComp.，SoftwareをSoft.とするなどして縮めてください．
-{\texttt sample.tex}では1ページ目に \verb|\maketitle| で表示される英語タイトル（ \verb|\ejtitle| にヘッダ用の英語タイトルを参照するように設定しています．
-そのため，ヘッダ用英語タイトルで改行を使用したり，タイトルに略称を使用した場合は \verb|\ejtitle| に改行を使用しない本来のタイトルを別途記載してください．
+\subsection{マイクロベンチマークの収集}
+マイクロベンチマーク共有サービスjsPerfからプログラムセットを収集する．ただし，jsPerfには既存のマイクロベンチマークを修正し，新たなリビジョンとして保存する機能が有るため，複数のリビジョンを持つマイクロベンチマークによってデータセットが偏るおそれがある．これを防ぐため，我々は最新リビジョンのマイクロベンチマークのみを収集する．\todo{Setup，比較しているProgramをすべて収集する．できればSetupと比較プログラムを合わせてトピックのような名前をつけておきたい．}
 
-偶数ページに表示する英語タイトルが2行になることを許容するために奇数，偶数ページのヘッダを「コンピュータソフトウェア」から一行分上にずらして表示するように変更しています．
-なお，この変更により本文に使用できる文字数等が変化することはありません．一方でページ全体としては1行分縦幅が長くなってしまっています．
+\subsection{実行時間の測定}
+マイクロベンチマーク中のセットアッププログラムとテストプログラムを結合し，プログラム全体の時間を計測する．測定後，実行時間の長いプログラムと短いプログラムを対応づけ，修正前後の対を作成する．測定手順は従来研究に従う．まず，NVMインスタンスを起動し，NwarmUp回プログラムを実行する．これにより，JITコンパイラをウォーミングアップさせる．続けて，Nmeasure回プログラムを実行し，その実行時間を測定する．この手順を繰り返してNVM回の測定を行い，プログラムごとにNVM個の測定結果を得る．測定結果から実行時間の95\%信頼区間を算出し，その閉区間に重なりのない実装対を収集する．\todo{重なったら対象外？データセットではどれぐらいあるのか要説明．}次のステップでは，この実装対のうち実行時間の長い方を変更元，短い方を変更先としてその変換をモデルに学習させる．本ステップでは，テストプログラムについてプログラム1回の実行時間や計測器の分解能を考慮してNwarmUp=5，Nmeasure=1,000，NVM=10に設定する．また，JavaScript実行環境にはNode.jsを用いる．すべての測定はCPUコア数12のIntel(R) Xeon(R) Silver 4214R CPU @ 2.40GHz上で行う．
 
 
-\subsubsection{ページ冒頭のレイアウトが崩れる問題}
-四つ目の変更については，実際にレイアウトが崩れた際に{\texttt sample.tex}の31行目に記載している \verb|\longtitle| のコメントアウトを外してください．
-\verb|\longtitle| は \foseclassfile で独自に追加したマクロなので必要とならない限りは使用しないことを推奨します．
-この問題については「コンピュータソフトウェア」も同様の問題があるはずですがどのように対応しているのか詳細を把握していません．
+\subsection{前処理}
+一般的に，プログラム自動修正モデルの作成時には汎化性能を高めるために学習プログラムセット中の変数名や関数名，リテラルの抽象化を行う．本研究でも同様にプログラムセットに対して抽象化を施す．ただし，一般的なプログラム自動修正モデルがバグ修正への利用を目的として作成されるのに対して我々の提案手法はリファクタリングへの利用を目的としているため，バグ修正タスクとは異なる手法で抽象化を施す．具体的には，変数名，関数名，リテラルのうち，特定のトークンのみを抽象化する．以下でそれぞれの抽象化基準について説明する．
 
-
-\subsection{クラスファイル管理者向けの変更点解説} \label{sec:differences}
-本節では，本クラスファイルを保守するFOSEワークショップ出版委員長並びに， {\texttt compsoft.cls} に具体的にどのような変更を加えたのかを理解したい方向けの説明をします．
-FOSEワークショップ用論文執筆キットは，日本ソフトウェア科学会「コンピュータソフトウェア」のスタイルファイル付属の「大会用論文」サンプルsample-TJ.texを基に作成しました．
-
-修正したファイルは以下の3つです．
-\begin{itemize}
-	\item compsoft.cls （fose.clsにリネームしただけ）
-	\item compsoft.sty （fose.styにリネーム後修正）
-	\item sample-TJ.tex（sample.texにリネーム後修正）
-\end{itemize}
-
-\ref{subsec:forauthors}に示した変更を行うために各ファイル（リネーム前のファイル名で表記）を以下のとおり修正しました．
-
-
-\subsubsection*{compsoft.sty}
-\begin{table*}[t]
-\caption{compsoft.sty変更箇所}
-\label{table:change1}
- 	\begin{tabular}{c}
-		\begin{tabularx}{47zw}{X}
-		\hline
-		\verb|1196: \def\leaderfilll{\leaders\hbox{\rule{0.2mm}{1mm}}\hfill}| \\
-		\verb|1198: \addtolength{\voffset}{-1\baselineskip}| \\
-		\verb|1199: \addtolength{\headsep}{1\baselineskip}| \\
-		\verb|1200: \newcommand{\setetitle}[1]{\def\etitle{#1}}| \\
-		\verb|1209: \global\xdef\foseabbrev{FOSE{\number\currentYear}}| \\
-		\verb|1211: \def\leaderfilll{\leaders\hbox{\rule{0.2mm}{1mm}}\hfill}| \\
-		\verb|1214: \gdef\@oddheadcontents{\foseabbrev}| \\
-		\verb|1215: \gdef\@evenheadcontents{\parbox[t]{.9\textwidth}{\centering\etitle}}| \\
-		\verb|1864: \phantom{\thepage}\phantom{\thevolpage}\hfil\@evenheadcontents| \\
-		\hline
-		\end{tabularx}
-	\end{tabular}
-\end{table*}
-
-論文1ページ目上部に表示される罫線を単純な黒線に変更するために1196行目と1211行目を表\ref{table:change1}のように変更しました．
-\verb|\rule|の第二引数を1mmとすることで従来のFOSEワークショップの体裁と同じ太さの線にしています．
-元々は罫線に加えてソフトウェア科学会大会の名称が表示されるようになっていましたが，1211行目を変更して文字の表示を消しました．
-
-奇数ページのヘッダ中央に{\textbf \foseabbrev}と表示するために1214行目を表\ref{table:change1}のように変更しました．
-また，この変更で使用している \verb|\foseabbrev| を1209行目で定義しています．
-このマクロは {\texttt sample.tex} 中でも使用しています．
-
-偶数ページのヘッダ中央に英語タイトルを表示するために1215行目を表\ref{table:change1}のように変更しました．
-\verb|\parbox|を使用することで改行を許容していますが，この設定はFOSEワークショップの旧スタイル（{\texttt fose2022.cls}）を参考に作成しました．
-また，この変更のためにヘッダの位置を1行分縦方向に上にずらしました．
-そのために，1198行目と1199行目の変更を追加しています．
-加えて，ヘッダ用の英語タイトル（ \verb|\etitle| ）を設定するためのマクロ \verb|\setetitle| を1200行目で定義しています．
-\verb|\etitle| は {\texttt sample.tex} でも \verb|\ejtitle|の規定値として使用しています．
-
-タイトルおよび著者名が合計で4行以上になる場合に \verb|\maketitle|の表示が崩れる問題についての修正については変更が多岐に渡るため表\ref{table:change1}での変更の提示は行いません．
-表示の問題を解決するために884行目の内の数値を {\texttt compsoft.sty}の値から変更しています．
-この変更を {\texttt sample.tex} 中で \verb|\longtitle| を呼び出すだけで適用できるように856行目から893行目にかけて大幅な変更を行っています．
-具体的な流れとしては\verb|\longtitle|を呼び出すとフラグがオンになり，フラグのオンオフで \verb|\maketitle| での表示方法を変更しているだけです．
-
-\subsubsection*{sample.tex}
-年度の指定のために，4行目を以下のように変更しています（2024年度の例です）．
-
-\begin{tabularx}{23zw}{|X|}
-	\hline
-	\verb|4: \taikai{2024}|
-	\\
-	\hline
-\end{tabularx}
-
-ヘッダからページ番号を非表示にするために1864行目を表\ref{table:change1}のように変更しました．
-また，1868行目も同様に \verb|\phantom{\thepage}|として，ページ番号を非表示にしています．
-加えて，各論文の1ページ目にページ番号とヘッダを表示させないように77行目(タイトル表示部分，セクションの開始直前を指します．
-アブストラクトの行数や著者数によって変動します)を以下のように変更しています．\\
-
-\begin{tabularx}{23zw}{|X|}
-	\hline
-	\verb|77: \maketitle \thispagestyle {empty}|
-	\\
-	\hline
-\end{tabularx}
-
-
-\section{各種書式の例}
-\subsection{図・表}
-図の例を図\ref{fig:figExample}に，表の例を表\ref{table:tableExample}に示します．
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=7.0cm]{image/sampleFig.png}
-	\caption{図の例}
-	\label{fig:figExample}
-\end{figure}
-
-\begin{table}[tb]
-	\centering
-	\caption{表の例}
-	\label{table:tableExample}
-	\begin{tabular}{rcl}
-		\hline %
-		見出し1 & 見出し2& 見出し3 \\ \hline
-		\hline %
-		セル11 & セル12 & セル13 \\ \hline
-		セル21 & セル22 & セル23 \\ \hline
-		セル31 & セル32 & セル33 \\ \hline
-		\hline
-	\end{tabular}
-\end{table}
-
-
-\subsection{リスト}
-
-リスト表記の例を以下に示します．
-
-\begin{itemize}
-	\item アイテム1
-	\item アイテム2
-	\item アイテム3
-	\begin{itemize}
-		\item アイテム3-1
-		\begin{itemize}
-			\item アイテム3-1-1
-		\end{itemize}
-	\end{itemize}
-\end{itemize}
-
-\newpage
-
-\begin{enumerate}
-	\item 番号付きアイテム1
-	\begin{enumerate}
-		\item 番号付きアイテム1-1
-		\begin{enumerate}
-			\item 番号付きアイテム1-1-1
-		\end{enumerate}
-	\end{enumerate}
-	\item 番号付きアイテム2
-\end{enumerate}
 
 \begin{description}
-	\item[見出し] 箇条書き1
-	\item[見出し] 箇条書き2
-		\begin{itemize}
-			\item kajougaki
-		\end{itemize}
-	\item[見出し] 箇条書き3
+
+\item[変数名]\mbox{}\\
+プログラム中で宣言されている変数のみを抽象化する．プログラム\ref{test-a}中のlengthのようなプログラム中で明示的に宣言されていないメンバ変数は，同等の実装において常に固定の変数名を持つため，抽象化しない．抽象化後の変数名は，VAR\_1のようになる．
+
+\item[関数名]\mbox{}\\
+変数名と同様に，プログラム中で宣言されている関数のみを抽象化する．抽象化後の関数名は，FUNCTION\_1のようになる．
+
+\item[リテラル]\mbox{}\\
+すべて抽象化しない．これは，リテラルを抽象化することで修正を捉えられなくなるパターンが一定数存在するためである．\todo{事例を使って説明}
+
 \end{description}
 
 
-\subsection{引用}
-文献を引用する際はBibTeXの使用を推奨します．
-また， 文献の並び順は{\texttt compsoft-guide.pdf} に記載されているように第一著者の苗字のアルファベット順に可能な限りしてください．
-{\texttt bib}ファイルの各エントリに {\texttt yomi} フィールドを追加することで自動でソートされます．
-BibTeXを使用しない場合は {\texttt thebibliography} 環境を使用してください．
-例として，過去7年分と今年度のFOSEワークショップを引用します
-\cite{fose2016}
-\cite{fose2017}
-\cite{fose2018}
-\cite{fose2019}
-\cite{fose2020}
-\cite{fose2021}
-\cite{fose2022}
-\cite{fose2023}
-\cite{fose2024}
-．
-これは{\texttt cite}パッケージを使用した場合の例です\cite{fose2016,fose2017,fose2018,fose2019,fose2020,fose2021,fose2022,fose2023,fose2024}．
-論文フォーマットとしてはどちらの形式も許容します．
-また，2020年と2021年の開催報告を引用します\cite{fose2020report}\cite{fose2021report}．
+実装対の両方に共通する変数名や関数名の抽象化後トークン名を一致させるため，GumTree\cite{Falleri_2014}を用いて修正元のプログラムと修正先のプログラムの共通部分を検出した．その際，処理に時間がかかることから，文字数\todo{ノード数ではなく，文字数？}が多い上位5\%のプログラムを除外し，95\%分位までのプログラムのみを対象\todo{対象外とするのはIII-A節でかけるのでは？}とした．
+
+また，マイクロベンチマーク内でセットアッププログラムが共通して用いられるため，プログラム中に使用されていない変数や関数が有る場合がある．このようなコードスニペットは学習の妨げになるため，プログラムから除去する．使用されていない変数や関数の検出には，静的解析ツールESLintを使用する．
+
+例えばプログラム\ref{test-a}および\ref{test-b}に対して前処理を行った場合，最終的なプログラムは以下のようになる．
+
+
+\begin{lstlisting}[caption=Abstracted Program 1, label=abstract-a,captionpos=t]
+var VAR_1, VAR_2 = []
+for(VAR_1=0; VAR_1<10000; VAR_1++)
+    VAR_2[VAR_1] = VAR_1;
+
+for(VAR_1=0; VAR_1<VAR_2.length; VAR_1++)
+    console.log(VAR_2[VAR_1]);
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Abstracted Program 2, label=abstract-b,captionpos=t]
+var VAR_1, VAR_2 = []
+for(VAR_1=0; VAR_1<10000; VAR_1++)
+    VAR_2[VAR_1] = VAR_1;
+
+VAR_2.forEach((VAR_3) => console.log(VAR_3));
+\end{lstlisting}
+
+
+\subsection{モデル構築}
+\subsubsection{パターンマッチモデルの作成}
+抽象構文木上で実装対の差分を抽出し，修正ルールを作成する．提案手法では従来研究と異なり，抽象構文木に基づいたパターンを作成することで，正規表現パターンよりも細かなプログラムを作成する．実装対の差分はGumTreeを用いて検出する．実装対の修正箇所は1箇所とは限らないため，修正ルールは複数のパターン対からなることがある．例えばプログラム\ref{test-a}と\ref{test-b}はforEachメソッドとfor文との書き換えに加え，変数itemとarray\_iの書き換えという2つのパターン対からなる．それぞれのパターン対は部分木の追加または部分木の削除，またはその両方の3種類に分けられる．ただし，部分木の追加のみからなる修正ルールは検出不可能であるため，データセットから除外する．また，基本的にパターン化する部分木はGumTreeによって検出された箇所に従うが，特殊な場合には部分木を拡大して（ルートノードをさらに浅い先祖ノードに変更して）パターン化する．特殊な場合とは，メンバ変数を書き換える場合と引数を書き換える場合である．メンバ変数を書き換える場合，そのメンバ変数を持つオブジェクトに応じて書き換え可能かが変化するため，オブジェクトまでをパターンに含める．同様に，引数を変更する場合もその引数を取る関数またはメソッドまでをパターンに含める．また，リテラルについては型レベルに抽象化し，パターンを検出する．
+
+
+\subsubsection{深層学習モデルの作成}
+本研究では事前学習モデルCodeT5+を用いてプログラム自動修正モデルを作成する．CodeT5+はオープンソースソフトウェア開発履歴をもとにプログラミング言語間，自然言語-プログラミング言語間の変換タスクについて膨大な学習を施された最新の大規模事前学習モデルである．本研究では，マイクロベンチマークから作成したデータセットを用いてCodeT5+をファインチューニングし，高速化のためのリファクタリングタスクに適用させる．ハイパーパラメータには，エポック数10，学習率2e-5，バッチサイズ8，最大トークン長400を設定した．
+
+
+
+\section{評価実験}
+提案モデルによる修正効果を明らかにするため，本研究では2つの評価実験を行う．第1に，学習データセットを10分割し，交差検証を行う．これは提案モデルがどれほど修正方法を学習しているかを明らかにするためである．第2に，GitHubプロジェクトに対して提案モデルを用いた修正を試み，その修正効果を既存モデルと比較する．これにより，既存モデルと比較した提案モデルの定量的な修正性能を明らかにする．
+
+\subsection{10分割交差検証}
+学習データセットの90\%のみを用いて2つの提案モデルそれぞれを作成する．そして，学習に用いなかった残り10\%の実装対を用いて提案モデルの性能を検証する．具体的には，検証用に残した実装対のうち，修正元となる実行時間の長い方のプログラムを提案モデルに入力し，修正プログラムを出力させる．修正成否は，実装対のうち修正先となる実行時間の短い方のプログラムに完全一致する修正プログラムを生成できるか否かをもとに判定する．
+
+\subsection{GitHubプロジェクトへの適用}
+評価データセットとして，従来研究において特定された，開発者による高速化のためのリファクタリングが行われたGitHubプルリクエストを使用する．このデータセットは，クライアントサイドとサーバサイドの両プロジェクトを含むプルリクエスト100件の変更差分およびテストプログラム，ベンチマークからなるデータセットである．このデータセットを用いて，提案モデルと4つの既存モデル\cite{Selakovic_2016}\cite{Gong_2015}\cite{Selakovic_2017}\footnote{https://chat.openai.com/}，開発者による修正とを比較する．既存モデルの実装は，それぞれの著者が公開する公式のツール\footnote{https://github.com/marijaselakovic/JavaScriptIssuesStudy}\footnote{https://github.com/Berkeley-Correctness-Group/JITProf}\footnote{https://github.com/Samsung/jalangi2}を用いる．
+
+具体的にはまず，それぞれのモデルにプルリクエスト投稿時点のプログラムを入力する．各モデルが出力した修正プログラムに対して，プロジェクトに付属のテストプログラムを適用して動作を確認する．テストプログラムを通過した修正プログラムに対してベンチマークまたはテストプログラムの実行時間を測定し，修正効果を検証する．実行時間の詳細な測定方法は前章と同様である．
+
+\section{結果}
+結果．
+
+
+\section{おわりに}
+まとめ．
 
 
 \textbf{謝辞}\
 本フォーマットの基になったスタイルファイルを作成してくださった方々に感謝します．
+
 
 %\begin{adjustvboxheight} % needed only when Appendix follows
 \bibliographystyle{jssst}
 \bibliography{sample}
 %\end{adjustvboxheight} % needed only when Appendix follows
 
-% 以下はbibtexを使用しない場合の例です．
-% 332行目と333行目をコメントアウトしてから使用してください．
-% なお，この例では年数順に文献が並んでいるので適切な並び順ではありません．
 %\begin{adjustvboxheight} % needed only when Appendix follows
-%\begin{thebibliography}{9}
-%\bibitem{fose2016} 阿萬 裕久，横川 智教 編：ソフトウェア工学の基礎XXIII,日本ソフトウェア科学会{\em FOSE2016}, 近代科学社, 2016.
-%\bibitem{fose2017} 吉田 敦，福安 直樹 編：ソフトウェア工学の基礎XXIV,日本ソフトウェア科学会{\em FOSE2017}, 近代科学社, 2017.
-%\bibitem{fose2018} 伊藤 恵，神谷 年洋 編：ソフトウェア工学の基礎XXV,日本ソフトウェア科学会{\em FOSE2019}, 近代科学社, 2018. 
-%\bibitem{fose2019} 森崎修司，大平雅雄 編：ソフトウェア工学の基礎XXVI,日本ソフトウェア科学会{\em FOSE2019}, 近代科学社, 2019. 
-%\bibitem{fose2020} 石尾 隆，天嵜 聡介 編：ソフトウェア工学の基礎XXVII,日本ソフトウェア科学会{\em FOSE2020}, 近代科学社, 2020. 
-%\bibitem{fose2021} 名倉 正剛，関澤 俊弦 編：ソフトウェア工学の基礎28,日本ソフトウェア科学会{\em FOSE2021}, 近代科学社, 2021.
-%\bibitem{fose2022} 角田 雅照，まつ本 真佑 編：ソフトウェア工学の基礎29,日本ソフトウェア科学会{\em FOSE2022}, 近代科学社, 2022.
-%\bibitem{fose2023} 吉田 則裕，槇原 絵里奈 編：ソフトウェア工学の基礎30,日本ソフトウェア科学会{\em FOSE2023}, 近代科学社, 2023. 
-%\bibitem{fose2024} 戸田 航史, 藤原 賢二 編：ソフトウェア工学の基礎31,日本ソフトウェア科学会{\em FOSE2024}, 近代科学社, 2024. （to appear）
-%\end{thebibliography}
+\begin{thebibliography}{9}
+\bibitem{Selakovic_2016}
+    M. Selakovic, and M. Pradel,
+    "Performance issues and optimizations in JavaScript: an empirical study,"
+    in Proceedings of the 38th International Conference on Software Engineering (ICSE),
+    2016,
+    pp.61-72.
+\bibitem{Gong_2015}
+    L. Gong, M. Pradel, and K. Sen,
+    "JITProf: pinpointing JIT-unfriendly JavaScript code,"
+    in Proceedings of the 2015 10th Joint Meeting on Foundations of Software Engineering (ESEC/FSE),
+    2015,
+    pp.357-368.
+\bibitem{Selakovic_2017}
+    M. Selakovic, T. Glaser, and M. Pradel,
+    "An actionable performance profiler for optimizing the order of evaluations,"
+    in Proceedings of the 26th ACM SIGSOFT International Symposium on Software Testing and Analysis (ISSTA),
+    2017,
+    pp.170-180.
+\bibitem{Falleri_2014}
+    J.R. Falleri, F. Morandat, X. Blanc, M. Martinez, and M. Monperrus,
+    "Fine-grained and accurate source code differencing,"
+    in Proceedings of the 29th ACM/IEEE International Conference on Automated Software Engineering (ASE),
+    2014,
+    pp.313-324.
+\bibitem{Wang_2023}
+    Y. Wang, H. Le, A. D. Gotmare, N. D. Q. Bui, J. Li, and S. C. H. Hoi,
+    "CodeT5+: Open Code Large Language Models for Code Understanding and Generation,"
+    arXiv preprint,
+    2023.
+\end{thebibliography}
 %\end{adjustvboxheight} % needed only when Appendix follows
 
 %以下は付録の例です．必要ならコメントアウトして使用してください．
