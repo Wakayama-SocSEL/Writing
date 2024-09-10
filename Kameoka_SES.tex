@@ -47,7 +47,7 @@
 \author{伊原  彰紀}{Ihara Akinori}{WU}[ihara@wakayama-u.ac.jp]
 
 \begin{abstract}
-OSS開発において複数の開発者がソースコードを読み，理解する必要があるため，ソースコードの可読性は重要である．開発者はコーディング規約に従った実装を行うことによって一定の可動性を担保することができる．
+OSS開発においてソースコードの可読性は複数の開発者がソースコードを読み，理解する必要があるため重要である．開発者はコーディング規約に従った実装を行うことによって一定の可読性を担保することができる．
 コーディング規約に従っていないコードは，静的解析ツールによって自動的に検出することができるが，大量に検出されるため一部のコードしか修正されないことが多い．
 従来研究では，機械学習を用いて予測対象プロジェクトの違反修正履歴を学習することによって，修正優先度予測を行っている．
 本研究では，コーディング規約に違反しているソースコードの修正予測を行う際に，予測対象以外の複数のプロジェクトの開発履歴を学習することによる予測精度への影響を調査する．また，提案手法と従来手法で予測精度が大きく変化したプロジェクトにおける予測結果の具体的な差異について分析を行う．
@@ -61,14 +61,14 @@ OSS開発において複数の開発者がソースコードを読み，理解�
 \section{はじめに}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-コーディング規約とは，ソースコードを一定の品質に保つための記述方法について，禁止事項や推奨事項，保守性を高めるためのコーディングスタイルなどを定めたものである．
-ソフトウェア開発者はコーディングスタイルの共通化や，ソースコードの最適化のためにコーディング規約を遵守することによって，ソースコードの可読性が向上し，ソフトウェア保守が容易になることが知られている\cite{EffectsSAT}．また，プロジェクトへのコーディング規約の導入によって，ソフトウェア開発におけるソースコードの理解の促進，バグの早期発見などへの効果も確認されている\cite{Beller2}\cite{Johnson}\cite{Beller}．
+コーディング規約とは，ソースコードを一定の品質に保つための記述方法について，禁止事項や推奨事項を定め，保守性を高めるためのコーディングスタイルなどをまとめたものである．
+ソフトウェア開発者はコーディングスタイルの共通化や，ソースコードの最適化のためにコーディング規約を遵守することで，可読性の高いソースコードを書くことができる\cite{EffectsSAT}．また，プロジェクトへのコーディング規約の導入によって，ソースコードの理解の促進やバグの早期発見などへの効果も確認されている\cite{Beller2}\cite{Johnson}\cite{Beller}．
 
 コーディング規約に違反している箇所を機械的に検出するために静的解析ツールが用いられる．
 %静的解析ツールはソースコードを実行することなく，ソースコードに含まれるコーディング規約に違反している箇所を検出することができ，継続的インテグレーションのプロセスの1つとして使用されることも多い．
-静的解析ツールは，ソースコード中のコーディング規約に違反しているコード断片を正規表現などにより検出することができ，開発者は静的解析ツールが検出した違反を確認することで，コーディング規約違反箇所を速やかに修正することができる．静的解析ツールは多くの規約の種類を定義しているため，誤検出を含む大量の規約違反検出結果が出力されることが頻繁に発生する．静的解析ツールの誤検出は開発効率の低下につながるため，検出精度を向上させるための研究が行われている\cite{Nguyen}．
+静的解析ツールは，ソースコード中のコーディング規約に違反しているコード断片を正規表現などにより検出することができ，開発者は静的解析ツールが検出した違反を確認することで，コーディング規約に違反している箇所を速やかに修正することができる．静的解析ツールは多くの規約の種類を定義しているため，修正の必要がないような軽微な違反を含む大量の規約違反検出結果が出力されることが頻繁に発生する．静的解析ツールの大量の検出結果は開発効率の低下につながるため，修正が必要な違反を検出するための研究が行われている\cite{Nguyen}．
 
-従来研究では大量に検出されるコーディング規約違反の中から，優先して修正すべき違反を検出する手法が数多く提案されている\cite{JyuraiPre}
+従来研究では大量に検出されるコーディング規約違反の中から，優先して修正すべき違反を検出する手法が数多く提案されている\cite{Jyura　diPre}
 % \todo{引用増やせれば}．
 %他にも静的解析ツールの検出結果を優先度づけする研究は数多く行われている．
 従来研究の多くは，単一プロジェクトの規約違反修正履歴を学習することで各プロジェクトのコーディングの慣習を捉えた予測を行っているが，単一プロジェクトの規約違反修正履歴のみ学習データとしているため，十分なデータが集まらなかった場合に学習不足に陥ることが考えられる．
@@ -77,9 +77,11 @@ OSS開発において複数の開発者がソースコードを読み，理解�
 
 本研究では，複数プロジェクトの開発データを予測モデルの学習に使用することによる，コーディング規約違反の修正予測精度への影響を明らかにする．
 提案手法として2種類の予測モデルを構築する．1つは，複数プロジェクトのデータを単純に結合し，学習するモデル構築手法である．
-もう1つは，複数プロジェクトのデータを結合後にクラスタリングを行い，各クラスタごとに予測モデルを構築する手法である．
+もう1つは，複数プロジェクトのデータを結合後にクラスタリングを行い，クラスタごとに予測モデルを構築する手法である．
 本研究の提案手法は，著者らが過去に提案した手法と基本方針は同様である\cite{mine}\cite{mine_live}．しかし，先行研究の手法では学習に利用していたデータセットが小さく，手法の有効性が十分に示されていない．そこで本研究ではデータセットに利用するプロジェクト数を10から68プロジェクトに増加させ，2種類の予測モデルを提案手法として扱う．
 また，本研究では先行研究では行っていなかった予測結果の詳細な分析まで行っている．
+
+本研究の貢献として，静的解析ツールの結果から修正すべき違反のみを正確に推薦することができれば，開発者が保守にかける時間を短縮することができ，開発効率を向上させることができると考えられる．
 
 つづく\ref{chap:background}章では，本研究の位置付け，および従来研究を述べる．\ref{chap:approach}章では，提案手法の詳細な学習データの作成方法や機械学習モデルの作成方法の説明を行う．\ref{chap:result}章では，従来手法である単一プロジェクトのデータのみを学習する手法と提案手法である複数プロジェクトのデータを学習する手法を用いた修正予測を行い，手法ごとのモデルの精度および予測内容の分析を行った結果を示す．\ref{chap:consideration}章では，結果に基づく考察を行い，\ref{chap:heuristic}章では本研究の妥当性への脅威について述べ，\ref{chap:end}章でまとめる．
 
@@ -128,23 +130,24 @@ OSS開発において複数の開発者がソースコードを読み，理解�
 % ここで掲載している違反はソースコード中に利用されていない変数が宣言されている場合に検出される違反である．
 % Program \ref{problematic}で宣言されている変数\texttt{`fruit2'}は利用されておらず，利用するように修正したコードがProgram \ref{correct}である．この例では\texttt{`fruit2'}を削除することでも解消される．
 
-コーディング規約違反の検出は開発者が目視で行うには多くのコストを要するため，静的解析ツールが用いられる．静的解析ツールにも各言語ごとに複数の種類があり，参照している規約の種類や，違反を検出した際のメッセージのフォーマットや，検出する違反のカスタマイズ性の高さなどが異なる．
+コーディング規約への違反の検出は開発者が目視で行うには多くのコストを要するため，静的解析ツールが用いられる．静的解析ツールにも各言語ごとに複数の種類があり，参照している規約の種類や，違反を検出した際のメッセージのフォーマットや，検出する違反のカスタマイズ性の高さなどが異なる．
 
 % \subsection{静的解析ツールの問題点}
 
 %静的解析ツールを用いて開発するには問題点が存在する．
 静的解析ツールは各違反ごとに定められたルールに合致した場合にすべて違反として検出し出力するため，大量の検出結果が出力されることが頻繁に発生する．実際に多くのプロジェクトで，静的解析ツールが大量の規約違反を検出することが多いことを従来研究で明らかにしている\cite{UsingStaticAnalysisTools2}．
-大量の違反の検出結果には誤検出も含まれ，それらを開発者がレビューし修正するには多くのコストを要するため困難である．
-さらに様々な違反から優先して修正すべき規約違反を特定することは，開発の経験や，複雑なソースコードの理解が必要であるため，共同開発者において容易でない\cite{shuseisarenai}．
+大量の違反の検出結果には修正する必要がないような軽微な違反も含まれ，それらを開発者がレビューし保守するには多くのコストを要するため困難である．
+さらに様々な違反から優先して修正すべき規約違反を特定することは，開発の経験や，複雑なソースコードの理解が必要であるため，プロジェクト開発において容易でない\cite{shuseisarenai}．
+
 
 
 \subsection{従来研究}
 
 従来研究では
 %各プロジェクトごとに異なる優先して修正すべき規約違反の特定のために，機械学習モデルを用いた特定手法などが数多く提案されている．
-静的解析ツールの誤検出を含む大量の検出結果によって開発効率の低下を防ぐため，Ruthruffらは機械学習モデルを用いて優先して修正すべき違反を特定する手法を提案している\cite{JyuraiPre}．
-Kimらは静的解析ツールの出力結果をベイジアンネットワークに活用することにより，規約違反しているコードの修正優先度の予測を行う手法が提案されている\cite{beizu}．
-これらの研究のほかにも静的解析ツールによって検出された規約違反コードの修正優先度付けを行う研究や，修正の要否を予測する研究は数多く行われている\cite{Wang}\cite{Qing}\cite{HowFar}．
+静的解析ツールの修正する必要のない違反を含む大量の検出結果によって開発効率の低下を防ぐため，Ruthruffらは機械学習モデルを用いて優先して修正すべき違反を特定する手法を提案している\cite{JyuraiPre}．
+Kimらは静的解析ツールの出力結果をベイジアンネットワークに活用することにより，コーディング規約に違反しているコードの修正優先度の予測を行う手法が提案されている\cite{beizu}．
+これらの研究のほかにも静的解析ツールによって検出された規約に違反しているコードの修正優先度付けを行う研究や，修正の要否を予測する研究は数多く行われている\cite{Wang}\cite{Qing}\cite{HowFar}．
 機械学習のモデル構築には，規約違反コードの優先度予測対象のプロジェクトの過去の規約違反修正履歴を学習データとし，新しいデータを評価用データとすることで構築したモデルの評価を行っている．
 
 従来手法では，予測対象とするプロジェクトの過去の規約違反修正履歴を学習データとして，予測モデルを構築している．各プロジェクトにはコーディングスタイルなどが存在し，修正の要否はプロジェクトごとに異なるため，評価用データと同じプロジェクトのデータを学習するほうが，他プロジェクトのデータを学習するより高い予測精度が得られると考えられる．
@@ -170,17 +173,18 @@ Kimらは静的解析ツールの出力結果をベイジアンネットワー�
 	\label{fig:Teiannsyuhou}
 \end{figure*}
 
-図\ref{fig:Teiannsyuhou}は本研究の検証手法を示す．本研究では，静的解析ツールによって検出されたコーディング規約違反を修正すべき違反かそうでない違反かの2値に分類する機械学習モデルを3種類作成する．%各モデルの概要は以下の通りである．
+図\ref{fig:Teiannsyuhou}は本研究の提案手法を評価するための検証手法を示す．本研究では，静的解析ツールによって検出されたコーディング規約違反を修正すべき違反かそうでない違反かの2値に分類する機械学習モデルを3種類作成する．%各モデルの概要は以下の通りである．
 
 \begin{enumerate}
-  \item 従来手法：従来研究の手法を採用したモデルであり，予測対象のプロジェクトの過去の規約違反修正履歴のみを学習する予測モデルを構築
-  \item 提案手法（クラスタリングなし）：提案手法の複数プロジェクトの規約違反修正履歴を学習させる手法で，すべての学習データを結合し学習する予測モデルを構築
-  \item 提案手法（クラスタリングあり）：提案手法で複数プロジェクトのデータを結合した後に，クラスタリングを行い各クラスタごとに学習する予測モデルを構築
+  \item 従来手法：従来研究の手法を採用したモデルであり，予測対象のプロジェクトの過去の規約違反修正履歴のみを学習する予測モデルを構築\cite{JyuraiPre}
+  \item 提案手法（クラスタリングなし）：提案手法の複数プロジェクトの規約違反修正履歴を学習させる手法で，すべての学習データを結合し，学習する予測モデルを構築
+  \item 提案手法（クラスタリングあり）：提案手法で複数プロジェクトのデータを結合した後に，クラスタリングを行いクラスタごとに学習する予測モデルを構築
 \end{enumerate}
 
+モデル(2)においてデータセット内のすべてのプロジェクトのデータを学習するため，プロジェクトごとのコーディングスタイルを無視した学習をしてしまうことが考えられる．コーディングスタイルの異なるプロジェクトのデータはノイズとなり，予測精度が低下する恐れがある．しかし，規約違反の修正予測の分野において複数プロジェクトのデータを学習に用いる手法は提案されていないため，モデル(2)の構築が必要である．
 
 モデル(3)において結合したデータをクラスタリングする理由を説明する．提案手法(クラスタリングなし)では，学習データに複数プロジェクトのデータを用いることによって学習データを拡張しており，各プロジェクトごとに存在するコーディングスタイルなどの特徴を無視したまま結合している．
-クラスタリングすることによって，説明変数が類似した違反修正データ群を収集することができるため，すべてのコーディング規約違反修正データを学習するより，類似性を持った説明変数から学習することができる．
+クラスタリングすることによって，説明変数が類似した違反修正データ群を収集することができるため，すべてのコーディング規約違反修正データを学習するより，類似性を持ったコーディング規約違反修正データから学習することができる．
 クラスタリングによって説明変数が類似し同じクラスタに分類されたプロジェクト同士が，コーディングスタイルも類似するとは言えないが，単純に結合した場合より効果的に複数プロジェクトのデータを学習できると考えられるため，クラスタリングを用いた手法を採用した．
 
 
@@ -236,13 +240,14 @@ Kimらは静的解析ツールの出力結果をベイジアンネットワー�
 \subsection{コーディング規約に違反しているコード断片のクラスタリング}
 
 
-提案手法(クラスタリングあり)において，説明変数の特徴量が類似しているコード断片をクラスタリングし，各クラスタごとに予測モデルを構築する．クラスタリングには，クラスタ間の類似度を計測するため階層的クラスタリングを用いる．階層的クラスタリングには，連結法としてWard法を用い，距離の測定にはユークリッド距離を用いる\cite{ward}．本研究ではクラスタ数を10とした場合における結果を用いて評価を行う．
+提案手法(クラスタリングあり)において，説明変数の特徴量が類似しているコード断片をクラスタリングし，クラスタごとに予測モデルを構築する．クラスタリングには，クラスタ間の類似度を計測するため階層的クラスタリングを用いる．階層的クラスタリングには，連結法としてWard法を用い，距離の測定にはユークリッド距離を用いる\cite{ward}．本研究ではクラスタ数を10とした場合における結果を用いて評価を行う．
 最適なクラスタ数の決定には決定問題が伴うが，本研究ではデータ数が非常に多く最適なクラスタ数を決定することが困難なため，暫定でクラスタ数を10としている．
 
 
 \subsection{機械学習モデルの構築と評価}
 
 本研究で利用する予測モデルは，機械学習の予測手法として頻繁に利用されるロジスティック回帰，RandomForestの2種類の手法を用いる．
+ロジスティック回帰モデルは従来研究でも用いられており\cite{JyuraiPre}，RandomForestは非線形な関係を表現できるため採用した．
 本研究で用いたデータセットに含まれるプロジェクトごとの違反修正率の中央値は0.36であった．つまり，コーディング規約違反の修正に関するデータは，違反が修正された正例が少なく，修正されない負例が多い不均衡なデータであるため，各予測モデルを構築するためのPythonパッケージに用意されているオプションであるclass\_weightsを用いることによって，2クラスデータに重みづけを行う．
 また，学習の反復回数を定めるイテレーション回数を10,000に設定する．
 % 構築した各予測モデルの評価には，従来研究でも用いられていた適合率，再現率，F1値を使用する．
@@ -302,85 +307,82 @@ Kimらは静的解析ツールの出力結果をベイジアンネットワー�
 \vspace{3mm}
 % \begin{table*}{}
     \centering
-    \caption{ロジスティック回帰モデルでの予測結果（総違反数の上位5件を掲載）}
+    \caption{ロジスティック回帰モデルでの予測結果（総違反数の上位20件を掲載）}
     \label{tab:logistic}
     %\vspace{3mm}
     \scalebox{0.9}{
-        \begin{tabular}{l||p{4em}|p{4em}|p{4em}||p{4em}|p{4em}|p{4em}||p{4em}|p{4em}|p{4em}}
-            \hline
-            \multirow{3}{*}{プロジェクト名}&\multicolumn{3}{c||}{\multirow{2}{*}{従来手法}} & \multicolumn{3}{c||}{提案手法} & \multicolumn{3}{c}{提案手法}\\
-            &\multicolumn{3}{c||}{} & \multicolumn{3}{c||}{（クラスタリングなし）} & \multicolumn{3}{c}{（クラスタリングあり）}\\ \cline{2-10}
-            & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値 \\ \hline
-            sockeye & \multicolumn{1}{r|}{\textbf{0.53}} & \multicolumn{1}{r|}{\textbf{0.81}} & \multicolumn{1}{r||}{\textbf{0.64}} & \multicolumn{1}{r|}{0.35} & \multicolumn{1}{r|}{0.56} & \multicolumn{1}{r||}{0.43} & \multicolumn{1}{r|}{0.49} & \multicolumn{1}{r|}{0.67} & \multicolumn{1}{r}{0.57} \\
-            coretools & \multicolumn{1}{r|}{\textbf{0.04}} & \multicolumn{1}{r|}{0.63} & \multicolumn{1}{r||}{\textbf{0.07}} & \multicolumn{1}{r|}{0.02} & \multicolumn{1}{r|}{\textbf{0.88}} & \multicolumn{1}{r||}{0.04} & \multicolumn{1}{r|}{0.03} & \multicolumn{1}{r|}{0.83} & \multicolumn{1}{r}{0.05} \\
-            howdoi & \multicolumn{1}{r|}{\textbf{0.64}} & \multicolumn{1}{r|}{\textbf{0.99}} & \multicolumn{1}{r||}{\textbf{0.78}} & \multicolumn{1}{r|}{0.12} & \multicolumn{1}{r|}{0.33} & \multicolumn{1}{r||}{0.17} & \multicolumn{1}{r|}{0.22} & \multicolumn{1}{r|}{0.25} & \multicolumn{1}{r}{0.23} \\
-            schema\_salad & \multicolumn{1}{r|}{\textbf{0.55}} & \multicolumn{1}{r|}{0.27} & \multicolumn{1}{r||}{0.37} & \multicolumn{1}{r|}{0.51} & \multicolumn{1}{r|}{\textbf{0.64}} & \multicolumn{1}{r||}{\textbf{0.56}} & \multicolumn{1}{r|}{\textbf{0.55}} & \multicolumn{1}{r|}{0.54} & \multicolumn{1}{r}{0.54} \\
-            serverless-application-model & \multicolumn{1}{r|}{\textbf{0.76}} & \multicolumn{1}{r|}{0.45} & \multicolumn{1}{r||}{0.57} & \multicolumn{1}{r|}{0.55} & \multicolumn{1}{r|}{\textbf{0.83}} & \multicolumn{1}{r||}{0.66} & \multicolumn{1}{r|}{0.64} & \multicolumn{1}{r|}{\textbf{0.83}} & \multicolumn{1}{r}{\textbf{0.72}} \\
-            \hline 
-            % \hline
-            % implicit & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r|}{0.44} & \multicolumn{1}{r||}{0.62} & \multicolumn{1}{r|}{0.70} & \multicolumn{1}{r|}{\textbf{0.78}} & \multicolumn{1}{r||}{\textbf{0.74}} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r|}{0.11} & \multicolumn{1}{r}{0.20} \\
-            % python-sshpubkeys & \multicolumn{1}{r|}{0.64} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r||}{\textbf{0.78}} & \multicolumn{1}{r|}{\textbf{0.71}} & \multicolumn{1}{r|}{0.71} & \multicolumn{1}{r||}{0.71} & \multicolumn{1}{r|}{0.64} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r}{\textbf{0.78}} \\
-            % munch & \multicolumn{1}{r|}{\textbf{0.43}} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r||}{\textbf{0.60}} & \multicolumn{1}{r|}{0.33} & \multicolumn{1}{r|}{0.33} & \multicolumn{1}{r||}{0.33} & \multicolumn{1}{r|}{0.38} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r}{0.55} \\
-            % python-resize-image & \multicolumn{1}{r|}{0.14} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r||}{0.25} & \multicolumn{1}{r|}{0.17} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r||}{0.29} & \multicolumn{1}{r|}{\textbf{0.20}} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r}{\textbf{0.33}} \\
-            % queuelib & \multicolumn{1}{r|}{nan} & \multicolumn{1}{r|}{0.00} & \multicolumn{1}{r||}{nan} & \multicolumn{1}{r|}{\textbf{0.33}} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r||}{\textbf{0.50}} & \multicolumn{1}{r|}{\textbf{0.33}} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r}{\textbf{0.50}} \\ \hline
-        \end{tabular}
+     \begin{tabular}{l|rrr|rrr|rrr}
+    \hline
+    \multicolumn{1}{c|}{\multirow{2}{*}{プロジェクト名}} & \multicolumn{3}{c|}{従来手法} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}c@{}}提案手法\\ (クラスタリングなし)\end{tabular}} & \multicolumn{3}{c}{\begin{tabular}[c]{@{}c@{}}提案手法\\ (クラスタリングあり)\end{tabular}} \\ \cline{2-10} 
+    \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{適合率} & \multicolumn{1}{l|}{再現率} & \multicolumn{1}{l|}{F1値} & \multicolumn{1}{l|}{適合率} & \multicolumn{1}{l|}{再現率} & \multicolumn{1}{l|}{F1値} & \multicolumn{1}{l|}{適合率} & \multicolumn{1}{l|}{再現率} & \multicolumn{1}{l}{F1値} \\ \hline
+    sockeye & \multicolumn{1}{r|}{\textbf{0.53}} & \multicolumn{1}{r|}{\textbf{0.81}} & \textbf{0.64} & \multicolumn{1}{r|}{0.35} & \multicolumn{1}{r|}{0.56} & 0.43 & \multicolumn{1}{r|}{0.49} & \multicolumn{1}{r|}{0.67} & 0.57 \\
+    coretools & \multicolumn{1}{r|}{\textbf{0.04}} & \multicolumn{1}{r|}{0.63} & \textbf{0.07} & \multicolumn{1}{r|}{0.02} & \multicolumn{1}{r|}{\textbf{0.88}} & 0.04 & \multicolumn{1}{r|}{0.03} & \multicolumn{1}{r|}{0.83} & 0.05 \\
+    howdoi & \multicolumn{1}{r|}{\textbf{0.64}} & \multicolumn{1}{r|}{\textbf{0.99}} & \textbf{0.78} & \multicolumn{1}{r|}{0.12} & \multicolumn{1}{r|}{0.33} & 0.17 & \multicolumn{1}{r|}{0.22} & \multicolumn{1}{r|}{0.25} & 0.23 \\
+    schema\_salad & \multicolumn{1}{r|}{\textbf{0.55}} & \multicolumn{1}{r|}{0.27} & 0.37 & \multicolumn{1}{r|}{0.51} & \multicolumn{1}{r|}{\textbf{0.64}} & \textbf{0.56} & \multicolumn{1}{r|}{\textbf{0.55}} & \multicolumn{1}{r|}{0.54} & 0.54 \\
+    serverless-application-model & \multicolumn{1}{r|}{\textbf{0.76}} & \multicolumn{1}{r|}{0.45} & 0.57 & \multicolumn{1}{r|}{0.55} & \multicolumn{1}{r|}{\textbf{0.83}} & 0.66 & \multicolumn{1}{r|}{0.64} & \multicolumn{1}{r|}{\textbf{0.83}} & \textbf{0.72} \\
+    SoCo & \multicolumn{1}{r|}{0.73} & \multicolumn{1}{r|}{\textbf{0.69}} & 0.71 & \multicolumn{1}{r|}{\textbf{0.87}} & \multicolumn{1}{r|}{0.61} & 0.72 & \multicolumn{1}{r|}{0.82} & \multicolumn{1}{r|}{0.65} & \textbf{0.73} \\
+    behave & \multicolumn{1}{r|}{0.18} & \multicolumn{1}{r|}{0.48} & 0.26 & \multicolumn{1}{r|}{0.15} & \multicolumn{1}{r|}{0.65} & 0.25 & \multicolumn{1}{r|}{\textbf{0.21}} & \multicolumn{1}{r|}{\textbf{0.67}} & \textbf{0.32} \\
+    OWSLib & \multicolumn{1}{r|}{\textbf{0.82}} & \multicolumn{1}{r|}{0.80} & \textbf{0.81} & \multicolumn{1}{r|}{0.42} & \multicolumn{1}{r|}{\textbf{0.93}} & 0.58 & \multicolumn{1}{r|}{0.46} & \multicolumn{1}{r|}{0.89} & 0.60 \\
+    pynput & \multicolumn{1}{r|}{\textbf{0.45}} & \multicolumn{1}{r|}{\textbf{0.92}} & \textbf{0.60} & \multicolumn{1}{r|}{0.43} & \multicolumn{1}{r|}{0.58} & 0.49 & \multicolumn{1}{r|}{0.25} & \multicolumn{1}{r|}{0.29} & 0.27 \\
+    schematics & \multicolumn{1}{r|}{\textbf{0.43}} & \multicolumn{1}{r|}{0.71} & \textbf{0.54} & \multicolumn{1}{r|}{0.24} & \multicolumn{1}{r|}{\textbf{0.78}} & 0.37 & \multicolumn{1}{r|}{0.23} & \multicolumn{1}{r|}{0.69} & 0.35 \\
+    hickle & \multicolumn{1}{r|}{\textbf{0.25}} & \multicolumn{1}{r|}{0.72} & \textbf{0.37} & \multicolumn{1}{r|}{0.20} & \multicolumn{1}{r|}{\textbf{0.74}} & 0.32 & \multicolumn{1}{r|}{0.23} & \multicolumn{1}{r|}{0.71} & 0.35 \\
+    python-sdk & \multicolumn{1}{r|}{\textbf{0.36}} & \multicolumn{1}{r|}{\textbf{0.75}} & \textbf{0.48} & \multicolumn{1}{r|}{0.16} & \multicolumn{1}{r|}{0.56} & 0.25 & \multicolumn{1}{r|}{0.18} & \multicolumn{1}{r|}{0.62} & 0.28 \\
+    rtv & \multicolumn{1}{r|}{\textbf{0.69}} & \multicolumn{1}{r|}{0.40} & 0.51 & \multicolumn{1}{r|}{0.66} & \multicolumn{1}{r|}{0.62} & 0.64 & \multicolumn{1}{r|}{\textbf{0.69}} & \multicolumn{1}{r|}{\textbf{0.66}} & \textbf{0.67} \\
+    datadogpy & \multicolumn{1}{r|}{\textbf{0.10}} & \multicolumn{1}{r|}{0.72} & 0.17 & \multicolumn{1}{r|}{0.08} & \multicolumn{1}{r|}{0.74} & 0.14 & \multicolumn{1}{r|}{\textbf{0.10}} & \multicolumn{1}{r|}{\textbf{1.00}} & \textbf{0.18} \\
+    pychromecast & \multicolumn{1}{r|}{\textbf{0.90}} & \multicolumn{1}{r|}{\textbf{0.78}} & \textbf{0.84} & \multicolumn{1}{r|}{0.83} & \multicolumn{1}{r|}{0.57} & 0.68 & \multicolumn{1}{r|}{0.82} & \multicolumn{1}{r|}{0.61} & 0.70 \\
+    pyscard & \multicolumn{1}{r|}{\textbf{0.02}} & \multicolumn{1}{r|}{0.33} & \textbf{0.04} & \multicolumn{1}{r|}{\textbf{0.02}} & \multicolumn{1}{r|}{0.83} & 0.03 & \multicolumn{1}{r|}{\textbf{0.02}} & \multicolumn{1}{r|}{\textbf{1.00}} & \textbf{0.04} \\
+    imgaug & \multicolumn{1}{r|}{\textbf{0.22}} & \multicolumn{1}{r|}{\textbf{0.71}} & \textbf{0.34} & \multicolumn{1}{r|}{0.06} & \multicolumn{1}{r|}{0.10} & 0.07 & \multicolumn{1}{r|}{0.04} & \multicolumn{1}{r|}{0.06} & 0.05 \\
+    GPflow & \multicolumn{1}{r|}{\textbf{0.68}} & \multicolumn{1}{r|}{\textbf{0.78}} & \textbf{0.73} & \multicolumn{1}{r|}{0.60} & \multicolumn{1}{r|}{0.75} & 0.66 & \multicolumn{1}{r|}{0.60} & \multicolumn{1}{r|}{0.56} & 0.58 \\
+    transitions & \multicolumn{1}{r|}{\textbf{0.83}} & \multicolumn{1}{r|}{\textbf{0.92}} & \textbf{0.87} & \multicolumn{1}{r|}{0.67} & \multicolumn{1}{r|}{0.61} & 0.64 & \multicolumn{1}{r|}{0.63} & \multicolumn{1}{r|}{0.86} & 0.73 \\
+    pyphi & \multicolumn{1}{r|}{0.66} & \multicolumn{1}{r|}{0.57} & 0.61 & \multicolumn{1}{r|}{\textbf{0.68}} & \multicolumn{1}{r|}{\textbf{0.74}} & \textbf{0.71} & \multicolumn{1}{r|}{0.59} & \multicolumn{1}{r|}{0.61} & 0.60 \\ \hline
+    \end{tabular}
     }
 % \end{table*}
     \vspace{3mm}
 % \begin{table*}{}
     \centering
-    \caption{RandomForestモデルでの予測結果（総違反数の上位5件を掲載）}
+    \caption{RandomForestモデルでの予測結果（総違反数の上位20件を掲載）}
     \label{tab:RandomForest}
+    \vspace{1mm}
     \scalebox{0.9}{
-        \begin{tabular}{l||p{4em}|p{4em}|p{4em}||p{4em}|p{4em}|p{4em}||p{4em}|p{4em}|p{4em}}
-            \hline
-            \multirow{3}{*}{プロジェクト名}&\multicolumn{3}{c||}{\multirow{2}{*}{従来手法}} & \multicolumn{3}{c||}{提案手法} & \multicolumn{3}{c}{提案手法}\\
-            &\multicolumn{3}{c||}{} & \multicolumn{3}{c||}{（クラスタリングなし）} & \multicolumn{3}{c}{（クラスタリングあり）}\\ \cline{2-10}
-            & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値 \\ \hline
-            sockeye & \multicolumn{1}{r|}{0.75} & \multicolumn{1}{r|}{\textbf{0.83}} & \multicolumn{1}{r||}{\textbf{0.79}} & \multicolumn{1}{r|}{\textbf{0.76}} & \multicolumn{1}{r|}{0.79} & \multicolumn{1}{r||}{0.78} & \multicolumn{1}{r|}{\textbf{0.76}} & \multicolumn{1}{r|}{0.80} & \multicolumn{1}{r}{0.78} \\
-            coretools & \multicolumn{1}{r|}{\textbf{0.14}} & \multicolumn{1}{r|}{0.24} & \multicolumn{1}{r||}{\textbf{0.18}} & \multicolumn{1}{r|}{0.04} & \multicolumn{1}{r|}{\textbf{0.41}} & \multicolumn{1}{r||}{0.08} & \multicolumn{1}{r|}{0.04} & \multicolumn{1}{r|}{0.37} & \multicolumn{1}{r}{0.07} \\
-            howdoi & \multicolumn{1}{r|}{\textbf{0.78}} & \multicolumn{1}{r|}{\textbf{0.99}} & \multicolumn{1}{r||}{\textbf{0.87}} & \multicolumn{1}{r|}{0.07} & \multicolumn{1}{r|}{\textbf{0.99}} & \multicolumn{1}{r||}{0.13} & \multicolumn{1}{r|}{0.07} & \multicolumn{1}{r|}{\textbf{0.99}} & \multicolumn{1}{r}{0.13} \\
-            schema\_salad & \multicolumn{1}{r|}{\textbf{0.66}} & \multicolumn{1}{r|}{\textbf{0.58}} & \multicolumn{1}{r||}{\textbf{0.62}} & \multicolumn{1}{r|}{0.58} & \multicolumn{1}{r|}{0.31} & \multicolumn{1}{r||}{0.41} & \multicolumn{1}{r|}{0.46} & \multicolumn{1}{r|}{0.21} & \multicolumn{1}{r}{0.29} \\
-            serverless-application-model & \multicolumn{1}{r|}{\textbf{0.72}} & \multicolumn{1}{r|}{\textbf{0.27}} & \multicolumn{1}{r||}{\textbf{0.39}} & \multicolumn{1}{r|}{0.70} & \multicolumn{1}{r|}{0.23} & \multicolumn{1}{r||}{0.34} & \multicolumn{1}{r|}{0.63} & \multicolumn{1}{r|}{0.24} & \multicolumn{1}{r}{0.35} \\
-            \hline
-            % \hline
-            % implicit & \multicolumn{1}{r|}{0.75} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r||}{\textbf{0.86}} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r|}{0.44} & \multicolumn{1}{r||}{0.62} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r|}{0.44} & \multicolumn{1}{r}{0.62} \\
-            % python-sshpubkeys & \multicolumn{1}{r|}{0.64} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r||}{\textbf{0.78}} & \multicolumn{1}{r|}{\textbf{0.71}} & \multicolumn{1}{r|}{0.71} & \multicolumn{1}{r||}{0.71} & \multicolumn{1}{r|}{0.67} & \multicolumn{1}{r|}{0.29} & \multicolumn{1}{r}{0.40} \\
-            % munch & \multicolumn{1}{r|}{nan} & \multicolumn{1}{r|}{0.00} & \multicolumn{1}{r||}{nan} & \multicolumn{1}{r|}{nan} & \multicolumn{1}{r|}{0.00} & \multicolumn{1}{r||}{nan} & \multicolumn{1}{r|}{nan} & \multicolumn{1}{r|}{0.00} & \multicolumn{1}{r}{nan} \\
-            % python-resize-image & \multicolumn{1}{r|}{0.14} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r||}{0.25} & \multicolumn{1}{r|}{0.14} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r||}{0.25} & \multicolumn{1}{r|}{\textbf{0.17}} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r}{\textbf{0.29}} \\
-            % queuelib & \multicolumn{1}{r|}{nan} & \multicolumn{1}{r|}{0.00} & \multicolumn{1}{r||}{nan} & \multicolumn{1}{r|}{nan} & \multicolumn{1}{r|}{0.00} & \multicolumn{1}{r||}{nan} & \multicolumn{1}{r|}{nan} & \multicolumn{1}{r|}{0.00} & \multicolumn{1}{r}{nan} \\ \hline
-        \end{tabular}
+    \begin{tabular}{l|rrr|rrr|rrr}
+    \hline
+    \multicolumn{1}{c|}{\multirow{2}{*}{プロジェクト名}} & \multicolumn{3}{c|}{従来手法} & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}c@{}}提案手法\\ (クラスタリングなし)\end{tabular}} & \multicolumn{3}{c}{\begin{tabular}[c]{@{}c@{}}提案手法\\ (クラスタリングあり)\end{tabular}} \\ \cline{2-10} 
+    \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{適合率} & \multicolumn{1}{c|}{再現率} & \multicolumn{1}{c|}{F1値} & \multicolumn{1}{c|}{適合率} & \multicolumn{1}{c|}{再現率} & \multicolumn{1}{c|}{F1値} & \multicolumn{1}{c|}{適合率} & \multicolumn{1}{c|}{再現率} & \multicolumn{1}{c}{F1値} \\ \hline
+    sockeye & \multicolumn{1}{r|}{0.75} & \multicolumn{1}{r|}{\textbf{0.83}} & \textbf{0.79} & \multicolumn{1}{r|}{\textbf{0.76}} & \multicolumn{1}{r|}{0.79} & 0.78 & \multicolumn{1}{r|}{\textbf{0.76}} & \multicolumn{1}{r|}{0.80} & 0.78 \\
+    coretools & \multicolumn{1}{r|}{\textbf{0.14}} & \multicolumn{1}{r|}{0.24} & \textbf{0.18} & \multicolumn{1}{r|}{0.04} & \multicolumn{1}{r|}{\textbf{0.41}} & 0.08 & \multicolumn{1}{r|}{0.04} & \multicolumn{1}{r|}{0.37} & 0.07 \\
+    howdoi & \multicolumn{1}{r|}{\textbf{0.78}} & \multicolumn{1}{r|}{\textbf{0.99}} & \textbf{0.87} & \multicolumn{1}{r|}{0.07} & \multicolumn{1}{r|}{\textbf{0.99}} & 0.13 & \multicolumn{1}{r|}{0.07} & \multicolumn{1}{r|}{\textbf{0.99}} & 0.13 \\
+    schema\_salad & \multicolumn{1}{r|}{\textbf{0.66}} & \multicolumn{1}{r|}{\textbf{0.58}} & \textbf{0.62} & \multicolumn{1}{r|}{0.58} & \multicolumn{1}{r|}{0.31} & 0.41 & \multicolumn{1}{r|}{0.46} & \multicolumn{1}{r|}{0.21} & 0.29 \\
+    serverless-application-model & \multicolumn{1}{r|}{\textbf{0.72}} & \multicolumn{1}{r|}{\textbf{0.27}} & \textbf{0.39} & \multicolumn{1}{r|}{0.70} & \multicolumn{1}{r|}{0.23} & 0.34 & \multicolumn{1}{r|}{0.63} & \multicolumn{1}{r|}{0.24} & 0.35 \\
+    SoCo & \multicolumn{1}{r|}{0.67} & \multicolumn{1}{r|}{\textbf{0.64}} & \textbf{0.66} & \multicolumn{1}{r|}{\textbf{0.74}} & \multicolumn{1}{r|}{0.53} & 0.62 & \multicolumn{1}{r|}{0.72} & \multicolumn{1}{r|}{0.47} & 0.57 \\
+    behave & \multicolumn{1}{r|}{\textbf{0.33}} & \multicolumn{1}{r|}{0.37} & \textbf{0.35} & \multicolumn{1}{r|}{0.24} & \multicolumn{1}{r|}{0.36} & 0.29 & \multicolumn{1}{r|}{0.27} & \multicolumn{1}{r|}{\textbf{0.40}} & 0.32 \\
+    OWSLib & \multicolumn{1}{r|}{\textbf{0.61}} & \multicolumn{1}{r|}{\textbf{0.77}} & \textbf{0.68} & \multicolumn{1}{r|}{0.59} & \multicolumn{1}{r|}{0.76} & 0.67 & \multicolumn{1}{r|}{0.58} & \multicolumn{1}{r|}{0.76} & 0.65 \\
+    pynput & \multicolumn{1}{r|}{0.34} & \multicolumn{1}{r|}{\textbf{0.87}} & 0.49 & \multicolumn{1}{r|}{0.55} & \multicolumn{1}{r|}{0.60} & \textbf{0.57} & \multicolumn{1}{r|}{\textbf{0.56}} & \multicolumn{1}{r|}{0.56} & 0.56 \\
+    schematics & \multicolumn{1}{r|}{0.44} & \multicolumn{1}{r|}{0.75} & 0.55 & \multicolumn{1}{r|}{\textbf{0.46}} & \multicolumn{1}{r|}{\textbf{0.79}} & \textbf{0.58} & \multicolumn{1}{r|}{0.43} & \multicolumn{1}{r|}{0.77} & 0.55 \\
+    hickle & \multicolumn{1}{r|}{0.14} & \multicolumn{1}{r|}{0.14} & 0.14 & \multicolumn{1}{r|}{\textbf{0.24}} & \multicolumn{1}{r|}{\textbf{0.49}} & \textbf{0.32} & \multicolumn{1}{r|}{\textbf{0.24}} & \multicolumn{1}{r|}{0.44} & 0.31 \\
+    python-sdk & \multicolumn{1}{r|}{0.43} & \multicolumn{1}{r|}{0.45} & 0.44 & \multicolumn{1}{r|}{0.32} & \multicolumn{1}{r|}{\textbf{0.64}} & 0.43 & \multicolumn{1}{r|}{\textbf{0.45}} & \multicolumn{1}{r|}{0.60} & \textbf{0.52} \\
+    rtv & \multicolumn{1}{r|}{\textbf{0.73}} & \multicolumn{1}{r|}{\textbf{0.51}} & \textbf{0.60} & \multicolumn{1}{r|}{0.72} & \multicolumn{1}{r|}{\textbf{0.51}} & \textbf{0.60} & \multicolumn{1}{r|}{0.65} & \multicolumn{1}{r|}{0.31} & 0.42 \\
+    datadogpy & \multicolumn{1}{r|}{0.02} & \multicolumn{1}{r|}{0.05} & 0.03 & \multicolumn{1}{r|}{0.19} & \multicolumn{1}{r|}{\textbf{0.77}} & 0.31 & \multicolumn{1}{r|}{\textbf{0.24}} & \multicolumn{1}{r|}{0.74} & \textbf{0.36} \\
+    pychromecast & \multicolumn{1}{r|}{\textbf{0.93}} & \multicolumn{1}{r|}{\textbf{0.89}} & \textbf{0.91} & \multicolumn{1}{r|}{0.85} & \multicolumn{1}{r|}{0.76} & 0.80 & \multicolumn{1}{r|}{0.87} & \multicolumn{1}{r|}{0.76} & 0.81 \\
+    pyscard & \multicolumn{1}{r|}{\textbf{0.08}} & \multicolumn{1}{r|}{0.17} & \textbf{0.11} & \multicolumn{1}{r|}{0.06} & \multicolumn{1}{r|}{\textbf{0.50}} & 0.10 & \multicolumn{1}{r|}{0.06} & \multicolumn{1}{r|}{\textbf{0.50}} & \textbf{0.11} \\
+    imgaug & \multicolumn{1}{r|}{0.10} & \multicolumn{1}{r|}{\textbf{0.05}} & \textbf{0.07} & \multicolumn{1}{r|}{\textbf{0.50}} & \multicolumn{1}{r|}{0.02} & 0.03 & \multicolumn{1}{r|}{\textbf{0.50}} & \multicolumn{1}{r|}{0.02} & 0.03 \\
+    GPflow & \multicolumn{1}{r|}{0.64} & \multicolumn{1}{r|}{\textbf{0.89}} & \textbf{0.74} & \multicolumn{1}{r|}{0.55} & \multicolumn{1}{r|}{0.20} & 0.29 & \multicolumn{1}{r|}{\textbf{0.66}} & \multicolumn{1}{r|}{0.22} & 0.33 \\
+    transitions & \multicolumn{1}{r|}{\textbf{0.83}} & \multicolumn{1}{r|}{0.96} & \textbf{0.89} & \multicolumn{1}{r|}{0.81} & \multicolumn{1}{r|}{\textbf{0.98}} & \textbf{0.89} & \multicolumn{1}{r|}{0.82} & \multicolumn{1}{r|}{\textbf{0.98}} & \textbf{0.89} \\
+    pyphi & \multicolumn{1}{r|}{0.67} & \multicolumn{1}{r|}{0.78} & 0.72 & \multicolumn{1}{r|}{\textbf{0.69}} & \multicolumn{1}{r|}{\textbf{0.92}} & \textbf{0.79} & \multicolumn{1}{r|}{\textbf{0.69}} & \multicolumn{1}{r|}{\textbf{0.92}} & \textbf{0.79} \\ \hline
+    \end{tabular}
+        % \begin{tabular}{l||p{4em}|p{4em}|p{4em}||p{4em}|p{4em}|p{4em}||p{4em}|p{4em}|p{4em}}
+        %     \hline
+        %     \multirow{3}{*}{プロジェクト名}&\multicolumn{3}{c||}{\multirow{2}{*}{従来手法}} & \multicolumn{3}{c||}{提案手法} & \multicolumn{3}{c}{提案手法}\\
+        %     &\multicolumn{3}{c||}{} & \multicolumn{3}{c||}{（クラスタリングなし）} & \multicolumn{3}{c}{（クラスタリングあり）}\\ \cline{2-10}
+        %     & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値 \\ \hline
+        %     sockeye & \multicolumn{1}{r|}{0.75} & \multicolumn{1}{r|}{\textbf{0.83}} & \multicolumn{1}{r||}{\textbf{0.79}} & \multicolumn{1}{r|}{\textbf{0.76}} & \multicolumn{1}{r|}{0.79} & \multicolumn{1}{r||}{0.78} & \multicolumn{1}{r|}{\textbf{0.76}} & \multicolumn{1}{r|}{0.80} & \multicolumn{1}{r}{0.78} \\
+        %     coretools & \multicolumn{1}{r|}{\textbf{0.14}} & \multicolumn{1}{r|}{0.24} & \multicolumn{1}{r||}{\textbf{0.18}} & \multicolumn{1}{r|}{0.04} & \multicolumn{1}{r|}{\textbf{0.41}} & \multicolumn{1}{r||}{0.08} & \multicolumn{1}{r|}{0.04} & \multicolumn{1}{r|}{0.37} & \multicolumn{1}{r}{0.07} \\
+        %     howdoi & \multicolumn{1}{r|}{\textbf{0.78}} & \multicolumn{1}{r|}{\textbf{0.99}} & \multicolumn{1}{r||}{\textbf{0.87}} & \multicolumn{1}{r|}{0.07} & \multicolumn{1}{r|}{\textbf{0.99}} & \multicolumn{1}{r||}{0.13} & \multicolumn{1}{r|}{0.07} & \multicolumn{1}{r|}{\textbf{0.99}} & \multicolumn{1}{r}{0.13} \\
+        %     schema\_salad & \multicolumn{1}{r|}{\textbf{0.66}} & \multicolumn{1}{r|}{\textbf{0.58}} & \multicolumn{1}{r||}{\textbf{0.62}} & \multicolumn{1}{r|}{0.58} & \multicolumn{1}{r|}{0.31} & \multicolumn{1}{r||}{0.41} & \multicolumn{1}{r|}{0.46} & \multicolumn{1}{r|}{0.21} & \multicolumn{1}{r}{0.29} \\
+        %     serverless-application-model & \multicolumn{1}{r|}{\textbf{0.72}} & \multicolumn{1}{r|}{\textbf{0.27}} & \multicolumn{1}{r||}{\textbf{0.39}} & \multicolumn{1}{r|}{0.70} & \multicolumn{1}{r|}{0.23} & \multicolumn{1}{r||}{0.34} & \multicolumn{1}{r|}{0.63} & \multicolumn{1}{r|}{0.24} & \multicolumn{1}{r}{0.35} \\ \hline
+        % \end{tabular}
     }
-% \end{table*}
-
-% \begin{table*}{}
-%     \centering
-%     \caption{SVMモデルでの予測結果（総違反数の上下5件ずつを掲載）}
-%     \label{tab:SVM}
-%     \vspace{3mm}
-%     \scalebox{0.75}{
-%         \begin{tabular}{l||p{4em}|p{4em}|p{4em}||p{4em}|p{4em}|p{4em}||p{4em}|p{4em}|p{4em}}
-%             \hline
-%             \multirow{3}{*}{プロジェクト名}&\multicolumn{3}{c||}{\multirow{2}{*}{従来手法}} & \multicolumn{3}{c||}{提案手法} & \multicolumn{3}{c}{提案手法}\\
-%             &\multicolumn{3}{c||}{} & \multicolumn{3}{c||}{（クラスタリングなし）} & \multicolumn{3}{c}{（クラスタリングあり）}\\ \cline{2-10}
-%             & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値 & 適合率 & 再現率 & F1値 \\ \hline
-%             sockeye & \multicolumn{1}{r|}{0.47} & \multicolumn{1}{r|}{\textbf{0.71}} & \multicolumn{1}{r||}{\textbf{0.57}} & \multicolumn{1}{r|}{0.30} & \multicolumn{1}{r|}{0.48} & \multicolumn{1}{r||}{0.37} & \multicolumn{1}{r|}{\textbf{0.50}} & \multicolumn{1}{r|}{0.60} & \multicolumn{1}{r}{0.54} \\
-%             coretools & \multicolumn{1}{r|}{0.02} & \multicolumn{1}{r|}{0.68} & \multicolumn{1}{r||}{0.04} & \multicolumn{1}{r|}{0.02} & \multicolumn{1}{r|}{0.49} & \multicolumn{1}{r||}{0.03} & \multicolumn{1}{r|}{\textbf{0.03}} & \multicolumn{1}{r|}{\textbf{0.88}} & \multicolumn{1}{r}{\textbf{0.06}} \\
-%             howdoi & \multicolumn{1}{r|}{0.05} & \multicolumn{1}{r|}{\textbf{0.99}} & \multicolumn{1}{r||}{0.10} & \multicolumn{1}{r|}{0.05} & \multicolumn{1}{r|}{0.21} & \multicolumn{1}{r||}{0.08} & \multicolumn{1}{r|}{\textbf{0.15}} & \multicolumn{1}{r|}{0.20} & \multicolumn{1}{r}{\textbf{0.17}} \\
-%             schema\_salad & \multicolumn{1}{r|}{0.48} & \multicolumn{1}{r|}{0.43} & \multicolumn{1}{r||}{0.45} & \multicolumn{1}{r|}{\textbf{0.51}} & \multicolumn{1}{r|}{0.58} & \multicolumn{1}{r||}{0.54} & \multicolumn{1}{r|}{\textbf{0.51}} & \multicolumn{1}{r|}{\textbf{0.66}} & \multicolumn{1}{r}{\textbf{0.57}} \\
-%             serverless-application-model & \multicolumn{1}{r|}{\textbf{0.69}} & \multicolumn{1}{r|}{0.56} & \multicolumn{1}{r||}{0.62} & \multicolumn{1}{r|}{0.47} & \multicolumn{1}{r|}{0.37} & \multicolumn{1}{r||}{0.41} & \multicolumn{1}{r|}{0.59} & \multicolumn{1}{r|}{\textbf{0.77}} & \multicolumn{1}{r}{\textbf{0.67}} \\
-%             \hline \hline
-%             implicit & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r|}{\textbf{0.44}} & \multicolumn{1}{r||}{\textbf{0.62}} & \multicolumn{1}{r|}{0.57} & \multicolumn{1}{r|}{\textbf{0.44}} & \multicolumn{1}{r||}{0.50} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r|}{0.22} & \multicolumn{1}{r}{0.36} \\
-%             python-sshpubkeys & \multicolumn{1}{r|}{\textbf{0.64}} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r||}{\textbf{0.78}} & \multicolumn{1}{r|}{nan} & \multicolumn{1}{r|}{0.00} & \multicolumn{1}{r||}{nan} & \multicolumn{1}{r|}{\textbf{0.64}} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r}{\textbf{0.78}} \\
-%             munch & \multicolumn{1}{r|}{nan} & \multicolumn{1}{r|}{0.00} & \multicolumn{1}{r||}{nan} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r|}{\textbf{0.33}} & \multicolumn{1}{r||}{\textbf{0.50}} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r|}{\textbf{0.33}} & \multicolumn{1}{r}{\textbf{0.50}} \\
-%             python-resize-image & \multicolumn{1}{r|}{0.14} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r||}{0.25} & \multicolumn{1}{r|}{\textbf{0.50}} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r||}{\textbf{0.67}} & \multicolumn{1}{r|}{0.20} & \multicolumn{1}{r|}{\textbf{1.00}} &\multicolumn{1}{r}{0.33} \\
-%             queuelib & \multicolumn{1}{r|}{nan} & \multicolumn{1}{r|}{0.00} & \multicolumn{1}{r||}{nan} & \multicolumn{1}{r|}{nan} & \multicolumn{1}{r|}{0.00} & \multicolumn{1}{r||}{nan} & \multicolumn{1}{r|}{\textbf{0.33}} & \multicolumn{1}{r|}{\textbf{1.00}} & \multicolumn{1}{r}{\textbf{0.50}} \\ \hline
-%         \end{tabular}
-%     }
-% \end{table*}
     \vspace{3mm}
-% \begin{table*}{}
-
 \end{table*}
 
 
@@ -440,7 +442,7 @@ Kimらは静的解析ツールの出力結果をベイジアンネットワー�
 \begin{table}[tb]
     \label{tab:schema_salad}
     \centering
-    \caption{schema\_saladプロジェクトの手法ごとの予測結果の混合行列}
+    \caption{schema\_saladプロジェクトの手法ごとの予測結果の混同行列}
     \vspace{2mm}
     \begin{tabular}{ll|r|r||r|r}
     \hline
@@ -454,7 +456,7 @@ Kimらは静的解析ツールの出力結果をベイジアンネットワー�
     \vspace{4mm}
     \centering
     \label{tab:transitions}
-    \caption{transitionsプロジェクトの手法ごとの予測結果の混合行列}
+    \caption{transitionsプロジェクトの手法ごとの予測結果の混同行列}
     \vspace{2mm}
     \begin{tabular}{ll|r|r||r|r}
     \hline
@@ -502,11 +504,13 @@ RQ1の結果から，提案手法でデータセットを拡張したことに�
 schema\_saladプロジェクトは提案手法によって予測精度が向上し，2行目のtransitionsプロジェクトは提案手法によって予測精度が低下した結果である．
 % 表\ref{tab:log-super}に記載した提案手法によって予測精度が向上した2プロジェクト，提案手法によって予測精度が低下した2プロジェクトにおける修正予測結果について分析を行う．
 
-表6，表7はschema\_saladとtransitionsプロジェクトの予測結果の混合行列を示す．表の左半分は従来手法の結果を示し，右半分は提案手法(クラスタリングなし)の結果を示す．
-各混合行列の左上はTNの数を示し，右上はFPの数を示し，右下はTPの数を示し，左下はFNの数を示している．
-% 各混合行列の左上は実際には修正されなかった違反を修正されないと正しく予測できたTNを表す．右上は，実際には発生した違反が修正されなかったが，誤って修正されると予測したFPを表す．右下は，発生した違反が実際に修正され，予測でも正しく修正されると予測できたTPの数を表す．左下は実際に修正された違反を誤って修正されないと予測したFNの数を表す．
+表6，表7はschema\_saladとtransitionsプロジェクトの予測結果の混同行列を示す．表の左半分は従来手法の結果を示し，右半分は提案手法(クラスタリングなし)の結果を示す．
+各混同行列の左上はTNの数を示し，右上はFPの数を示し，右下はTPの数を示し，左下はFNの数を示している．
+すべてのプロジェクトに対して，従来手法と提案手法(クラスタリングなし)の予測結果の混同行列を作成し，分析を行った．紙面の都合上，提案手法(クラスタリングなし)による予測精度の変化が大きかった2プロジェクトの混同行列のみを掲載している．
 
-% 図\ref{fig:schema_salad}と図\ref{fig:transitions}に従来手法と提案手法(クラスタリングなし)または，従来手法と提案手法(クラスタリングあり)の予測結果をベン図にまとめる．図中のベン図は，プロジェクトで検出された全コーディング規約違反データの内，左側の円で囲われたものが目的変数の正例群を示し，右側の円は予測結果の正例群を示している．両方の円で囲まれた部分は実データと予測結果が共に正例であるためTPの違反修正箇所数を示し，左円のみに囲まれている部分は，予測できなかった正例であるためFNの修正箇所数を示し,右円のみに囲まれている部分は誤って正例と予測したためFPの修正箇所数を示し，どちらにも囲まれていない部分は，実際に修正されず予測でも修正されないと予測したためTNの修正箇所数を表している．\todo{混合行列を表で書いては？}
+% 各混同行列の左上は実際には修正されなかった違反を修正されないと正しく予測できたTNを表す．右上は，実際には発生した違反が修正されなかったが，誤って修正されると予測したFPを表す．右下は，発生した違反が実際に修正され，予測でも正しく修正されると予測できたTPの数を表す．左下は実際に修正された違反を誤って修正されないと予測したFNの数を表す．
+
+% 図\ref{fig:schema_salad}と図\ref{fig:transitions}に従来手法と提案手法(クラスタリングなし)または，従来手法と提案手法(クラスタリングあり)の予測結果をベン図にまとめる．図中のベン図は，プロジェクトで検出された全コーディング規約違反データの内，左側の円で囲われたものが目的変数の正例群を示し，右側の円は予測結果の正例群を示している．両方の円で囲まれた部分は実データと予測結果が共に正例であるためTPの違反修正箇所数を示し，左円のみに囲まれている部分は，予測できなかった正例であるためFNの修正箇所数を示し,右円のみに囲まれている部分は誤って正例と予測したためFPの修正箇所数を示し，どちらにも囲まれていない部分は，実際に修正されず予測でも修正されないと予測したためTNの修正箇所数を表している．\todo{混同行列を表で書いては？}
 
 \subsubsection{提案手法によって予測可能・不可能になったコーディング規約違反とは?}
 % \done{答えがない}
@@ -527,9 +531,9 @@ transitionsプロジェクトは従来手法によってTPが217件から145件�
 具体的な予測結果を分析すると，transitionsプロジェクトはテストデータにC0116(関数またはメソッドにdocstringが無い)の規約が22件含まれており，従来手法では22件すべて正解しているが，提案手法では8件しか正解していない．これは，C0116へのtransitionsプロジェクトの修正傾向が他プロジェクトの傾向と異なるからであると考えられる．他のコーディング規約も同様に，テストデータに多数含まれており，従来手法では正しく予測できているが，提案手法では予測できていないコーディング規約が散見される．テストデータに多数含まれているコーディング規約は，学習用データにも多数含まれていることが多い．つまり，提案手法によって予測不可能になる規約違反は，単一プロジェクトで頻出しているコーディング規約で，他プロジェクトの修正方針と異なるコーディング規約への違反である．
 
 
-% \subsubsection{結果のまとめ}
+\subsubsection{結果のまとめ}
 
-% 提案手法(クラスタリングなし)，提案手法(クラスタリングあり)によって予測精度が向上しているプロジェクトでは，データセットを拡張したことによってTPが増加，FNが減少したことによる再現率の向上と，それに伴うF1値の向上によって従来手法を上回る予測精度でコーディング規約違反の修正予測が可能となった．しかし，従来手法によって高い精度で予測できているものは，提案手法によってTPが減少する場合や，FPがTPの増加より上回って増加してしまう場合は再現率が低下しF1値も低下する．
+提案手法によって発生している規約違反の出現や修正の傾向が他の多数のプロジェクトと同じ傾向にある場合は，従来手法では予測ができなかった修正予測が可能であることが示唆される．しかし，発生している規約違反の出現や修正の傾向が他プロジェクトと異なる場合は，提案手法を用いることによって，従来手法で予測ができていた違反の予測ができなくなることも示唆される．ただし，提案手法によってF1値が低下するプロジェクトにおいても再現率が向上しているプロジェクトが多いことから，提案手法によって従来手法では予測できなかった正例を正しく予測できることが示唆される．
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{考察}\label{chap:consideration}
@@ -575,10 +579,33 @@ RQ1の結果では提案手法の再現率が従来手法に比べて向上し�
 	\label{fig:importance}
 \end{figure}
 
-提案手法として，複数プロジェクトのデータを結合した後にクラスタリングを行い，各クラスタごとにロジスティック回帰予測モデルを作成し予測を行った．クラスタリングによる予測精度の変化を分析するために，各クラスタごとの予測精度を算出した．表\ref{tab:cluster}に，各クラスタごとの予測精度を示す．表の最下列は各クラスタに分類されたテストデータ数を示している．表からわかるようにcluster06とcluster10にはテストデータが存在せず，cluster01，cluster04，cluster05に多くのデータが集まっている．表中の`nan'は予測結果をすべて負例として予測した場合に適合率，再現率，F1値が計算できずに代入される．
-クラスタごとの予測結果で最もF1値が高いのはcluster04，cluster05の0.60である．また，cluster06以降では違反修正データの有無に関わらず修正予測ができていない．各クラスタごとに各評価指標の値に違いが見られるため，総違反修正データのクラスタリングが予測精度に影響を与えていることがわかる．また，cluster04，cluster05のデータ数は2,129と4,719であり，cluster01はクラスタに含まれるデータ数が過多であり，cluster02とcluster03はデータ数が過小であると考えられる．
+提案手法として，複数プロジェクトのデータを結合した後にクラスタリングを行い，クラスタごとにロジスティック回帰予測モデルを作成し予測を行った．クラスタリングによる予測精度の変化を分析するために，クラスタごとの予測精度を算出した．表\ref{tab:cluster}に，クラスタごとの予測精度を示す．表の最下列は各クラスタに分類されたテストデータ数を示している．表からわかるようにcluster06とcluster10にはテストデータが存在せず，cluster01，cluster04，cluster05に多くのデータが集まっている．表中の`nan'は予測結果をすべて負例として予測した場合に適合率，再現率，F1値が計算できずに代入される．
+クラスタごとの予測結果で最もF1値が高いのはcluster04，cluster05の0.60である．また，cluster06以降では違反修正データの有無に関わらず修正予測ができていない．クラスタごとに各評価指標の値に違いが見られるため，総違反修正データのクラスタリングが予測精度に影響を与えていることがわかる．また，cluster04，cluster05のデータ数は2,129と4,719であり，cluster01はクラスタに含まれるデータ数が過多であり，cluster02とcluster03はデータ数が過小であると考えられる．
 
-各クラスタごとの予測精度から，クラスタリングにより抜粋された説明変数のみ学習する提案手法（クラスタリングあり）は，クラスタごとに予測精度が異なり，クラスタに含まれるデータ数が2,129と4,719の際に最大のF1値を確認したため，各クラスタに含まれるデータ数をcluster04，cluster05に近づけるようにクラスタリングを行うことによって，更なる予測精度の向上を見込むことができると考えられる．
+クラスタごとの予測精度から，クラスタリングにより抜粋された説明変数のみ学習する提案手法（クラスタリングあり）は，クラスタごとに予測精度が異なり，クラスタに含まれるデータ数が2,129と4,719の際に最大のF1値を確認したため，各クラスタに含まれるデータ数をcluster04，cluster05に近づけるようにクラスタリングを行うことによって，更なる予測精度の向上を見込むことができると考えられる．
+
+\subsection{提案手法によって修正すべき規約違反のみを推薦することができているか}
+
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+\begin{table*}[tb]
+    \centering
+    \caption{規約違反修正推薦結果まとめ}
+    \label{tab:recommend}
+    \vspace{1mm}
+\begin{tabular}{c|c|r|r|r|r|r}
+\hline
+\multicolumn{1}{l}{} & & \multicolumn{1}{c|}{従来手法} & \multicolumn{1}{c|}{\begin{tabular}[c|]{@{}c@{}}提案手法\\ (クラスタリングなし)\end{tabular}} & \multicolumn{1}{c|}{\begin{tabular}[c|]{@{}c@{}}提案手法\\ (クラスタリングあり)\end{tabular}} & \multicolumn{1}{c|}{コーディング規約違反数} & \multicolumn{1}{c}{必要修正数} \\ \hline
+\multirow{2}{*}{ロジスティック回帰} & 中央値 & 36.5 & 59.0 & 48.0 & 100.5 & 26.0 \\
+& 平均値 & 127.5 & 186.3 & 161.1 & 389.6 & 92.9 \\ \hline
+\multirow{2}{*}{RandomForest} & 中央値 & 25.5 & 23.0 & 23.0 & 100.5 & 26.0 \\
+& 平均値 & 97.9 & 112.0 & 107.2 & 389.6 & 92.9 \\ \hline
+\end{tabular}
+\end{table*}
+
+
+データセット内の68プロジェクトの修正予測結果から，表\ref{tab:recommend}のような結果が得られた．表\ref{tab:recommend}は，従来手法，提案手法(クラスタリングなし)，提案手法(クラスタリングあり)の予測結果で修正が必要であると予測した数をプロジェクトごとに計測し，それぞれの中央値と平均値を算出した結果をまとめたものである．表内の規約違反数は，修正する必要のない違反も含めた総違反数であり，必要修正数は，規約違反の中でもソースコードの品質向上のために修正が必要な違反数を示す．表\ref{tab:recommend}の結果から，すべてのモデルにおいて修正の必要のない規約違反を削減できていることがわかる．しかし，ロジスティック回帰モデルでは，提案手法の2種類とも従来手法より多くの規約違反を推薦してしまっている．推薦数が多くなった結果は，修正が不必要な規約違反も推薦してしまっているが，RQ1の結果から提案手法によって再現率が向上しているため，推薦漏れを抑制することができていると考えられる．RandomForestモデルでは，従来手法と提案手法で修正推薦数に大きな変化は見られず，予測精度においても従来手法が提案手法より高いため，提案手法の有効性は確認できなかった．
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{妥当性への脅威}\label{chap:heuristic}
@@ -588,7 +615,10 @@ RQ1の結果では提案手法の再現率が従来手法に比べて向上し�
 % 本研究で利用したデータセットは，プロジェクトごとの規約修正履歴の期間は統一して収集しているが，複数プロジェクトを結合して学習した場合には予測地点では得られない他プロジェクトの未来のデータを学習している．複数プロジェクトのデータを学習し，予測する際にも時系列を考慮することは今後の課題である．
 
 目的変数の計測において，規約違反しているコードが修正された場合のみ正例として扱い，削除された場合は，修正されたわけではないため本研究では負例として扱っている．しかし，コーディング規約違反の中には該当部分を削除することによっても解消するものがあるため，本来正例として扱うべきケースを負例として計測してしまっていることがある．
-また，目的変数の計測は一様に最終リビジョンにおいて，コーディング規約違反が修正されたか否かで計測しており，違反の発生地点は考慮していない．つまり，最終リビジョンの一つ前のリビジョンで発生した違反と，最初のリビジョンで発生した違反を同等に扱っているため，最終リビジョンに近いほど修正までの猶予が短いことを考慮していない．
+コードの移動に関してもGitHubの仕様上，削除と追加という扱いになるため，コードの移動によってコーディング規約に違反しているコードが削除され不例として計測している可能性がある．
+また，コーディング規約に違反しているコードが，可読性とは関係のない実行速度などの観点からコードが修正された場合でも，違反していたコードが削除された場合は不例として計測してしまっている．
+
+目的変数の計測は一様に最終リビジョンにおいて，コーディング規約違反が修正されたか否かで計測しており，違反の発生地点は考慮していない．つまり，最終リビジョンの一つ前のリビジョンで発生した違反と，最初のリビジョンで発生した違反を同等に扱っているため，最終リビジョンに近いほど修正までの猶予が短いことを考慮していない．
 
 % 本研究では2値分類機械学習アルゴリズムとして，ロジスティック回帰，RandomForest，SVMの3種類のアルゴリズムを用いて検出されたコーディング規約違反の修正予測を行った．結果として，RandomForestが最も高い精度で予測し，SVMが最も低い精度での予測結果となった．
 本研究で用いた2種類の機械学習アルゴリズム以外にも、より正確な予測を可能にするアルゴリズムが存在する可能性がある．
@@ -604,6 +634,8 @@ RQ1の結果では提案手法の再現率が従来手法に比べて向上し�
 また，プロジェクト数をさらに拡張した場合や，対象とするプロジェクトや期間を変更した場合に予測精度が変化することが示唆される．
 対象言語をPython以外の言語とした場合予測結果が変化することが示唆される．
 しかし，本研究で使用したデータセットは68プロジェクトでプロジェクトごとのデータ数が中央値で500.5件のデータ数を含んでいるので，更なるデータサイズの拡張による予測精度への影響は低いと考えられる．
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{おわりに}\label{chap:end}
