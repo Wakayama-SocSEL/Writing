@@ -1,0 +1,379 @@
+This is e-pTeX, Version 3.141592653-p3.9.0-210218-2.6 (utf8.euc) (TeX Live 2021) (preloaded format=platex 2022.2.28)  10 SEP 2024 10:06
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**IPSJjournal_Maekawa_2nd_response.tex
+(./IPSJjournal_Maekawa_2nd_response.tex
+pLaTeX2e <2020-10-01>+2 (based on LaTeX2e <2020-10-01> patch level 4)
+L3 programming layer <2021-02-18>
+(/usr/local/texlive/2021/texmf-dist/tex/platex/base/jarticle.cls
+Document Class: jarticle 2020/09/30 v1.8f Standard pLaTeX class
+\c@@paper=\count178
+(/usr/local/texlive/2021/texmf-dist/tex/platex/base/jsize10.clo
+File: jsize10.clo 2020/09/30 v1.8f Standard pLaTeX file (size option)
+)
+\c@part=\count179
+\c@section=\count180
+\c@subsection=\count181
+\c@subsubsection=\count182
+\c@paragraph=\count183
+\c@subparagraph=\count184
+\c@figure=\count185
+\c@table=\count186
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\symmincho=\mathgroup4
+LaTeX Font Info:    Overwriting symbol font `mincho' in version `bold'
+(Font)                  JY1/mc/m/n --> JY1/gt/m/n on input line 615.
+\toclineskip=\dimen154
+\@lnumwidth=\dimen155
+\bibindent=\dimen156
+\heisei=\count187
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2020/02/24 v1.2b Standard LaTeX Color (DPC)
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: dvips.def on input line 147.
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics-def/dvips.def
+File: dvips.def 2017/06/20 v3.1d Graphics/color driver for dvips
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/dvipsnam.def
+File: dvipsnam.def 2016/06/17 v3.0m Driver-dependent file (DPC,SPQR)
+))
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2020/09/09 v1.2b Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks16
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2020/08/30 v1.4c Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: dvipdfmx.def on input line 105.
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/graphics-def/dvipdfmx.def
+File: dvipdfmx.def 2021/03/18 v5.0j Graphics/color driver for dvipdfmx
+))
+\Gin@req@height=\dimen157
+\Gin@req@width=\dimen158
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/tools/tabularx.sty
+Package: tabularx 2020/01/15 v2.11c `tabularx' package (DPC)
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/tools/array.sty
+Package: array 2020/10/01 v2.5c Tabular extension package (FMi)
+\col@sep=\dimen159
+\ar@mcellbox=\box64
+\extrarowheight=\dimen160
+\NC@list=\toks17
+\extratabsurround=\skip49
+\backup@length=\skip50
+\ar@cellbox=\box65
+)
+\TX@col@width=\dimen161
+\TX@old@table=\dimen162
+\TX@old@col=\dimen163
+\TX@target=\dimen164
+\TX@delta=\dimen165
+\TX@cols=\count188
+\TX@ftn=\toks18
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
+Package: fancyhdr 2021/01/28 v4.0.1 Extensive control of page headers and foote
+rs
+\f@nch@headwidth=\skip51
+\f@nch@O@elh=\skip52
+\f@nch@O@erh=\skip53
+\f@nch@O@olh=\skip54
+\f@nch@O@orh=\skip55
+\f@nch@O@elf=\skip56
+\f@nch@O@erf=\skip57
+\f@nch@O@olf=\skip58
+\f@nch@O@orf=\skip59
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/lastpage/lastpage.sty
+Package: lastpage 2015/03/29 v1.2m Refers to last page's name (HMM; JPG)
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/multirow/multirow.sty
+Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
+\multirow@colwidth=\skip60
+\multirow@cntb=\count189
+\multirow@dima=\skip61
+\bigstrutjot=\dimen166
+)
+(/usr/local/texlive/2021/texmf-dist/tex/generic/ulem/ulem.sty
+\UL@box=\box66
+\UL@hyphenbox=\box67
+\UL@skip=\skip62
+\UL@hook=\toks19
+\UL@height=\dimen167
+\UL@pe=\count190
+\UL@pixel=\dimen168
+\ULC@box=\box68
+Package: ulem 2019/11/18
+\ULdepth=\dimen169
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/base/latexsym.sty
+Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
+\symlasy=\mathgroup5
+LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
+(Font)                  U/lasy/m/n --> U/lasy/b/n on input line 52.
+) (./maltcol.sty
+Style option: `multicol' v1.4m <92/09/04> (FMi)
+English documentation          <92/09/04> (FMi)
+\mult@box=\box69
+\multicol@leftmargin=\dimen170
+\c@unbalance=\count191
+\c@collectmore=\count192
+\c@tracingmulticols=\count193
+\col@number=\count194
+\doublecol@number=\count195
+\multicoltolerance=\count196
+\multicolpretolerance=\count197
+\full@width=\dimen171
+\page@free=\dimen172
+\premulticols=\dimen173
+\postmulticols=\dimen174
+\multicolsep=\skip63
+\multicolbaselineskip=\skip64
+\partial@page=\box70
+\last@line=\box71
+) (./jumoline.sty
+Package: jumoline 2001/05/31 v1.2 
+\UnderlineTexDepth=\dimen175
+\MidlineHeight=\dimen176
+\OverlineHeight=\dimen177
+\UMOlineThickness=\dimen178
+\UMO@height=\dimen179
+\UMO@depth=\dimen180
+\UMO@dqspace=\dimen181
+\UMO@tempdim=\dimen182
+\UMO@prejfmglue=\skip65
+\UMO@postjfmglue=\skip66
+\UMO@mode=\count198
+\UMO@spacefactor=\count199
+\UMO@firstxspcode=\count266
+\UMO@lastxspcode=\count267
+\UMO@inhibitxspcode=\count268
+\UMO@prebreakpenalty=\count269
+\UMO@postbreakpenalty=\count270
+\UMO@kpostbreakpenalty=\count271
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2020/10/26 v3.5g Customizing captions (AR)
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2020/10/21 v2.2e caption3 kernel (AR)
+\captionmargin=\dimen183
+\captionmargin@=\dimen184
+\captionwidth=\dimen185
+\caption@tempdima=\dimen186
+\caption@indent=\dimen187
+\caption@parindent=\dimen188
+\caption@hangindent=\dimen189
+Package caption Info: Unknown document class (or package),
+(caption)             standard defaults will be used.
+Package caption Info: \@makecaption = \long macro:#1#2->\vskip \abovecaptionski
+p \iftdir \sbox \@tempboxa {#1\hskip 1zw#2}\else \sbox \@tempboxa {#1: #2}\fi \
+ifdim \wd \@tempboxa >\hsize \iftdir #1\hskip 1zw#2\relax \par \else #1: #2\rel
+ax \par \fi \else \global \@minipagefalse \hb@xt@ \hsize {\hfil \box \@tempboxa
+ \hfil }\fi \vskip \belowcaptionskip  on input line 1139.
+)
+
+Package caption Warning: Unknown document class (or package),
+(caption)                standard defaults will be used.
+See the caption package documentation for explanation.
+
+\c@caption@flags=\count272
+\c@continuedfloat=\count273
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip16
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+(/usr/local/texlive/2021/texmf-dist/tex/latex/l3backend/l3backend-dvips.def
+File: l3backend-dvips.def 2021-03-18 L3 backend support: dvips
+\l__pdf_internal_box=\box72
+\g__pdf_backend_object_int=\count274
+\l__pdf_backend_content_box=\box73
+\l__pdf_backend_model_box=\box74
+\g__pdf_backend_annotation_int=\count275
+\g__pdf_backend_link_int=\count276
+\g__pdf_backend_link_sf_int=\count277
+)
+No file IPSJjournal_Maekawa_2nd_response.aux.
+\openout1 = `IPSJjournal_Maekawa_2nd_response.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for JY1/mc/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for JT1/mc/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+Package lastpage Info: Please have a look at the pageslts package at
+(lastpage)             https://www.ctan.org/pkg/pageslts
+(lastpage)             ! on input line 76.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <10> not available
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 87.
+LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <10> not available
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 87.
+
+LaTeX Warning: Reference `LastPage' on page 1 undefined on input line 109.
+
+[1
+
+]
+LaTeX Font Info:    Trying to load font information for OML+cmr on input line 1
+23.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/base/omlcmr.fd
+File: omlcmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <10> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 123.
+
+
+LaTeX Warning: Reference `LastPage' on page 2 undefined on input line 165.
+
+[2]
+
+LaTeX Warning: Reference `LastPage' on page 3 undefined on input line 200.
+
+[3]
+
+LaTeX Warning: Reference `LastPage' on page 4 undefined on input line 223.
+
+[4]
+LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 2
+27.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 227.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 261.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 261.
+LaTeX Font Info:    Trying to load font information for U+lasy on input line 26
+1.
+
+(/usr/local/texlive/2021/texmf-dist/tex/latex/base/ulasy.fd
+File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
+)
+Overfull \hbox (3.19249pt too wide) in paragraph at lines 261--261
+[]|[]| 
+ []
+
+
+Overfull \hbox (3.19249pt too wide) in paragraph at lines 294--294
+[]|[]| 
+ []
+
+
+LaTeX Warning: Reference `LastPage' on page 5 undefined on input line 301.
+
+[5]
+
+LaTeX Warning: Reference `LastPage' on page 6 undefined on input line 364.
+
+[6]
+
+LaTeX Warning: Reference `LastPage' on page 7 undefined on input line 385.
+
+[7]
+
+LaTeX Warning: Reference `LastPage' on page 8 undefined on input line 412.
+
+[8]
+
+LaTeX Warning: Reference `LastPage' on page 9 undefined on input line 443.
+
+[9]
+
+LaTeX Warning: Reference `LastPage' on page 10 undefined on input line 477.
+
+[10]
+
+LaTeX Warning: Reference `LastPage' on page 11 undefined on input line 517.
+
+[11]
+
+LaTeX Warning: Reference `LastPage' on page 12 undefined on input line 566.
+
+[12]
+
+LaTeX Warning: Reference `LastPage' on page 13 undefined on input line 584.
+
+[13]
+
+LaTeX Warning: Reference `LastPage' on page 14 undefined on input line 600.
+
+[14]
+
+LaTeX Warning: Reference `LastPage' on page 15 undefined on input line 637.
+
+[15]
+
+LaTeX Warning: Reference `LastPage' on page 16 undefined on input line 663.
+
+[16]
+
+LaTeX Warning: Reference `LastPage' on page 17 undefined on input line 683.
+
+[17]
+
+LaTeX Warning: Reference `LastPage' on page 18 undefined on input line 716.
+
+[18]
+
+Package lastpage Warning: Rerun to get the references right on input line 735.
+
+
+AED: lastpage setting LastPage
+
+LaTeX Warning: Reference `LastPage' on page 19 undefined on input line 735.
+
+[19] (./IPSJjournal_Maekawa_2nd_response.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 2968 strings out of 479466
+ 49587 string characters out of 5870548
+ 415106 words of memory out of 5000000
+ 20660 multiletter control sequences out of 15000+600000
+ 409723 words of font info for 56 fonts, out of 8000000 for 9000
+ 929 hyphenation exceptions out of 8191
+ 68i,18n,74p,1123b,443s stack positions out of 5000i,500n,10000p,200000b,80000s
+
+Output written on IPSJjournal_Maekawa_2nd_response.dvi (19 pages, 217048 bytes)
+.
