@@ -1,0 +1,576 @@
+
+\documentclass[submit]{ipsj}
+%\documentclass{ipsj}
+
+%\usepackage{graphicx}
+%\usepackage{latexsym}
+\usepackage[dvipdfmx]{graphicx} % pdfを使用する
+\usepackage{latexsym}
+\usepackage{array}
+
+
+\def\Underline{\setbox0\hbox\bgroup\let\\\endUnderline}
+\def\endUnderline{\vphantom{y}\egroup\smash{\underline{\box0}}\\}
+\def\|{\verb|}
+
+%%
+%% 追加パッケージ
+%%
+\usepackage{comment}
+\usepackage{url}
+\newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
+\newcommand{\diff}[1]{{\color{magenta} {#1}}}
+
+% 下線を引く用の追加パッケージ
+\usepackage{jumoline}
+\setlength{\UnderlineTexDepth}{3pt}
+
+\setcounter{巻数}{59}
+\setcounter{号数}{1}
+\setcounter{page}{1}
+
+\受付{2016}{3}{4}
+\再受付{2015}{7}{16}   %省略可能
+\再再受付{2015}{7}{20} %省略可能
+\再再受付{2015}{11}{20} %省略可能
+\採録{2016}{8}{1}
+
+
+\begin{document}
+
+%%
+%% タイトル（日本語）
+%%
+\title{\textcolor{red}{\UnderlineTex{コンピュテーショナル・シンキング}}に基づく\\Scratchユーザの習熟度到達予測}
+
+%%
+%% タイトル（英語）
+%%
+\etitle{Predicting Proficiency Level for Scratch Users\\Based on \textcolor{red}{\UnderlineTex{Computational Thinking}}}
+
+
+%%
+%% 所属
+%%
+\affiliate{WU}{和歌山大学\\
+Wakayama University, 930 Sakaedani, Wakayama 640--8510, Japan}
+
+%%
+%% 著者情報
+%%
+\author{安東 亮汰}{Ryota Ando}{WU}[s216009@wakayama-u.ac.jp]
+\author{伊原 彰紀}{Akinori Ihara}{WU}[ihara@wakayama-u.ac.jp]
+
+%%
+%% 概要（日本語）
+%%
+\begin{abstract}
+本研究は，プログラミング学習環境Scratchにおけるユーザが作品制作に使用する\textcolor{red}{\UnderlineTex{コンピュテーショナル・シンキング (CT) }}の概念を明らかにし，ユーザが新たに制作する作品が特定の習熟度に到るか否かを予測するモデル（習熟度到達予測モデル）を提案する．Scratchにおいて作品を20回以上制作したユーザ6,323人を対象に評価実験を行った結果，習熟度到達予測モデルは適合率0.87，再現率0.87の精度で特定の習熟度 (Developing) への到達を予測することができ，ユーザが特定の習熟度の作品を制作するためには，\textcolor{red}{\UnderlineTex{CT概念}}「同期」や「フロー制御」の習熟が重要であることを明らかにした．
+\end{abstract}
+
+%%
+%% キーワード（日本語）
+%%
+\begin{jkeyword}
+Scratch，プログラミング教育，コンピュテーショナル・シンキング
+\end{jkeyword}
+
+%%
+%% 概要（英語）
+%%
+\begin{eabstract}
+This study analyzes a concept of \textcolor{red}{\UnderlineTex{computational thinking (CT) }} that users use to create a program work in Scratch programming learning environment, and proposes a proficiency level model that predicts whether a new work created by a user reaches a specific proficiency level. In order to evaluate our prediction model, this study targets 6,323 users who have created more than 20 projects in Scratch. Consequently, the proficiency level model achieves performance in precision (0.87) and recall (0.87) for a specific proficiency level (Developing). Furthermore, this study finds ``Synchronization'' and ``Flow control'' as an \textcolor{red}{\UnderlineTex{[変更M-3] important concepts}} to create works with master level proficiency.
+\end{eabstract}
+
+% キーワード（英語）
+\begin{ekeyword}
+Scratch, Programming Education, Computational Thinking
+\end{ekeyword}
+
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% 1章
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{はじめに}\label{sec:intro}
+初等教育からのプログラミング教育が進められており，プログラミング教材の一つとしてビジュアルプログラミングの学習環境Scratch\footnote{Scratch: \url{https://scratch.mit.edu/}}がある．Scratchは，プログラムの命令処理をブロックで視覚的に表現することで，ユーザの直感的な作品制作を実現している．Scratchは，テキストによるプログラミング教育と同様に，ユーザがプログラムの実装を通してコンピュテーショナル・シンキングスキル（\textcolor{red}{\UnderlineTex{[変更2-1-a]CT：CTには抽象的な分析と効率的な問題解決のための考え方が含まれている}}）~\cite{Wing_2006}を習得するために広く利用されている．また，Scratchにおいて，ユーザの\textcolor{red}{\UnderlineTex{CT}}を評価するためのツールにはDr.Scratch~\cite{Moreno_2015}がある．Dr.Scratchは，作品中のプログラムに使用されるブロックを解析し，作品の機能実装に使用される\textcolor{red}{\UnderlineTex{7つのCT概念}}をそれぞれ0点から3点で算出し，合計点数0点から21点までの22段階\textcolor{red}{\UnderlineTex{（CTスコア）}}で作品を評価する．特に，\textcolor{red}{\UnderlineTex{CTスコア}}により習熟度を3つに分け，0点から7点をBasic，8点から14点をDeveloping，15点から21点をMasterとしている~\cite{Moreno_2015_analyze}．
+
+Scratchは決められた学習順序が存在せず，ユーザ自らが試行錯誤を繰り返し学習する環境を提供している．したがって，高い\textcolor{red}{\UnderlineTex{CT}}を必要とする作品の制作に向けて，ユーザが習熟すべき\textcolor{red}{\UnderlineTex{CT概念}}を把握することは困難である．学習習熟度の把握を目的としたYangらの研究では，Scratchにおけるユーザは多数の作品制作を経て，使用ブロックの種類が増加することを明らかにしている~\cite{Yang_2015}．この結果から，ユーザは複数回の作品制作を通して，\textcolor{red}{\UnderlineTex{高いCT}}を必要とする作品制作が可能になることが示唆される．しかし，ユーザが高い\textcolor{red}{\UnderlineTex{CT}}を必要とする作品を制作するまでに，過去に制作した作品で使用した\textcolor{red}{\UnderlineTex{CT概念}}は明らかではない．
+
+本研究では，Scratchにおいて特定の習熟度に到達する作品を制作するまでに，ユーザが過去に制作した作品で使用した\textcolor{red}{\UnderlineTex{CT概念}}を明らかにする．さらに，ユーザが過去に使用した\textcolor{red}{\UnderlineTex{CT概念}}に基づき，新たに制作する作品が特定の習熟度に到るか否かを予測するモデルを構築する．事前分析として，\textcolor{red}{\UnderlineTex{[変更1-1-b]Scratchにおいてユーザ6,323人が制作した作品126,460件（6,323人{$\times$}20件）の特徴分析を行い，その後，}}Dr.Scratchが算出する\textcolor{red}{\UnderlineTex{CTスコア}}は，多数の作品制作を実施することで高くなるのか否かを明らかにする．
+
+事前分析の結果から，ユーザが過去に獲得した\textcolor{red}{\UnderlineTex{CT概念}}の点数に基づき，新たに制作する作品が習熟度Developing以上（合計点数8点以上），または習熟度Master（15点以上の作品）に到達するか否かを予測するモデルを構築する．本研究により，Scratchにおいてユーザが高い\textcolor{red}{\UnderlineTex{CT}}を要する作品を制作するまでに習熟した\textcolor{red}{\UnderlineTex{CT概念}}を明らかにすることで，ユーザが有する\textcolor{red}{\UnderlineTex{CT}}の把握，および，Scratchにおいて公開される作品の中からユーザの\textcolor{red}{\UnderlineTex{CT}}に合わせた作品の推薦に貢献できると考える．
+
+続く\ref{sec:visual}章では，Scratchと関連研究について述べ，本研究の立ち位置を説明する．\ref{sec:section_3}章で予測モデルで使用する説明変数の決定に向けた事前分析について述べる．\ref{sec:method}章では習熟度到達予測モデルの構築方法を述べ，\ref{sec:result}章でScratchに記録された作品に基づく予測モデルの評価結果を述べる．\ref{sec:discussion}章で結果の考察を述べ，\ref{sec:conclusion}章で本研究をまとめる．
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% 2章
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Scratchを用いたプログラミング学習}\label{sec:visual}
+
+%%
+%% 2.1章
+%%
+\subsection{Scratch}
+Scratch\footnote{Scratch: \url{https://scratch.mit.edu/}}は，MITメディアラボが開発しているビジュアルプログラミング言語の1つであり，ブロックのような視覚的なオブジェクトを組み合わせることで直感的なプログラミングを実現している．テキストベースのプログラミング言語を使用した学習と比較して，Scratchは文字入力の間違いによるエラーが発生しないため学習難易度が低く，プログラミング初学者の学習ツールとして利用されることが多い．従来研究では，Scratchのプログラミングの学習効果を確認し，テキストベースのプログラミングへの移行を容易にすることを実証実験により明らかにしている~\cite{Weintrop_2017}．\textcolor{red}{\UnderlineTex{[変更M-4]Scratchでは，ユーザが制作した作品をScratchサービス上に公開し，さらに，サービス上に公開済みの他の作品を複製して再利用できる機能「リミックス」を提供している．}}ユーザはリミックスにより他の作品を複製し，機能の追加や削除を行うことで新たな別の作品として制作することが可能である．また，Dasguptaらは，Scratchにおいてユーザはリミックスを使用して作品を制作することで，新たな\textcolor{red}{\UnderlineTex{CT概念}}を使用した作品制作が可能になることを明らかにしている~\cite{Dasgupta_2016}．
+
+%%
+%% 2.2章 作品解析ツール：Dr.Scratch
+%%
+\subsection{作品解析ツール：Dr.Scratch}
+
+%--------------------------
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\linewidth]{./fix_fig/DrScratch_result.pdf}
+    \caption{Dr.Scratchの評価画面（作品\protect\url{https://scratch.mit.edu/projects/311354215}に適用）}
+    \label{fig:dr_scratch}
+\end{figure}
+%--------------------------
+
+%--------------------------
+\begin{table*}[t]
+    \centering
+    \caption{Dr.Scratchによる\textcolor{red}{\UnderlineTex{7つのCT概念}}の評価方法~\cite{Moreno_2015}}\label{tab:analysis_method}
+    \scalebox{0.75}[0.75]{
+        \begin{tabular}{l||p{5mm}|p{60mm}|p{60mm}|p{60mm}p{0mm}}
+            \hline
+            \multicolumn{1}{c||}{\textcolor{red}{\UnderlineTex{CT概念}}} & \multicolumn{1}{c|}{0点} & \multicolumn{1}{c|}{1点} & \multicolumn{1}{c|}{2点} & \multicolumn{1}{c}{3点} & \\ \hline \hline
+            抽象化                   & \centering -- & \centering\begin{tabular}{c}2つ以上のスクリプトを使用\end{tabular}                         & \centering 定義ブロックを使用                        & \centering クローンブロックを使用                      & \\ \hline
+            並列                    & \centering -- & \centering\begin{tabular}{c}緑の旗ブロックを2個以上使用\end{tabular}                         & \centering\begin{tabular}{c}オブジェクトへのクリック動作により\\2つ以上のスクリプトを同時に\\実行する機能を実装\end{tabular}                        & \centering\begin{tabular}{c}背景が切り替わったとき，\\メッセージを受け取ったとき等，\\様々なイベント動作により2つ以上の\\スクリプトを同時に実行する機能を実装\end{tabular}                        & \\ \hline
+            論理                    & \centering -- & \centering Ifブロックを使用                        & \centering If elseブロックを使用                        & \centering 論理演算ブロックを使用 & \\ \hline
+            同期                    & \centering -- & \centering 待機ブロックを使用                      & \centering\begin{tabular}{c}メッセージを受信すると\\プログラムを停止する機能を実装\end{tabular}                        & \centering\begin{tabular}{c}指定条件を満たすまで\\プログラムを停止する処理を実装\end{tabular}                      & \\ \hline 
+            フロー制御                 & \centering -- & \centering 2個以上の処理ブロックを連結して使用                         & \centering 指定回数/回数無制限の繰り返しブロックを使用                        & \centering 指定条件までの繰り返しブロックを使用                       & \\ \hline
+            ユーザ対話性                & \centering -- & \centering 緑の旗ブロックを使用                        & \centering\begin{tabular}{c}ユーザによる入力を伴うブロックを使用\end{tabular}                         & \centering\begin{tabular}{c}マイクやビデオなどの\\インタラクションを伴うブロックを使用\end{tabular}                        & \\ \hline
+            データ表現                 & \centering -- & \centering\begin{tabular}{c}オブジェクトの大きさや位置等の\\プロパティを編集\end{tabular}                        & \centering 変数ブロックを使用                        & \centering リスト変数ブロックの使用                       & \\ \hline
+        \end{tabular}
+    }
+\end{table*}
+%--------------------------
+
+Morenoらは，ユーザが制作したScratchの作品に必要な\textcolor{red}{\UnderlineTex{CT}}を計測する作品評価ツールDr.Scratchを開発している~\cite{Moreno_2015}\footnote{Dr.Scratch: \url{http://drscratch.org/}}．Dr.Scratchは，作品内で使用されているブロックやプログラムの構造を解析し，\textcolor{red}{\UnderlineTex{7つのCT概念}}（抽象化，並列，論理，同期，フロー制御，ユーザ対話性，データ表現）を計測する．表~\ref{tab:analysis_method}は，各\textcolor{red}{\UnderlineTex{CT概念}}の計測方法を示す．各\textcolor{red}{\UnderlineTex{CT概念}}には，作品中で使用されるブロックの種類，数に基づき，0点から3点の点数が割り当てられ，それら\textcolor{red}{\UnderlineTex{7つのCT概念}}の点数からユーザが制作した作品を合計点数0点から21点までの22段階\textcolor{red}{\UnderlineTex{（CTスコア）}}で評価する．特に，\textcolor{red}{\UnderlineTex{CTスコア}}により習熟度を3つに分け，0点から7点をBasic，8点から14点をDeveloping，15点から21点をMasterとしている~\cite{Moreno_2015_analyze}．図~\ref{fig:dr_scratch}は，作品(a)とDr.Scratchで作品(a)を評価した結果(b)を示す．図~\ref{fig:dr_scratch}中の(2)には，作品(a)を制作するために使用している\textcolor{red}{\UnderlineTex{CT概念}}を，抽象化で1点，並列で3点，論理で3点，同期で3点，フロー制御で3点，ユーザ対話性で2点，データ表現で2点と算出し，図~\ref{fig:dr_scratch}中の(1)に\textcolor{red}{\UnderlineTex{CTスコア}}17点として習熟度Masterと提示している．\textcolor{red}{\UnderlineTex{[変更1-1-a]個々の作品では，各CT概念で0点から3点のいずれかの点数を獲得するが，Dr.Scratchが定義するCT概念の一部は，同一概念にもかかわらず使用したブロックの種類によって異なる点数を決定している．例えば，CT概念の「論理」では，If elseブロックやIfブロックを使用することで2点や1点を獲得できるが，Ifブロック以外（NotブロックやAndブロック等）の論理演算命令でも3点を獲得できる．したがって，本研究ではユーザのCTを明確に捉えるため，過去に制作した作品で使用する各CT概念の0点から3点までを区別して調査する．}}
+
+
+%% 
+%% 2.3章 従来研究
+%%
+\subsection{従来研究}
+世界各地で初等教育段階からのプログラミング教育が本格化しており，\textcolor{red}{\UnderlineTex{CT}}を育むためにはビジュアルプログラミング言語を用いた教育が有効である~\cite{杉浦_2008}．特に，Scratchは優れたプログラミング学習環境として世界中の教育機関で利用されており，Scratchの学習効果に関する研究が進められている~\cite{Yang_2015}\cite{Aivaloglou_2017}\cite{Robles_2017}\cite{Troiano_2019}\cite{Troiano_2020}．
+
+Scratchで制作された作品の特徴を調査するために，AivaloglouらはScratchにおけるユーザ109,960人が制作した公開作品250,163件から，各作品に含まれるプログラム，および，各作品をDr.Scratchによって評価した結果を収集し，公開している~\cite{Aivaloglou_2017}．Aivaloglouらは実行可能なプログラムを含む作品233,491件を解析した結果，スクリプトの規模は比較的小さく，複雑度も単純であることを明らかにした~\cite{Aivaloglou_2016}．
+
+Scratchにおけるユーザのプログラミング能力の成長に関する研究として，Yangらは，Scratchで少なくとも50回以上の作品制作を行ったユーザ3,852人は，繰り返し作品を制作することで，作品に使用するブロックの種類数が増加することを明らかにした~\cite{Yang_2015}．Troianoらは，{$8^{th}$}-grade（13歳から14歳）の生徒19人を対象に，それぞれの作品制作過程でDr.Scratchにより作品に使用する\textcolor{red}{\UnderlineTex{CT概念}}を調査した結果，作品制作を進めるにつれて並列，論理，同期の点数が高くなる生徒は多いが，抽象化，データ表現の点数が高くなる生徒は少ないことを明らかにした~\cite{Troiano_2019}．
+
+多くの従来研究は，ユーザが制作した1つの作品に使用された\textcolor{red}{\UnderlineTex{CT概念}}，または1つの作品制作過程において使用される\textcolor{red}{\UnderlineTex{CT概念}}の順序を調査し，一部の\textcolor{red}{\UnderlineTex{CT概念}}（抽象化，データ表現など）を使用した作品制作は困難であること明らかにしている．しかし，ユーザが複数の作品制作を重ねることで使用する\textcolor{red}{\UnderlineTex{CT概念}}，および，使用する\textcolor{red}{\UnderlineTex{CT概念}}の順序は明らかにされていない．本研究では，ユーザが特定の習熟度に到るまでに作品制作に使用した\textcolor{red}{\UnderlineTex{CT概念}}を明らかにし，ユーザが次に制作する作品が特定の習熟度以上の評価を得るか否かを予測するモデルを構築する．続く事前分析では，ユーザが特定の習熟度の評価を得る作品を制作するまでに，過去に制作した作品の特徴を調査する．
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% 3章
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{事前分析}\label{sec:section_3}
+
+%--------------------------
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=1.0\linewidth]{./fix_fig/7concepts_score.pdf}
+    \caption{\textcolor{red}{\UnderlineTex{7つのCT概念}}の点数分布}
+    \label{fig:7concepts_score}
+\end{figure*}
+%--------------------------
+
+本章では，Scratchにおいて制作された作品で実装されたプログラムを収集し，ユーザが特定の習熟度に到達するまでに，過去に制作した作品の特徴を調査する．
+
+%%
+%% 3.1章
+%%
+\subsection{Scratchプログラムの収集}
+Scratchは，2019年1月3日のバージョン3.0のリリースにおいて，使用可能なブロックを追加するなど大規模なアップデートを実施している．本研究では，ユーザが共通の開発環境で制作された作品を比較するため，バージョン3.0をリリースした2019年1月3日から2020年1月3日までに\textcolor{red}{\UnderlineTex{[変更M-5-a]初めて作品公開を行ったユーザ}}を分析対象とする．まず，Scratchが提供するAPI\footnote{\url{https://ja.scratch-wiki.info/wiki/Scratch_API_(2.0)#GET_.2Fusers.2F.3Cusername.3E}}を用いて，20件以上の作品を制作したユーザ7,050人が制作した作品141,000件に関するデータを収集した．その後，収集した作品プログラムの調査，および，Dr.Scratchによる評価結果の収集を行った結果，Scratch3.0には存在しないブロック\footnote{\url{https://en.scratch- wiki.info/wiki/Experimental_Blocks}}を含む作品（715件）やDr.Scratchによる評価に失敗した作品（322件）が一部存在したため，それらの作品を制作したユーザ727人は分析対象から除外した．最終的に，本研究ではユーザ6,323人が1番目から20番目までに制作した作品126,460件を分析対象とする．
+
+%%
+%% 3.2章
+%%
+\subsection{分析対象作品の特徴分析}
+
+図~\ref{fig:7concepts_score}は，収集した作品を対象にDr.Scratchによって計測した\textcolor{red}{\UnderlineTex{7つのCT概念}}の点数別作品数の分布を示す．各グラフは，横軸に各\textcolor{red}{\UnderlineTex{CT概念}}における点数[0-3]点，縦軸に各点数を獲得した作品数を示す．また，グラフ中の灰色で示す箇所はリミックスを使用せずに制作された作品（オリジナル作品），黒色で示す箇所はリミックスを使用して制作された作品（リミックス作品）を示す．さらに，図~\ref{fig:total_score}は，合計点数別作品数の分布を示す．横軸は合計点数，縦軸は各点数を獲得した作品数を示す．灰色，黒色で示す箇所は図~\ref{fig:7concepts_score}と同様である．
+
+図~\ref{fig:7concepts_score}から，\textcolor{red}{\UnderlineTex{[変更1-2]フロー制御では高い点数の作品が多い一方で，論理では高い点数の作品が少ないことが分かる．}}この結果は，Aivaloglouらが公開する作品と同じ結果を示した~\cite{Aivaloglou_2017}．
+
+また，図~\ref{fig:total_score}から，\textcolor{red}{\UnderlineTex{CTスコア}}は7点の作品が最頻値であり，8点の作品以降，\textcolor{red}{\UnderlineTex{CTスコア}}が高くなるにつれて作品数が減少し，Dr.Scratchが分類する\textcolor{red}{\UnderlineTex{CT}}の習熟度であるDeveloping（\textcolor{red}{\UnderlineTex{CTスコア}}が8点から14点），Master（\textcolor{red}{\UnderlineTex{CTスコア}}が15点から21点）に分類される作品は少ない．各習熟度の作品数は，Basicが65,976件，Developingが47,861件，Masterが12,623件である．習熟度による作品規模の違いを図~\ref{fig:size_level}に示す．横軸は3種類の習熟度 (Basic, Developing, Master)，縦軸はそれぞれの規模を対数軸で示している．それぞれの習熟度間における作品規模は統計的有意な差（マン・ホイットニーのU検定，有意水準5\%）を確認できることから，習熟度DevelopingやMasterに分類される作品は，ユーザにとって制作困難であることが示唆される．
+
+%--------------------------
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\linewidth]{./fix_fig/total_score.pdf}
+    \caption{\textcolor{red}{\UnderlineTex{CTスコア}}の分布}
+    \label{fig:total_score}
+\end{figure}
+%--------------------------
+
+%--------------------------
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\linewidth]{./fix_fig/size_level.pdf}
+    \caption{\textcolor{red}{\UnderlineTex{CT}}の習熟度別の作品規模の違い}
+    \label{fig:size_level}
+\end{figure}
+%--------------------------
+
+%%
+%% 3.3章
+%%
+\subsection{ユーザが過去に制作した作品の点数分析}
+
+%--------------------------
+\begin{figure*}[t]
+	\centering
+	\includegraphics[width=1.0\linewidth]{./fix_fig/violin_plot.pdf}
+    \caption{\textcolor{red}{\UnderlineTex{[C2-1-b]ユーザがN番目に制作したCTスコア{$S~(0 \leq S \leq 21)$}点のオリジナル作品を制作するまでに，過去に制作した作品（1番目からN-1番目に制作した作品）のCTスコア別作品数の分布}}}
+    \label{fig:violin_plot}
+\end{figure*}
+%--------------------------
+
+従来研究では，特定の作品1件に対する\textcolor{red}{\UnderlineTex{CT}}の特徴を調査している．本章では，ユーザが自身で制作するオリジナル作品（N番目に制作した作品）に至るまでに制作した複数の作品（1番目からN-1番目に制作した作品）における\textcolor{red}{\UnderlineTex{CT}}を調査する．
+
+図~\ref{fig:violin_plot}は，\textcolor{red}{\UnderlineTex{[変更C2-1-a]ユーザがN番目に制作したCTスコア{$S~(0 \leq S \leq 21)$}点のオリジナル作品を制作するまでに，過去に制作した作品（1番目からN-1番目に制作した作品）のCTスコア別作品数}}の分布をバイオリン図で示す．横軸はN番目に制作したオリジナル作品の\textcolor{red}{\UnderlineTex{CTスコア}}，縦軸は1番目からN-1番目に制作した作品の\textcolor{red}{\UnderlineTex{CTスコア}}の分布を示す．\textcolor{red}{\UnderlineTex{[変更M-6]各バイオリンの膨らみが大きい箇所}}は，1番目からN-1番目に制作した作品の中で最も獲得した回数が多い合計点数を表す．例えば，7点を獲得した作品は，当該作品を制作するまでに5点の作品を制作した回数が最も多い．オリジナル作品（N番目に制作した作品）ごとに，左側の灰色の分布は過去に制作したオリジナル作品，右側の黒色の分布は過去に制作したリミックス作品の制作頻度を示す．これらの結果をDr.Scratchが分類する3つの習熟度別に分析結果を述べる．
+
+\begin{itemize}
+\item \textbf{Basicのオリジナル作品を制作するまでの特徴: }\textcolor{red}{\UnderlineTex{CTスコア}}の中央値が7点であり，四分位偏差は2.0点である．このことから，ユーザは連続して習熟度Basic，またはDevelopingの作品を制作することが多く，Masterの作品を制作することは少ない．
+\item \textbf{Developingのオリジナル作品を制作するまでの特徴: }\textcolor{red}{\UnderlineTex{CTスコア}}の中央値が7点であり，四分位偏差は2.5点である．このことから，ユーザはBasicのオリジナル作品を制作するまでの特徴と同様に，連続して習熟度Basic，Developingの作品を制作することが多く，Masterの作品を制作することは少ない．
+\item \textbf{Masterのオリジナル作品を制作するまでの特徴: }\textcolor{red}{\UnderlineTex{CTスコア}}の中央値が10点であり，四分位偏差は3.0点である．このことから，ユーザは習熟度Masterの作品を制作するまでに習熟度Developingの作品を制作することが多い．図~\ref{fig:total_score}からも習熟度Masterの作品を制作するユーザは少ないことが分かるように，習熟度Masterの作品を連続して制作することは少ない．
+\end{itemize}
+
+事前分析の結果から，Scratchを使用した学習において，ユーザは\textcolor{red}{\UnderlineTex{CTスコア}}が低いほど（特に習熟度Developing以下であるほど），過去に制作した作品の\textcolor{red}{\UnderlineTex{CTスコア}}は同一点数前後であった．したがって，ユーザは突如点数の高い作品を制作することはなく，類似する\textcolor{red}{\UnderlineTex{CT}}を使用した作品を連続で制作していることが示唆される．ただし，オリジナル作品とリミックス作品における分布は異なることから，次に制作する作品に影響しているのがオリジナル作品かリミックス作品であるのかは明らかではない．
+
+続く\ref{sec:method}章では，ユーザが過去に制作した作品で使用した\textcolor{red}{\UnderlineTex{CT概念}}の特徴量に基づき，ユーザにとって到達が困難な目標習熟度Developing以上（8点以上），またはMaster（15点以上）の評価を得る作品を制作するか否かを予測するユーザの習熟度到達予測モデルの構築方法を述べる．また，\ref{sec:result}章では予測精度の評価結果を述べる．
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% 4章
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{ユーザの習熟度到達予測モデル}\label{sec:method}
+
+%%
+%% 4.1章
+%%
+\subsection{習熟度到達予測モデルの構築}
+
+%--------------------------
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=1.0\linewidth]{./fix_fig/model_creation.pdf}
+    \caption{2つのモデルにおける正例クラス，負例クラスの事例}
+    \label{fig:model_creation}
+\end{figure*}
+%--------------------------
+
+本研究では，特定の目標習熟度に到達する作品を制作するユーザが，過去に制作した作品に使用する\textcolor{red}{\UnderlineTex{CT概念}}を明らかにする．具体的には，ユーザがScratchにおいて制作する1番目から20番目までの作品で，目標習熟度に到達するまでに制作した作品の\textcolor{red}{\UnderlineTex{CT概念}}を説明変数とし，目標習熟度に到達する作品を制作するユーザか否かを予測する機械学習モデルを構築する．目標習熟度に到達しないユーザは1番目から20番目までに制作した作品の\textcolor{red}{\UnderlineTex{CT概念}}を説明変数とする．\ref{sec:section_3}章の事前分析の結果に基づき，目標習熟度が異なる2種類の予測モデルを構築する．
+
+\begin{itemize}
+\item （モデル1）\textcolor{red}{\UnderlineTex{CTスコア}}が8点以上（Developing以上）のオリジナル作品を制作するユーザを予測
+\item （モデル2）\textcolor{red}{\UnderlineTex{CTスコア}}が15点以上（Master）のオリジナル作品を制作するユーザを予測
+\end{itemize}
+
+目的変数は，{$N~(2 \leq N \leq 20)$}番目に目標習熟度に到達するオリジナル作品を制作したユーザを正例クラス，それ以外のユーザを負例クラスとする．\textcolor{red}{\UnderlineTex{[変更C1-1]従来研究~[4]では，ユーザが特定の種類のブロックを1回でも使用すれば，そのブロックを学習したと捉えていることから，本論文でも同様に，ユーザが目標習熟度を満たす作品を1回でも制作すれば到達したと判断する．}}提案するモデルでは，ユーザが自身で制作したオリジナル作品が目標習熟度に到達することを予測するモデルを構築し，たとえリミックス作品で目標習熟度以上の点数を獲得していても目標習熟度に到達したと判定しない．{$N=1$}となる正例クラスは，特徴量として使用する作品数が0件となるため除外する．
+
+説明変数には，過去に制作した作品における\textcolor{red}{\UnderlineTex{7つのCT概念}}の0点から3点の獲得有無を用いる．先行研究では\textcolor{red}{\UnderlineTex{CT概念}}の点数獲得回数を用いているが，本研究では説明変数に獲得有無を用いる．特定の習熟度に到達する正例クラスの作品数は到達までに制作した作品数（ユーザ一人あたり1作品から19作品）である一方で，負例クラスのユーザは到達できずに多くの作品数（ユーザ一人あたり20作品）から説明変数を計測するため，本研究では作品数の偏りを解決するため獲得有無を用いる．獲得点数の計測は，リミックス作品の制作による学習効果が示されているため~\cite{Dasgupta_2016}，オリジナル作品の制作において獲得した点数と，リミックス作品の制作において獲得した点数と区別する．\textcolor{red}{\UnderlineTex{[変更1-4-a]尚，説明変数の計測にリミックス作品を加えることの妥当性については6.3節で考察する．}}したがって，56次元（7（\textcolor{red}{\UnderlineTex{7つのCT概念}}）{$\times$} 4（0点から3点）{$\times$} 2（オリジナル作品またはリミックス作品））の説明変数を計測する．
+
+図~\ref{fig:model_creation}は，構築する2つのモデルにおける正例クラスと負例クラスの事例を示し，3人のユーザ（A, B, C）が1番目から20番目までに制作した作品事例から，説明変数の計測方法を述べる．
+
+\begin{itemize}
+\item \textbf{ユーザ(a): }一度もDeveloping以上のオリジナル作品を制作していないため，どちらのモデルにおいても負例クラスとなり，説明変数の計測には1番目から20番目までの全ての作品を使用する．
+\item \textbf{ユーザ(b): }9番目の作品でDevelopingのオリジナル作品を制作しているため，モデル1では正例クラスとなり，学習データには1番目から8番目の作品を使用する．一方で，Masterのオリジナル作品は一度も制作していないため，モデル2では負例クラスとなり，説明変数の計測には1番目から20番目までの全ての作品を使用する．
+\item \textbf{ユーザ(c): }5番目の作品でDevelopingのオリジナル作品を制作しているため，モデル1では正例クラスとなり，説明変数の計測には1番目から4番目の作品を使用する．加えて，11番目の作品でMasterのオリジナル作品を制作しているため，モデル2においても正例クラスとなり，説明変数の計測には1番目から10番目の作品を使用する．
+\end{itemize}
+
+%--------------------------
+\begin{table}[t]
+	\caption{正例クラス，負例クラスに該当するユーザの内訳}
+	\begin{center}
+		\begin{tabular}{l|p{2mm}|p{2mm}}
+		\hline
+     		& \multicolumn{1}{c|}{正例クラス} & \multicolumn{1}{c}{負例クラス} \\ \hline
+		\multicolumn{1}{l|}{モデル1} & \multicolumn{1}{r|}{3,436}  & \multicolumn{1}{r}{1,108}  \\
+		\multicolumn{1}{l|}{モデル2} & \multicolumn{1}{r|}{1,345}  & \multicolumn{1}{r}{4,800}  \\ \hline
+		\end{tabular}
+	\end{center}
+	\label{tab:model_classes}
+\end{table}
+%--------------------------
+
+%--------------------------
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\linewidth]{./fix_fig/KFold.pdf}
+    \caption{層化K-分割交差検証法}
+    \label{fig:kfold}
+\end{figure}
+%--------------------------
+
+予測モデルの構築には，\ref{sec:section_3}章で使用したデータセットを使用し，表~\ref{tab:model_classes}は，2つのモデルにおける正例クラス，負例クラスに分類されたユーザの内訳を示す．
+
+本研究では，習熟度到達予測モデルの構築にランダムフォレスト法~\cite{Breiman_2001}を用いる．ランダムフォレスト法は，与えられた訓練データから複数の決定木を作成することでモデルを生成するアンサンブル学習法であり，予測結果から分類精度に強く影響した特徴量を特定できる．ランダムフォレストの実装にはPythonの\texttt{scikit-learn}を用いる．また，ランダムフォレストのパラメータはBreimanらが推奨する値をもとに，決定木の個数は200，各決定木の生成に使用する特徴量の個数は説明変数56次元の平方根とする．また，予測モデルの検証には層化K-分割交差検証法を用いる．交差検証法は，データをK個に分割し，K-1個を学習データ，残りを検証データとして使用する手法である．図~\ref{fig:kfold}は，K=10，学習データ内の正例クラスの割合が70\%，負例クラスの割合が30\%のときの層化K-分割交差検証法の事例を示す．交差検証法には，本研究で用いる層化K-分割交差検証法以外にも，K-分割交差検証法が存在する．ただし，K-分割交差検証法は，学習データ内のクラス数が不均衡である場合，偏りのある検証データや訓練データを作成し，その結果，学習不足や過学習などの問題を引き起こすことがある．層化K-分割交差検証法は，図~\ref{fig:kfold}に示す通り，検証データ，訓練データ作成時の正例クラス，負例クラスの比率を学習データと同じにすることで，K-分割交差検証法が抱える問題を解決している．本研究では，K=10として交差検証を行う．また，予測モデルの構築時に使用する正例クラスと負例クラスに属するデータの割合は，表~\ref{tab:model_classes}に示すように偏りが存在するため，モデル構築時に各クラスの出現する割合の逆数に基づいた重みを割り当てる．予測モデルの評価指標は適合率，再現率，F値の3つを用い，交差検証により10回の構築を行うことで予測モデルから得た各指標の平均値を算出する．
+
+
+%%
+%% 4.2章
+%%
+\subsection{モデルに影響する特徴量の重要度}
+ユーザがオリジナル作品の制作において目標習熟度に到達するまでに，過去に制作した作品の\textcolor{red}{\UnderlineTex{CT概念}}の特徴を明らかにするために，モデルへの精度向上に寄与する各説明変数の重要度を算出する．予測モデルの評価では層化10分割交差検証を用いて10個の予測モデルを構築するため，モデルの構築毎に算出される各説明変数の重要度が異なる．本研究では，10個のモデルにおける説明変数の重要度ランキングを明らかにするために，順位傾向のクラスタ分析手法Scott-Knott Effect Size Difference (ESD) 検定~\cite{Tantithamthavorn_2019}を用いる．Scott-Knott ESDは統計的に複数のスコアをクラスタリングする手法であり，予測モデルに影響を及ぼす説明変数の特定にも使用されている．本研究では，10個の各予測モデルから得られる説明変数の順位を分類し，いずれのモデルにも強く寄与する説明変数を特定する．Scott-Knott ESDの実装には，Rパッケージの\texttt{ScottKnottESD}を用いる．
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% 5章
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{実験結果}\label{sec:result}
+本章は，2つの習熟度到達予測モデル （モデル1: \textcolor{red}{\UnderlineTex{CTスコア}}が8点以上（Developing以上）のオリジナル作品を制作するユーザを予測，モデル2: \textcolor{red}{\UnderlineTex{CTスコア}}が15点以上（Master）のオリジナル作品を制作するユーザを予測）の精度評価，および，分類精度に寄与する説明変数を明らかにする．
+%本章は，2つの習熟度到達予測モデル （モデル1: CTスキルの合計点数が8点以上（Developing以上）のオリジナル作品を制作するユーザを予測，モデル2: CTスキルの合計点数が15点以上（Master）のオリジナル作品を制作するユーザを予測）の精度評価，および，分類精度に寄与する説明変数を明らかにする．
+
+%%
+%% 5.1章
+%%
+\subsection{習熟度到達予測モデルの分類精度}
+表~\ref{tab:predict_result}は，2つの予測モデルそれぞれの分類精度（適合率，再現率，F値）を示す．モデル1のF値は0.87であり，モデル2のF値は0.58であった．モデル2の分類精度はモデル1に比べて低いため，\textcolor{red}{\UnderlineTex{[変更M-5-b]公開した20件の作品の中で}}一度もMasterに到達しなかったユーザの一部は，Masterに到達したユーザとの間で，過去に使用した\textcolor{red}{\UnderlineTex{CT概念}}に違いがないことが示唆される．続いて，高い精度で分類できた2つのモデルに寄与する特徴量の重要度を分析し，さらに\ref{sec:discussion}章でモデルの妥当性を考察する．
+
+%--------------------------
+\begin{table}[t]
+	\caption{２つのモデルの分類精度（平均値）}
+	\begin{center}
+		%\begin{tabular}{l|wr{1.5cm}|wr{1.5cm}|wr{1.5cm}}
+		\begin{tabular}{l|p{15mm}|p{15mm}|p{15mm}}
+		\hline
+            & \multicolumn{1}{c|}{適合率} & \multicolumn{1}{c|}{再現率} & \multicolumn{1}{c}{F値} \\ \hline
+            モデル1 & 0.87 & 0.87 & 0.87 \\
+            モデル2 & 0.73 & 0.49 & 0.58 \\ \hline
+		\end{tabular}
+	\end{center}
+	\label{tab:predict_result}
+\end{table}
+%--------------------------
+
+%%
+%% 5.2章
+%%
+\subsection{特徴量の重要度}
+
+%--------------------------
+\begin{table*}[t]
+    \caption{\textcolor{red}{\UnderlineTex{[変更M-7]}}2つのモデルにおける重要度の高い説明変数の上位10件}\label{tab:feature_importance}
+    \begin{center}
+        \scalebox{1.0}[1.0]{
+            \begin{tabular}{r|rp{55mm}|rp{55mm}}
+                \hline
+                & \multicolumn{2}{c|}{モデル1} & \multicolumn{2}{c}{モデル2} \\
+                \cline{2-5}
+                グループ & \begin{tabular}{r} 重要度 \end{tabular} & \begin{tabular}{l} 説明変数 \end{tabular} & \begin{tabular}{r} 重要度 \end{tabular} & \begin{tabular}{l} 説明変数 \end{tabular} \\ \hline
+                1 & \begin{tabular}{r}0.05\end{tabular} & \begin{tabular}{r} \{オリジナル/フロー制御/0点\} \end{tabular} & \begin{tabular}{r} 0.04 \end{tabular} & \begin{tabular}{l} \{オリジナル/データ表現/0点\} \end{tabular} \\ \hline
+                2 & \begin{tabular}{r} 0.04 \end{tabular} & \begin{tabular}{r} \{リミックス/抽象化/0点\} \end{tabular} & \begin{tabular}{r} 0.04 \end{tabular} & \begin{tabular}{l} \{オリジナル/抽象化/0点\} \end{tabular} \\ \hline
+                3 & \begin{tabular}{r} 0.04 \end{tabular} & \begin{tabular}{r} \{オリジナル/データ表現/0点\} \end{tabular} & \begin{tabular}{r} 0.03 \end{tabular} & \begin{tabular}{l} \{オリジナル/同期/2点\} \end{tabular} \\ \hline
+                4 & \begin{tabular}{r} 0.04 \end{tabular} & \begin{tabular}{r} \{オリジナル/ユーザ対話性/0点\} \end{tabular} & \begin{tabular}{r} 0.03 \end{tabular} & \begin{tabular}{l} \{オリジナル/フロー制御/3点\} \end{tabular} \\ \hline
+                5 & \begin{tabular}{r} 0.04 \end{tabular} & \begin{tabular}{r} \{リミックス/並列/0点\} \end{tabular} & \begin{tabular}{r} 0.03 \end{tabular} & \begin{tabular}{l} \{リミックス/同期/0点\} \end{tabular} \\ \hline
+                6 & \begin{tabular}{r} 0.04 \end{tabular} & \begin{tabular}{r} \{リミックス/データ表現/0点\} \end{tabular} & \begin{tabular}{r} 0.03 \end{tabular} & \begin{tabular}{l} \{\textcolor{red}{\UnderlineTex{オリジナル/論理/0点}}\} \\ \{オリジナル/フロー制御/1点\} \\ \{リミックス/論理/0点\} \end{tabular} \\ \hline
+                7 & \begin{tabular}{r} 0.04 \end{tabular} & \begin{tabular}{r} \{リミックス/抽象化/2点\} \end{tabular} & \begin{tabular}{r} 0.03 \end{tabular} & \begin{tabular}{l} \{オリジナル/並列/3点\} \end{tabular} \\ \hline
+                8 & \begin{tabular}{r} 0.03 \end{tabular} & \begin{tabular}{r} \{リミックス/同期/0点\} \end{tabular} & \begin{tabular}{r} 0.03 \end{tabular} & \begin{tabular}{l} \{オリジナル/同期/3点\} \end{tabular} \\ \hline
+                9 & \begin{tabular}{r} 0.03 \end{tabular} & \begin{tabular}{r} \{リミックス/フロー制御/1点\} \end{tabular} & \begin{tabular}{r} 0.03 \end{tabular} & \begin{tabular}{l} \{オリジナル/並列/2点\} \\ \{オリジナル/データ表現/2点\} \end{tabular} \\ \hline
+                10 & \begin{tabular}{r} 0.03 \end{tabular} & \begin{tabular}{r} \{リミックス/論理/3点\} \end{tabular} & \begin{tabular}{r} 0.03 \end{tabular} & \begin{tabular}{l} \{オリジナル/論理/2点\} \end{tabular} \\ \hline
+            \end{tabular}
+        }
+    \end{center}
+\end{table*}
+%--------------------------
+
+表~\ref{tab:feature_importance}は，2つの予測モデルそれぞれにおいて，分類に寄与する説明変数の重要度の順位を示す．表中には，分類に強く寄与する説明変数を\{作品の種類/\textcolor{red}{\UnderlineTex{CT概念}}/点数\}のように示す．モデル2のグループ6，グループ9に示すように，Scott-Knott ESD検定の結果，統計的に有意な差がない説明変数は，同一順位として示している．モデル1では，説明変数\{オリジナル/フロー制御/0点\}（オリジナル作品の制作による\textcolor{red}{\UnderlineTex{CT概念}}「フロー制御」で0点の獲得有無）が分類精度に最も寄与し，続いて\{リミックス/抽象化/0点\}，\{オリジナル/データ表現/0点\}が寄与していることが分かった．また，モデル2では，\{オリジナル/データ表現/0点\}，\{オリジナル/抽象化/0点\}，\{オリジナル/同期/2点\}が分類精度に寄与していることが分かった．それぞれのモデル間における重要度の高い説明変数の違いとして，モデル1では0点の\textcolor{red}{\UnderlineTex{CT概念}}が70\%（10件中7件）を占めていることに対して，モデル2では1点以上の\textcolor{red}{\UnderlineTex{CT概念}}が約62\%（13件中8件）を占めていることが分かる．それぞれのモデルに使用した\textcolor{red}{\UnderlineTex{CT概念}}が特に寄与するクラスについては，考察で議論する．
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% 6章
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{考察}\label{sec:discussion}
+
+%%
+%% 6.1章
+%%
+\subsection{モデルの精度に寄与する要因}
+本研究では，ユーザが過去に使用した\textcolor{red}{\UnderlineTex{CT概念}}に基づき，新たに制作する作品が特定の習熟度に到達するか否かを予測する機械学習モデルを構築した．モデルの評価実験の結果，習熟度Developingに関する予測（モデル1）の予測精度（F値）は0.87，習熟度Masterに関する予測（モデル2）の予測精度（F値）は0.58であった．特に，モデル1では適合率，再現率ともに0.87となり，高い精度で分類することができた．その一方で，モデル2では適合率0.73，再現率0.49となり，適合率は高かったものの，再現率は適合率に比べて低かった．その理由は2つ考えられる．
+
+% 2つの理由についての記述
+\begin{itemize}
+
+\item \textbf{正例クラスと負例クラスのユーザが使用した\textcolor{red}{\UnderlineTex{CT概念}}の違い．}
+
+表\ref{tab:feature_importance}より，2つのモデルそれぞれにおける重要度の高い説明変数として，モデル1では0点の\textcolor{red}{\UnderlineTex{CT概念}}が多く，モデル2では2点以上となる\textcolor{red}{\UnderlineTex{CT概念}}が多かった．まずモデル1において，最も重要度の高かった\{オリジナル/フロー制御/0点\}を獲得したユーザは，正例クラスに約18\%（3,436人中，614人）存在し，負例クラスでは約48\%（1,108人中，536人）存在していた．同様に，重要度順位が2位の\{リミックス/抽象化/0点\}を獲得したユーザは，正例クラスでは約17\%（3,436人中，591人）存在し，負例クラスでは43\%（1,108人中，633人）存在していた．したがって，モデル1では，Developing以上に到達しないユーザの多くが0点を獲得していることが予測精度に影響を及ぼしているため，習熟度Developingに到達するためには，フロー制御などの\textcolor{red}{\UnderlineTex{CT概念}}を習熟することが期待される．
+
+次にモデル2において，モデル1と同様に重要度の高い上位2件の\textcolor{red}{\UnderlineTex{CT概念}}はどちらも0点（\{オリジナル/データ表現/0点\}，\{オリジナル/抽象化/0点\}）であった．一方で，モデル1では出現しなかったオリジナル作品で2点以上を獲得している\textcolor{red}{\UnderlineTex{CT概念}}が，モデル2において重要度順位が3位（\{オリジナル/同期/2点\}）と4位（\{オリジナル/フロー制御/3点\}）に出現していた．重要度順位が3位の\{オリジナル/同期/2点\}を獲得したユーザは，正例クラスでは約69\%（1,345人中927人），負例クラスでは約46\%（4,800人中2,199人）存在していた．重要度順位が4位の\{オリジナル/フロー制御/3点\}を獲得したユーザは，正例クラスでは約38\%（1,345人中508人），負例クラスでは約18\%（4,800人中855人）存在していた．したがって，モデル2では，正例クラスの特徴がモデルの予測精度に影響を及ぼしているため，ユーザは習熟度Masterに到達するためには，2点以上の同期やフロー制御の\textcolor{red}{\UnderlineTex{CT概念}}を習熟することが期待される．
+
+%--------------------------
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\linewidth]{./fix_fig/barplot_model1.pdf}
+    \caption{モデル1において，N番目にDeveloping以上に到達したユーザ数とその予測結果}
+    \label{fig:barplot_model1}
+\end{figure}
+%--------------------------
+
+%--------------------------
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\linewidth]{./fix_fig/barplot_model2.pdf}
+    \caption{モデル2において，N番目にMasterに到達したユーザ数とその予測結果}
+    \label{fig:barplot_model2}
+\end{figure}
+%--------------------------
+
+\item \textbf{正例クラスと負例クラスの学習に使用した作品数の違い．}
+
+モデルの学習に使用する作品数は，正例クラスではN番目に特定の習熟度に到達するまでに制作した作品N-1件であることに対して，負例クラスではユーザが制作した全作品20件である．具体的には，モデル1の正例クラスでは，学習に使用した作品数の中央値は5件（四分位偏差: 3.5），モデル2の正例クラスにおいて学習に使用した作品数は中央値11件（四分位偏差: 5.5）であった．図\ref{fig:barplot_model1}，図\ref{fig:barplot_model2}は，それぞれモデル1とモデル2の正例クラスにおいて，N番目に特定の習熟度に到達したユーザ数とその予測結果の分布を示す．横軸は，特定の習熟度に到達した作品番号，縦軸は到達したユーザ数を示す．グラフ中の黒色で示す箇所は，正例クラスのユーザのうち正しく予測できた人数，灰色で示す箇所は予測できなかった人数を示す．図8，図9は，それぞれモデル1とモデル2の正例クラスにおいて，N番目に特定の習熟度に到達したユーザ数とその予測結果の分布を示す．横軸は，特定の習熟度に到達した作品番号，縦軸は到達したユーザ数を示す．グラフ中の黒色で示す箇所は，正例クラスのユーザのうち正しく予測できた人数，灰色で示す箇所は予測できなかった人数を示す．図8，図9から，本提案モデルは作品数が少なくして特定の習熟度に到達するユーザほど正しく予測できた．一方で，作品制作数が増加するにつれ，誤った予測結果が増えたのは，本研究の事前分析から，ユーザは突如点数の高い作品を制作することがないため，特定の習熟度に到達する時点を正しく予測できなかったことが原因と考える．今後は特定の習熟度に到達する時点を見積もる手法を検討する．
+
+\end{itemize}
+
+%%
+%% 6.2章
+%%
+\subsection{プログラミング学習時におけるモデルの活用}
+本研究において構築した習熟度到達予測モデルは，プログラミングユーザが有する\textcolor{red}{\UnderlineTex{CT}}の把握，および，Scratchにおいて公開される作品の中から，ユーザの\textcolor{red}{\UnderlineTex{CT}}に合わせた作品の推薦に貢献できると考える．
+
+Scratchにおいて，ユーザはリミックス機能などを用いて，他の作品を参考にした作品制作を行うことも多い．ユーザがリミックス対象となる作品を選択するまでの手順は，Scratchのサービス上で自然言語による作品の検索を行い，検索単語に紐づいた作品の抽出が挙げられる．ただし，Scratchの検索結果は，閲覧数の多い作品やリミックス回数の多い作品など，人気度の高い順に表示されるため，ユーザの\textcolor{red}{\UnderlineTex{CT}}に合った作品が必ずしも上位に表示されるとは限らない．この課題の解決策の一つとして，Dr.Scratchの評価結果に基づく作品提示方法が考えられる．例えば，ユーザが習熟度Basicの作品を制作した場合には，習熟度Developingの作品を検索結果として提示することで，ユーザは自身の\textcolor{red}{\UnderlineTex{CT}}に合った作品を見つけることが容易になる．ただし，本研究において，特定の習熟度への到達可否は，ユーザが過去に使用した\textcolor{red}{\UnderlineTex{CT概念}}の影響を受けることが明らかになったため，単に習熟度が1段階上の作品を提示するだけでは，ユーザの\textcolor{red}{\UnderlineTex{CT}}に合わせた作品の提示は困難であると考える．\textcolor{red}{\UnderlineTex{[変更1-3]本研究の結果から，Developing以上に到達していないユーザの多くは，CT概念の「抽象化」や「データ表現」などにおいて0点を獲得している．このことから，0点を獲得し続けるユーザに対しては，当該CT概念での点数を満たす作品を提示することで，Developing以上の作品を制作するための支援ができると考える．一方で，Masterに到達するユーザの多くは，CT概念の「同期」や「フロー制御」で2点以上を獲得しているため，これらの概念を使用するユーザはさらに高い習熟度を必要とする作品を制作できると考えられる．したがって，当該CT概念で高い点数を獲得するユーザに対しては，高い習熟度の作品を推薦することで，ユーザの更なるCTの向上に繋がると考える．}}今後は，ユーザが過去に使用した\textcolor{red}{\UnderlineTex{CT概念}}に基づく，ユーザの\textcolor{red}{\UnderlineTex{CT}}に合わせた作品提示を検討する．
+
+
+%%
+%% 6.3章
+%%
+{\subsection{\textcolor{red}{[変更1-4-b]リミックス作品がモデルの精度に及ぼす影響}}
+
+%--------------------------------------
+\begin{table}[t]
+\color{red}
+        \begin{center}
+        \caption{説明変数からリミックス作品を除去した場合の分類精度（平均値）（*リミックス作品を除去しなかった場合の分類精度）}\label{tab:add_analysis}
+            \begin{tabular}{l|p{20mm}|p{20mm}|p{20mm}}
+                \hline
+                & \multicolumn{1}{c|}{適合率} & \multicolumn{1}{c|}{再現率} & \multicolumn{1}{c}{F値} \\ \hline
+                モデル1 & 0.88 (*0.87) & 0.68 (*0.87) & 0.76 (*0.87) \\
+                モデル2 & 0.55 (*0.73) & 0.44 (*0.49) & 0.48 (*0.58) \\ 
+                \hline
+            \end{tabular}
+        \end{center}
+\color{black}
+\end{table}
+%--------------------------------------
+
+\textcolor{red}{\UnderlineTex{本研究で構築した習熟度到達予測モデルにおける説明変数には，リミックス作品の制作による学習効果が示されていることから~[6]，オリジナル作品で獲得した点数と，リミックス作品で獲得した点数と区別して計測した．しかし特定の習熟度に到達するか否かを判定するためにリミックス作品の制作が有用であるか否かは明らかでないため，リミックス作品を分析対象外とした場合の予測モデルも構築し，精度結果を比較する．}}
+
+\textcolor{red}{\UnderlineTex{表5は説明変数からリミックス作品を除去した場合の分類精度を示す．表5から，リミックス作品を除去した場合，除去前と比較して，モデル1ではF値が0.09，モデル2ではF値が0.10低下することが分かった．したがって，ユーザがDeveloping以上の習熟度に到達するか否かを予測するために，リミックス作品を説明変数の特徴量として使用することは予測精度向上に有効であることが示唆される．今後は，特定の習熟度への到達に寄与するリミックス作品の特徴，および，ユーザがリミックスによって習熟するCT概念を明らかにする．}}
+
+
+%%
+%% 6.4章
+%%
+\subsection{妥当性への脅威}
+\begin{itemize}
+\item \textbf{内的妥当性: }本研究では，習熟度到達予測モデルの構築にランダムフォレスト法を用いた．ランダムフォレストのパラメータには，Breimanらが推奨する値をもとに，決定木の個数は200，各決定木の生成に使用する特徴量の個数は説明変数56次元の平方根と定めた．精度向上のために説明変数の選択，対象ユーザの選択，と同時にモデルのパラメータの調整も今後は検討する．
+
+\item \textbf{外的妥当性: }本研究では，ユーザが自身で制作するオリジナル作品が目標習熟度に到達することを予測するモデルの構築を行ったが，オリジナル作品の中には，公開されている他の作品を模倣して制作した作品が存在することも考えられる．また，Scratchのサービス上に共有されている作品しか調査できていないため，サービス上に非公開の作品を制作していることも考えられる．本研究で対象とするユーザが制作した作品の中にも，これらの事例が含まれる場合，予測モデルの精度低下に繋がることが考えられる．
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% 7章
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{おわりに}\label{sec:conclusion}
+本研究では，事前分析として，ユーザが制作した作品の\textcolor{red}{\UnderlineTex{CTスコア}}を調査した結果，ユーザは突如点数の高い作品を制作することはなく，類似の\textcolor{red}{\UnderlineTex{CT}}を使用した作品を連続で制作していることが示唆された．その後，ユーザが制作する作品を3つの習熟度 (Basic, Developing, Master)に分類し，作品制作に使用する\textcolor{red}{\UnderlineTex{CT概念}}を分析した．具体的には，ユーザが過去に使用した\textcolor{red}{\UnderlineTex{CT概念}}に基づき，新たに制作する作品がDeveloping以上，またはMasterの習熟度に到達するか否かを予測する2つの習熟度到達予測モデルを構築した．その結果，Developing以上に関する予測の精度（F値）は0.87，Masterに関する予測の精度（F値）は0.58の精度で分類することができた．その要因として，目標習熟度に到達するユーザと到達しないユーザの間では使用する\textcolor{red}{\UnderlineTex{CT概念}}（「同期」や「フロー制御」など）に違いがあることが示唆される．しかし，提案する予測モデルは，初めて目標習熟度に到達するまでに多数の作品制作するユーザを予測することが困難であった．今後は，ユーザが特定の習熟度に到達する時点を見積もる手法を検討し，作品制作数の多いユーザについても考慮した習熟度到達予測モデルを提案する．
+
+
+% 参考文献
+%\bibliographystyle{ipsjunsrt}
+%\bibliography{bibfile}
+
+\begin{thebibliography}{10}
+
+\bibitem{Wing_2006}
+\textcolor{red}{\UnderlineTex{[変更M-8, 2-1-b]Wing, J.~M.: Computational thinking, {\em Communications of the ACM},  Vol.~49,
+  No.~3, pp.\ 33--35 (2006).}}
+
+\bibitem{Moreno_2015}
+Moreno-Le{\'o}n, J., Robles, G. and Rom{\'a}n-Gonz{\'a}lez, M.: Dr. Scratch:
+  Automatic analysis of scratch projects to assess and foster computational
+  thinking, {\em RED. Revista de Educaci{\'o}n a Distancia},  \textcolor{red}{\UnderlineTex{[変更M-9]Vol.~15}}, No.~46,
+  pp.\ 1--23 (2015).
+
+\bibitem{Moreno_2015_analyze}
+Moreno-Le{\'o}n, J. and Robles, G.: Analyze your Scratch projects with Dr.
+  Scratch and assess your computational thinking skills, {\em Scratch
+  conference}, pp.\ 12--15 (2015).
+
+\bibitem{Yang_2015}
+Yang, S., Domeniconi, C., Revelle, M., Sweeney, M., Gelman, B.~U., Beckley, C.
+  and Johri, A.: Uncovering Trajectories of Informal Learning in Large Online
+  Communities of Creators, {\em In Proceedings of the 2nd Conference on
+  Learning @ Scale (L@S'15)}, pp.\ 131--140 (2015).
+
+\bibitem{Weintrop_2017}
+Weintrop, D. and Wilensky, U.: Comparing Block-Based and Text-Based Programming
+  in High School Computer Science Classrooms, {\em Transactions on Computing
+  Education},  Vol.~18, No.~1, pp.\ 1--25 (2017).
+
+\bibitem{Dasgupta_2016}
+Dasgupta, S., Hale, W., Monroy-Hern\'{a}ndez, A. and Hill, B.~M.: Remixing As a
+  Pathway to Computational Thinking, {\em Proceedings of the 19th Conference on
+  Computer-Supported Cooperative Work \& Social Computing (CSCW'16)}, pp.\
+  1438--1449 (2016).
+
+\bibitem{杉浦_2008}
+杉浦学，松澤芳昭，岡田健，大岩元\：アルゴリズム構築能力育成の導入教育:
+  実作業による概念理解に基づくアルゴリズム構築体験とその効果，情報処理学会論文誌，
+  Vol.~49, No.~10, pp.\ 3409--3427 (2008).
+
+\bibitem{Aivaloglou_2017}
+Aivaloglou, E., Hermans, F., Moreno-Le\'{o}n, J. and Robles, G.: A Dataset of
+  Scratch Programs: Scraped, Shaped and Scored, {\em Proceedings of the 14th
+  International Conference on Mining Software Repositories (MSR'17)}, pp.\
+  511--514 (2017).
+
+\bibitem{Robles_2017}
+Robles, G., Moreno-Le{\'o}n, J., Aivaloglou, E. and Hermans, F.: Software
+  clones in scratch projects: on the presence of copy-and-paste in
+  computational thinking learning, {\em Proceedings of the 11th International
+  Workshop on Software Clones (IWSC'17)}, pp.\ 1--7 (2017).
+
+\bibitem{Troiano_2019}
+Troiano, G., Snodgrass, S., Argimak, E., Robles, G., Smith, G., Cassidy, M.,
+  Tucker-Raymond, E., Puttick, G. and Harteveld, C.: Is My Game OK Dr.
+  Scratch?: Exploring Programming and Computational Thinking Development via
+  Metrics in Student-Designed Serious Games for STEM, {\em Proceedings of the
+  18th International Conference on Interaction Design and Children (IDC'19)},
+  pp.\ 208--219 (2019).
+
+\bibitem{Troiano_2020}
+Troiano, G., Chen, Q., Vargas-Alba, {\'A}., Robles, G., Smith, G., Cassidy, M.,
+  Tucker-Raymond, E., Puttick, G. and Harteveld, C.: Exploring How Game Genre
+  in Student-Designed Games Influences Computational Thinking Development, {\em
+  Proceedings of the Conference on Human Factors in Computing Systems
+  (CHI'20)}, pp.\ 1--17 (2020).
+
+\bibitem{Aivaloglou_2016}
+Aivaloglou, E. and Hermans, F.: How Kids Code and How We Know: An Exploratory
+  Study on the Scratch Repository, {\em Proceedings of the Conference on
+  International Computing Education Research (ICER'16)}, pp.\ 53--61 (2016).
+
+\bibitem{Breiman_2001}
+Breiman, L.: Random forests, {\em Machine learning},  Vol.~45, No.~1, pp.\
+  5--32 (2001).
+
+\bibitem{Tantithamthavorn_2019}
+Tantithamthavorn, C., McIntosh, S., Hassan, A.~E. and Matsumoto, K.: The Impact
+  of Automated Parameter Optimization on Defect Prediction Models, {\em IEEE
+  Transactions on Software Engineering},  Vol.~45, No.~7, pp.\ 683--711 (2019).
+
+\end{thebibliography}
+
+
+% 著者一覧
+\begin{biography}
+\profile{s}{安東 亮汰}{2020年和歌山大学システム工学部卒業．現在，同大学同学部博士前期課程に在学中．ソフトウェア工学，特にプログラミング学習支援の研究に従事．}
+%
+\profile{m}{伊原 彰紀}{2007年龍谷大学理工学部卒業．2009年奈良先端科学技術大学院大学情報科学研究科博士前期課程修了．2012年同大学博士後期課程修了．2012年同大学情報科学研究科助教．2018年和歌山大学システム工学部講師．博士（工学）．ソフトウェア工学，特にオープンソースソフトウェア開発・利用支援の研究に従事．電子情報通信学会，ソフトウェア科学会，IEEE各会員．}
+\end{biography}
+
+\end{document}
