@@ -15,6 +15,7 @@
 
 \newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
 
+
 %ここからソースコードの表示に関する設定
 \definecolor{darkgray}{rgb}{.4,.4,.4}
 \definecolor{purple}{rgb}{0.65, 0.12, 0.82}
@@ -52,11 +53,16 @@
   numbersep=1zw,
   lineskip=-0.5ex
 }
+
 %ここまでソースコードの表示に関する設定
 
 \def\Underline{\setbox0\hbox\bgroup\let\\\endUnderline}
 \def\endUnderline{\vphantom{y}\egroup\smash{\underline{\box0}}\\}
 \def\|{\verb|}
+
+% 下線を引く用の追加パッケージ
+\usepackage{jumoline}
+\setlength{\UnderlineTexDepth}{3pt}
 
 \setcounter{巻数}{59}
 \setcounter{号数}{1}
