@@ -183,14 +183,14 @@ Mujahidらは，後方互換性を損失するJavaScriptライブラリバージ
         \hline
         ライブラリ名@\par 旧バージョン{...}新バージョン & 更新前の\par テスト成功 & 更新後の\par テスト失敗 & 更新後の\par テスト成功 \\
         \hline
-        uuid@7.0.3…8.0.0-beta.0 & 433 & 118 & 315 \\
-        uuid@3.4.0…7.0.0-beta.0 & 492 & 57 & 435 \\
+        uuid＠7.0.3…8.0.0-beta.0 & 433 & 118 & 315 \\
+        uuid＠3.4.0…7.0.0-beta.0 & 492 & 57 & 435 \\
         globby＠8.0.0…8.0.1 & 128 & 42 & 86 \\
         globby＠6.1.0…7.0.0 & 137 & 27 & 110 \\
         meow＠3.6.0...4.0.0 & 153 & 26 & 127 \\
         pump＠1.0.3...2.0.0 & 112 & 19 & 83 \\
         globby＠7.1.1…8.0.0 & 143 & 17 & 126 \\
-        vinyl@1.2．0…2.0.0 & 69 & 11 & 58 \\
+        vinyl＠1.2.0…2.0.0 & 69 & 11 & 58 \\
         \hline
         \end{tabular}
     }
@@ -227,10 +227,10 @@ Mujahidらは，後方互換性を損失するJavaScriptライブラリバージ
 \end{table*}
 
 \begin{table*}[t]
-    \caption{uuid@7.0.3…8.0.0-beta.0の記述パターン}
+    \caption{uuid＠7.0.3…8.0.0-beta.0の記述パターン}
     \label{table:uuidclient_pattern}
     \centering
-    \scalebox{0.60}{
+    \scalebox{0.6}{
         \begin{tabular}{c|l|r|r}
         \hline
         \multicolumn{1}{c|}{ID} & \multicolumn{1}{c|}{記述パターン}& \multicolumn{1}{c|}{統合数(重複数)} & \multicolumn{1}{c}{クライアントへの該当数} \\ \hline\hline
@@ -240,16 +240,15 @@ Mujahidらは，後方互換性を損失するJavaScriptライブラリバージ
         4  & \begin{tabular}[c]{@{}l@{}}"(?\textless{}variable1\textgreater{}{[}\textbackslash{}\textbackslash{}w-{]}+) = require(\textbackslash{}"uuid/v4\textbackslash{}")"\\ "variable1()"\end{tabular} & 6& 0  \\ \hline
         5  & \begin{tabular}[c]{@{}l@{}}"import (?\textless{}variable1\textgreater{}{[}\textbackslash{}\textbackslash{}w-{]}+) from 'uuid/v1'"\\ "variable1()"\end{tabular} & 5  & 0  \\ \hline
         …  & ………… & …………  & …………  \\ \hline
-        16 & \begin{tabular}[c]{@{}l@{}}import * as (?\textless{}variable1\textgreater{}{[}\textbackslash{}\textbackslash{}w-{]}+) from \textbackslash{}"uuid\textbackslash\\ variable1()\end{tabular} & 1 & 0 \\ \hline
+        16 & \begin{tabular}[c]{@{}l@{}}"import * as (?\textless{}variable1\textgreater{}{[}\textbackslash{}\textbackslash{}w-{]}+) from \textbackslash{}"uuid/v1\textbackslash{}";"\\ "variable1()"\end{tabular} & 1 & 0 \\ \hline
         合計  & 16種類  & 102件  & 37件  \\ \hline
         \end{tabular}
         }
 \end{table*}
 \subsection{データセット}
 
+本研究では，従来研究においてMujahidらが公開するデータセットを分析対象とする．データセットには，GitHubリポジトリが記載されている，未成熟なクライアントを除外するために依存ライブラリを記述するファイル（package.json）の変更履歴が2回以上ある，290,417件のJavaScriptライブラリ名と各ライブラリのいずれかのバージョンに依存するクライアントのリポジトリやコミットIDなどの情報が含まれている．このデータセットの中から，従来研究\cite{matsuda}において2つの条件で絞った238件のJavaScriptライブラリと該当ライブラリのバージョンごとにクライアントテストを実行した結果をもとに分析対象とした2,111組の分析対象ライブラリバージョン，各ライブラリバージョンのクライアントのテスト実行結果を用いる．各条件は次に示す．
 
-
-本研究では，従来研究においてMujahidらが公開するデータセットを分析対象とする．データセットには，GitHubリポジトリが記載されている，未成熟なクライアントを除外するために依存ライブラリを記述するファイル（package.json）の変更履歴が2回以上ある，290,417件のJavaScriptライブラリ名と各ライブラリのいずれかのバージョンに依存するクライアントのリポジトリやコミットIDなどの情報が含まれている．このデータセットの中から，従来研究\cite{matsuda}において3つの条件で絞った238件のJavaScriptライブラリと該当ライブラリのバージョンごとにクライアントテストを実行した結果をもとに分析対象とした2,111組の分析対象ライブラリバージョン，各ライブラリバージョンのクライアントのテスト実行結果を用いる．各条件は次に示す．
 \begin{itemize}
 \item ライブラリの人気度合いを示すnpmスコア\footnote{\url{https://npms.io}}が上位500件以内であること
 \item バージョンがリリースされた変更のコミットステータス\footnote{\url{https://www.npmjs.com/}}からテスト実行結果を確認し，テスト実行時の成功率が 100\%であること
@@ -272,15 +271,15 @@ Mujahidらは，後方互換性を損失するJavaScriptライブラリバージ
      \scalebox{0.6}{
         \begin{tabular}{l|r|r|r}
         \hline
-        \begin{tabular}[c]{@{}c@{}}ライブラリ名@\\ 旧バージョン\{...\}新バージョン\end{tabular} & \begin{tabular}[c]{@{}c@{}}更新後の\\ テスト失敗\end{tabular} & \begin{tabular}[c]{@{}c@{}}更新後の\\ テスト成功\end{tabular} & \begin{tabular}[c]{@{}c@{}}記述パターンを\\ 含むテスト成功\end{tabular}\\ \hline
-            uuid@7.0.3…8.0.0-beta.0 & 118 & 315 & 37 (12\%)\\
-            uuid@3.4.0…7.0.0-beta.0 & 57 & 435 & 41 (10\%)\\
+        \begin{tabular}[c]{@{}c@{}}ライブラリ名＠\\ 旧バージョン\{...\}新バージョン\end{tabular} & \begin{tabular}[c]{@{}c@{}}更新後の\\ テスト失敗\end{tabular} & \begin{tabular}[c]{@{}c@{}}更新後の\\ テスト成功\end{tabular} & \begin{tabular}[c]{@{}c@{}}記述パターンを\\ 含むテスト成功\end{tabular}\\ \hline
+            uuid＠7.0.3…8.0.0-beta.0 & 118 & 315 & 37 (12\%)\\
+            uuid＠3.4.0…7.0.0-beta.0 & 57 & 435 & 41 (10\%)\\
             globby＠8.0.0…8.0.1 & 42 & 86 & 45 (52\%)\\
             globby＠6.1.0…7.0.0 & 27 & 110 & 60 (55\%)\\
             meow＠3.6.0...4.0.0 & 26 & 127 & 37(29\%) \\
             pump＠1.0.3...2.0.0 & 19 & 83 & 36(43\%) \\
             globby＠7.1.1…8.0.0 & 17 & 126 & 64(51\%) \\
-            vinyl@1.2．0…2.0.0 & 11 & 58 & 28(48\%) \\ \hline
+            vinyl＠1.2.0…2.0.0 & 11 & 58 & 28(48\%) \\ \hline
         \end{tabular}
     }
 \end{table}
@@ -303,7 +302,7 @@ Mujahidらは，後方互換性を損失するJavaScriptライブラリバージ
 
 %\begin{adjustvboxheight} % needed only when Appendix follows
 %junsrt
-\bibliographystyle{plain}
+\bibliographystyle{junsrt}
 \bibliography{IidaFOSE}
 
 %\end{adjustvboxheight} % needed only when Appendix follows
