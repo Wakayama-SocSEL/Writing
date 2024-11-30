@@ -1,0 +1,135 @@
+\documentclass[submit]{ipsj}
+%\documentclass{ipsj}
+
+%\usepackage{graphicx}
+%\usepackage[dvipdfmx]{graphicx,color}
+%\usepackage[dvips]{graphicx}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{latexsym}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{colortbl}
+
+
+\newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
+
+%ここからソースコードの表示に関する設定
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle={\small\ttfamily},
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\smallitshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-0.5ex
+}
+%ここまでソースコードの表示に関する設定
+
+\def\Underline{\setbox0\hbox\bgroup\let\\\endUnderline}
+\def\endUnderline{\vphantom{y}\egroup\smash{\underline{\box0}}\\}
+\def\|{\verb|}
+
+\setcounter{巻数}{59}
+\setcounter{号数}{1}
+\setcounter{page}{1}
+
+
+\受付{2016}{3}{4}
+\再受付{2015}{7}{16}   %省略可能
+\再再受付{2015}{7}{20} %省略可能
+\再再受付{2015}{11}{20} %省略可能
+\採録{2016}{8}{1}
+
+
+
+
+\begin{document}
+
+
+\title{hoge}
+
+\etitle{hoge}
+
+\affiliate{WA}{和歌山大学システム工学部\\
+Wakayama University, Faculty of Systems Engineering, Sakaedani 930, Wakayama-city 640-8510, Japan}
+
+
+\author{大森 楓己}{Mizuki Uenaka}{WA}[uenaka.mizuki@g.wakayama-u.jp]
+\author{伊原 彰紀}{Akinori Ihara}{WA}[ihara@wakayama-u.ac.jp]
+
+\begin{abstract}
+hogehoge
+\end{abstract}
+
+
+\begin{jkeyword}
+hogehoge
+\end{jkeyword}
+
+\begin{eabstract}
+hogehoge
+\end{eabstract}
+
+\begin{ekeyword}
+hogehoge
+\end{ekeyword}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{はじめに}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+hoge
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{おわりに}
+\label{sec:conclusion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+hoge
+
+
+\bibliographystyle{ipsjunsrt}
+\bibliography{bibfile_IPSJjournal_Uenaka}
+
+\vspace{-4mm}
+
+\begin{biography}
+\profile{n}{大森 楓己}{2024年和歌山大学システム工学部在学中，ソフトウェア工学，特にプログラム検証の研究に従事．}
+%
+\profile{m}{伊原 彰紀}{2009年奈良先端科学技術大学院大学情報科学研究科博士前期課程修了．2012年同大学博士後期課程修了．2012年同大学情報科学研究科助教．2018年和歌山大学システム工学部講師．博士（工学）．ソフトウェア工学，特にオープンソースソフトウェア開発・利用支援の研究に従事．電子情報通信学会，IEEE各会員．}
+\end{biography}
+
+
+
+\end{document}
