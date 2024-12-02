@@ -2,6 +2,11 @@
 \usepackage{wuse_thesis}
 \usepackage{indentfirst}
 \usepackage{url}	% \url{}コマンド用．URLを表示する際に便利
+\usepackage{xcolor} 	% 色を扱うためのパッケージ
+
+\newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
+\newcommand{\change}[1]{\colorbox{green}{{\bf CHANGE}:}{\color{blue} {\textbf{[#1]}}}}
+\newcommand{\new}[1]{\colorbox{cyan}{{\bf NEW}:}{\color{black} {\textbf{[#1]}}}}
 %\usepackage{graphicx}  % ←graphicx.styを用いてEPSを取り込む場合有効にする
 			% 他のパッケージ・スタイルを使う場合には適宜追加
 
@@ -12,8 +17,7 @@
 %%
 
 %%  タイトル(修論の場合は英語表記も指定)
-\title{卒業・修士論文用スタイルファイルを用いた\\
-       p\LaTeX による卒業・修士論文の作成}
+\title{\todo{焦らせてくれ．一人じゃ卒論は書けん．}}
 %\etitle{Test\\Test\\Test}
 
 %%  著者名(修論の場合は英語表記も指定)
