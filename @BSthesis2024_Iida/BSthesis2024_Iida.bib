@@ -1,0 +1,162 @@
+% Encoding: UTF-8
+@inproceedings{mujahid,
+  author    = {Mujahid, Suhaib and Abdalkareem, Rabe and Shihab, Emad and McIntosh, Shane},
+  title     = {Using Others' Tests to Identify Breaking Updates},
+  year      = {2020},
+  booktitle = {Proceedings of the 17th International Conference on Mining Software Repositories (MSR{\textquotesingle}20)},
+  pages     = {466–476}
+}
+
+@inproceedings{mostafa2017experience,
+  title={Experience paper: a study on behavioral backward incompatibilities of Java software libraries},
+  author={Mostafa, Shaikh and Rodriguez, Rodney and Wang, Xiaoyin},
+  booktitle={Proceedings of the 26th ACM SIGSOFT international symposium on software testing and analysis},
+  pages={215--225},
+  year={2017}
+}
+
+@inproceedings{raemaekers2012measuring,
+  title={Measuring software library stability through historical version analysis},
+  author={Raemaekers, Steven and Van Deursen, Arie and Visser, Joost},
+  booktitle={2012 28th IEEE international conference on software maintenance (ICSM)},
+  pages={378--387},
+  year={2012},
+  organization={IEEE}
+}
+
+@article{matsuda,
+  title   = {ライブラリのテストケース変更に基づく後方互換性の実証的分析},
+  author  = {松田 和輝 and 伊原 彰紀 and 才木 一也},
+  journal = {ソフトウェア工学の基礎ワークショップ論文集},
+  volume  = {28},
+  pages   = {139-144},
+  year    = {2021}
+}
+
+@article{10.1145/3428255,
+    author = {M\o{}ller, Anders and Nielsen, Benjamin Barslev and Torp, Martin Toldam},
+    title = {Detecting locations in JavaScript programs affected by breaking library changes},
+    year = {2020},
+    issue_date = {November 2020},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    volume = {4},
+    number = {OOPSLA},
+    url = {https://doi.org/10.1145/3428255},
+    doi = {10.1145/3428255},
+    abstract = {JavaScript libraries are widely used and evolve rapidly. When adapting client code to non-backwards compatible changes in libraries, a major challenge is how to locate affected API uses in client code, which is currently a difficult manual task. In this paper we address this challenge by introducing a simple pattern language for expressing API access points and a pattern-matching tool based on lightweight static analysis. Experimental evaluation on 15 popular npm packages shows that typical breaking changes are easy to express as patterns. Running the static analysis on 265 clients of these packages shows that it is accurate and efficient: it reveals usages of breaking APIs with only 14\% false positives and no false negatives, and takes less than a second per client on average. In addition, the analysis is able to report its confidence, which makes it easier to identify the false positives. These results suggest that the approach, despite its simplicity, can reduce the manual effort of the client developers.},
+    journal = {Proc. ACM Program. Lang.},
+    month = {nov},
+    articleno = {187},
+    numpages = {25},
+    keywords = {breaking changes, software evolution, software maintenance}
+}
+
+@inproceedings{konstantopoulos2009best,
+  title={Best principles in the design of shared software},
+  author={Konstantopoulos, Dino and Marien, John and Pinkerton, Mike and Braude, Eric},
+  booktitle={2009 33rd Annual IEEE International Computer Software and Applications Conference},
+  volume={2},
+  pages={287--292},
+  year={2009},
+  organization={IEEE}
+}
+
+@article{Moser1996effect,
+  title={The effect of object-oriented frameworks on developer productivity},
+  author={Moser, Simon and Nierstrasz, Oscar},
+  journal={Computer},
+  volume={29},
+  number={9},
+  pages={45--51},
+  year={1996},
+  publisher={IEEE}
+}
+@inproceedings{Nielsen2021JSFix,
+author = {Nielsen, Benjamin Barslev and Torp, Martin Toldam and M\o{}ller, Anders},
+title = {Semantic patches for adaptation of JavaScript programs to evolving libraries},
+year = {2021},
+publisher = {IEEE Press},
+url = {https://doi.org/10.1109/ICSE-Companion52605.2021.00105},
+doi = {10.1109/ICSE-Companion52605.2021.00105},
+abstract = {The artifact contains the JSFIX tool along with instructions for how to replicate all of the experiments from the paper. The purpose of the artifact is to allow the the reader to check that the results presented in the paper are correct.},
+booktitle = {Proceedings of the 43rd International Conference on Software Engineering: Companion Proceedings},
+pages = {229},
+numpages = {1},
+location = {Virtual Event, Spain},
+series = {ICSE '21}
+}
+
+@article{relationofMethodPopularity,
+author = {Keshani, Mehdi and Vos, Simcha and Proksch, Sebastian},
+title = {On the relation of method popularity to breaking changes in the Maven ecosystem},
+year = {2023},
+issue_date = {Sep 2023},
+publisher = {Elsevier Science Inc.},
+address = {USA},
+volume = {203},
+number = {C},
+issn = {0164-1212},
+url = {https://doi.org/10.1016/j.jss.2023.111738},
+doi = {10.1016/j.jss.2023.111738},
+journal = {J. Syst. Softw.},
+month = sep,
+numpages = {15},
+keywords = {Breaking changes, API evolution, Semantic versioning, Compatibility, Method popularity, Maven Central}
+}
+@inproceedings{UnderstandingWild,
+author = {Jayasuriya, Dhanushka and Terragni, Valerio and Dietrich, Jens and Ou, Samuel and Blincoe, Kelly},
+title = {Understanding Breaking Changes in the Wild},
+year = {2023},
+isbn = {9798400702211},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3597926.3598147},
+doi = {10.1145/3597926.3598147},
+abstract = {Modern software applications rely heavily on the usage of libraries, which provide reusable functionality, to accelerate the development process. As libraries evolve and release new versions, the software systems that depend on those libraries (the clients) should update their dependencies to use these new versions as the new release could, for example, include critical fixes for security vulnerabilities. However, updating is not always a smooth process, as it can result in software failures in the clients if the new version includes breaking changes. Yet, there is little research on how these breaking changes impact the client projects in the wild. To identify if changes between two library versions cause breaking changes at the client end, we perform an empirical study on Java projects built using Maven. For the analysis, we used 18,415 Maven artifacts, which declared 142,355 direct dependencies, of which 71.60\% were not up-to-date. We updated these dependencies and found that 11.58\% of the dependency updates contain breaking changes that impact the client. We further analyzed these changes in the library which impact the client projects and examine if libraries have adhered to the semantic versioning scheme when introducing breaking changes in their releases. Our results show that changes in transitive dependencies were a major factor in introducing breaking changes during dependency updates and almost half of the detected client impacting breaking changes violate the semantic versioning scheme by introducing breaking changes in non-Major updates.},
+booktitle = {Proceedings of the 32nd ACM SIGSOFT International Symposium on Software Testing and Analysis},
+pages = {1433–1444},
+numpages = {12},
+keywords = {software libraries, software evolution, software dependency, breaking changes},
+location = {Seattle, WA, USA},
+series = {ISSTA 2023}
+}
+
+@article{DependedOnYou,
+author = {Venturini, Daniel and Cogo, Filipe Roseiro and Polato, Ivanilton and Gerosa, Marco A. and Wiese, Igor Scaliante},
+title = {I Depended on You and You Broke Me: An Empirical Study of Manifesting Breaking Changes in Client Packages},
+year = {2023},
+issue_date = {July 2023},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {32},
+number = {4},
+issn = {1049-331X},
+url = {https://doi.org/10.1145/3576037},
+doi = {10.1145/3576037},
+abstract = {Complex software systems have a network of dependencies. Developers often configure package managers (e.g., npm) to automatically update dependencies with each publication of new releases containing bug fixes and new features. When a dependency release introduces backward-incompatible changes, commonly known as breaking changes, dependent packages may not build anymore. This may indirectly impact downstream packages, but the impact of breaking changes and how dependent packages recover from these breaking changes remain unclear. To close this gap, we investigated the manifestation of breaking changes in the npm ecosystem, focusing on cases where packages’ builds are impacted by breaking changes from their dependencies. We measured the extent to which breaking changes affect dependent packages. Our analyses show that around 12\% of the dependent packages and 14\% of their releases were impacted by a breaking change during updates of non-major releases of their dependencies. We observed that, from all of the manifesting breaking changes, 44\% were introduced in both minor and patch releases, which in principle should be backward compatible. Clients recovered themselves from these breaking changes in half of the cases, most frequently by upgrading or downgrading the provider’s version without changing the versioning configuration in the package manager. We expect that these results help developers understand the potential impact of such changes and recover from them.},
+journal = {ACM Trans. Softw. Eng. Methodol.},
+month = may,
+articleno = {94},
+numpages = {26},
+keywords = {change impact, dependency management, npm, Semantic Version, Breaking changes}
+}
+
+@inproceedings{10.1145/3338906.3338940,
+author = {M\o{}ller, Anders and Torp, Martin Toldam},
+title = {Model-based testing of breaking changes in Node.js libraries},
+year = {2019},
+isbn = {9781450355728},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3338906.3338940},
+doi = {10.1145/3338906.3338940},
+abstract = {Semantic versioning is widely used by library developers to indicate whether updates contain changes that may break existing clients. Especially for dynamic languages like JavaScript, using semantic versioning correctly is known to be difficult, which often causes program failures and makes client developers reluctant to switch to new library versions. The concept of type regression testing has recently been introduced as an automated mechanism to assist the JavaScript library developers. That mechanism is effective for detecting breaking changes in widely used libraries, but it suffers from scalability limitations that make it slow and also less useful for libraries that do not have many available clients. This paper presents a model-based variant of type regression testing. Instead of comparing API models of a library before and after an update, it finds breaking changes by automatically generating tests from a reusable API model. Experiments show that this new approach significantly improves scalability: it runs faster, and it can find breaking changes in more libraries.},
+booktitle = {Proceedings of the 2019 27th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
+pages = {409–419},
+numpages = {11},
+keywords = {JavaScript, semantic versioning},
+location = {Tallinn, Estonia},
+series = {ESEC/FSE 2019}
+}
+
