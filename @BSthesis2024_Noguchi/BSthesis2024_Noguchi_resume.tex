@@ -3,10 +3,22 @@
 %
 \documentclass[twocolumn]{jarticle} % 2段組のスタイルを用いている
 
+
+\usepackage{url}	% \url{}コマンド用．URLを表示する際に便利
+\usepackage{xcolor} 	% 色を扱うためのパッケージ
+\usepackage{listings}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{jvlisting}
 \usepackage{wuse_resume}
 \usepackage{url}	% \url{}コマンド用．URLを表示する際に便利
 %\usepackage[dvipdfmx]{graphicx}  % ←graphicx.styを用いてEPSを取り込む場合有効にする
 			% 他のパッケージ・スタイルを使う場合には適宜追加
+\newcommand{\RQone}{コーディングパターンとして抽出すべき基準はどこなのか}
+\newcommand{\RQtwo}{抽出したコーディングパターンはプロジェクトでどの程度使用されているのか}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -14,20 +26,20 @@
 %% タイトル，学生番号，氏名などを設定する
 %%
 
-\タイトル{p\LaTeX によるレジュメの作成}
+\タイトル{プロジェクト特有のコーディングパターン収集方法の定量的評価}
 \研究室{ソーシャルソフトウェア工学}
-\学生番号{60266000}
-\氏名{伊原 彰紀}
+\学生番号{60266227}
+\氏名{野口 朋弥}
 
 \概要{%
-この文章は，和歌山大学システム工学部システム工学科社会情報学メジャーの卒業研究発表会に
-おいて配布されるレジュメをp\LaTeX を用いて作成するための方法を記述したものである．
-この文章もまた，統一されたレジュメの体裁に沿って作成されており，レジュメ作成の際の参考にされたい．
+ソフトウェア開発において，開発効率の向上を目指して深層学習や正規表現などを利用したソースコードの自動生成の手法が多数提案されている．その多くは，多数のプロジェクトを学習することにより特定のプログラミング言語における汎用的なソースコードが生成される．しかし，個別プロジェクトが定める規約やドメインによって必ずしも汎用的なソースコードの実装が適切とは限らない．従来研究では個別プロジェクトに特化したコーディングパターンを抽出する手法が提案されているが，実装パターンとして記録する基準は十分に議論されていないため，基準によって膨大なパターン数が生成されることもある．本研究では，個別プロジェクトに特化したコーディングパターンの抽出し，有用なパターンを選定する基準を定量的に評価することで，課題の解決を目指す．
 }
 
-\キーワード{レジュメ}
-\キーワード{和歌山大学システム工学部}
-\キーワード{卒業論文}
+\キーワード{Python}
+\キーワード{コーディングパターン}
+\キーワード{オープンソースソフトウェア}
+\キーワード{プログラム解析}
+\キーワード{静的解析}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -43,209 +55,124 @@
 %% 本文 - ここから
 %%
 
-\section{レジュメ}
+\section{はじめに}
+ソフトウェア開発において，開発効率の向上を目指して深層学習や正規表現などを利用したソースコードの自動生成の手法が多数提案されている\cite{smith}．その多くは，GitHub\footnote{GitHub:~\url{https://github.com}}やGerritGerrit\footnote{Gerrit:~\url{https://www.gerritcodereview.com}}などのオープンソースプラットフォームで公開されている大規模なプロジェクトの開発履歴を学習データとして利用している．これらの手法は，多数のプロジェクトから関数・クラスの実装方法や，APIの使用方法，エラーハンドリングなどの特徴を学習することで，特定のプログラミング言語における汎用的なソースコードの生成を実現している．
 
-レジュメは，A4用紙2枚を上限とし，卒業論文提出時に同時に提出することに
-なっている\footnote{平成15年度より，レジュメのスタイルは学科である程度統一されることになった．}．
-レジュメに記述しなければならないのは，本文に加えて次の各項目である．
+しかし，個別プロジェクトが定める規約やドメインによって，必ずしも汎用的なソースコードの実装が適切とは限らない．例えば，金融システムや医療システムといった重要インフラでは，セキュリティ要件や法的規制が厳格であり，独自のアーキテクチャ設計が不可欠となっている．また，複数人で開発を行う際のコーディング規約もプロジェクトごとに異なることがあるため，汎用的な生成手法では，ドメイン固有の要件を満たすソースコードを適切に生成できないことが多い．
 
+Uedaらは，単一のプロジェクトの開発履歴から頻出する修正方法を抽象化することで，コーディングパターンを特定した\cite{devreplay}．しかし，特定したコーディングパターンがプロジェクトの修正方法を反映しているかを十分に検証していない．その結果，従来手法では不要なパターンが大量に生成される，または必要なパターンを取りこぼしているという課題がある．本研究ではこれらの課題を解決するために，個別プロジェクトに特化したコーディングパターンを抽出する手法を提案する．それをもとに，取得した修正方法から，有用なコーディングパターンを選別する評価基準の確立を目指す．
+具体的には，2つのResearch Questions（RQ）に回答する．
 \begin{itemize}
-  \item タイトル
-  \item 所属研究室
-  \item 学生番号
-  \item 氏名
-  \item 概要
-  \item キーワード(5語程度)
-  \item 参考文献
+    \item RQ1: \RQone
+    \item RQ2: \RQtwo
 \end{itemize}
+RQ1では，プロジェクト内に存在する実装方法をコーディングパターンとして抽出するための条件を明確にする．これを実現するために，従来手法と提案手法を比較し，その違いを分析する．
+RQ2では，RQ1にて抽出したコーディングパターンが生存している期間を分析することで，プロジェクトにとって有用なコーディングパターンが抽出できたのかを評価・議論する．
 
-本フォーマットでは，2ページという限られた領域を有効に利用するために，2段組のレイアウトを採用して
-いる．
-
-本レジュメフォーマットは，
-\begin{itemize}
-  \item {\tt wuse\_resume.sty}
-  \item {\tt resume\_sample.tex}
-\end{itemize}
-の2つのファイルから構成される．
-{\tt wuse\_resume.sty}ファイルは，\TeX を用いてレジュメを作成する際に，統一的なスタイルを
-与える
-\LaTeX のスタイルファイルである．
-{\tt resume\_sample.tex}ファイルは，このスタイルファイルを利用してレイアウトした文書の例であ
-る．
-
-以下では，本スタイルファイルを利用するための方法，および2段組のレイアウトを効果的に使うための手
-法を解説する．
-なお，本スタイルファイルの姉妹版として，
-卒業論文用スタイルファイル\cite{wusethesis}
-も用意しているので参考にされたい．
-\TeX や\LaTeX についての情報は，書籍\cite{latex_j,latexcomp,latex2e}や
-\TeX Wiki\footnote{\url{https://texwiki.texjp.org/}}が詳しい．
-
-\section{タイトル，氏名，概要など}
-
-タイトルや氏名などは，それぞれ``\verb|\タイトル|''や``\verb|\氏名|''コマンドを利用して指
-定する．
-この他に，
-  所属研究室(\verb|\研究室|)，
-  学生番号(\verb|\学生番号|)，
-  概要(\verb|\概要|)，
-  キーワード(\verb|\キーワード|)
-を指定するためのコマンドが用意されている．
-これらの情報は，\verb|\maketitle|によって1ページ目上部中央に出力される．
-
-\section{図，表}\label{chap:fig-tab-exp}
-
-論文/レジュメでは，図，表などを効果的に使用する．
-
-\subsection{図}
-
-{\tt figure}環境を利用することによって図にキャプション(\verb|\caption|)を付けることができ
-る．
-図には通し番号が付けられ，キャプションに\verb|\label|を設定しておくと，
-``図\ref{fig:sample}''のように\verb|\ref|によって図を番号で参照することができる．
-図\ref{fig:sample}に{\tt figure}環境を用いた記述例を示す．
-なお，図のキャプションは，図の下部に付けるのが一般的である．
-
-\begin{figure}[t]
-  \centering
-  %% EPS形式の図を入れる場合には，以下のminipageを \includegraphics{hoge.eps}
-  %% などに置き換える．
-  \begin{minipage}{0.45\textwidth}
-    \begin{verbatim}
-	  \begin{figure}
-	    \centering
-	    図(\includegraphics{hoge.eps}など)
-	    \caption{figure環境}\label{figenv}
-	  \end{figure}
-    \end{verbatim}
-  \end{minipage}
-  %% ここまで(置き換える範囲)
-  \caption{図の例}\label{fig:sample}
-\end{figure}
-
-\verb|includegraphics|を用いてPDF形式/PNG形式/JPEG形式/EPS形式等の図を文章の中に取り込むことができる．
-この場合には，\verb|\begin{document}|の前に\verb|\usepackage[dvipdfmx]{graphicx}|を追加する．
-
-\subsection{表}
-
-{\tt table}環境を利用することによって図と同じように，キャプションをつけたり，ラベルにより参照したり
-することができる．
-なお，表のキャプションは，表の上部に付けるのが一般的である．
-
-\subsection{横長の図・表}
-
-2段組の文書を作成していて，1段でレイアウトしたい横長の図や表を入れるためには，
-\verb|figure*|や\verb|table*|環境を利用する．
-表\ref{tab:long_sample}に横長の表の例を示す．
-
-\begin{table*}
-  \caption{横長の表}\label{tab:long_sample}
-  \centering
-  \begin{tabular}{lrrrr}
-  \hline
-  \multicolumn{1}{c}{条件} & \multicolumn{1}{c}{その1} & \multicolumn{1}{c}{その2} & \multicolumn{1}{c}{その3} & \multicolumn{1}{c}{その4}\\ 
-  \hline
-  条件1 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979\\
-  条件2 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979\\
-  条件3 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979\\
-  \hline
-  \end{tabular}
-\end{table*}
-
-\section{参考文献}
-
-レジュメには，参考文献も含める．
-ここでは，一般的な\verb|thebibliography|環境を利用している．
-
-\section{質問等}
-
-このレジュメ体裁(p\LaTeX 版)に関する質問は，
-メールにて，\verb|fukuyasu@wakayama-u.ac.jp|まで．
-
-\section{おためし}
-
-\subsection{箇条書}
-
-\begin{itemize}
-  \item 普通の箇条書1
-  \item 普通の箇条書2
-  \item 普通の箇条書3
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-\end{itemize}
-
-\subsection{番号付き箇条書}
-
-\begin{enumerate}
-  \item 普通の箇条書1
-  \item 普通の箇条書2
-  \item 普通の箇条書3
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-\end{enumerate}
-
+\section{コーディングパターン候補生成}
+本研究では，従来手法を踏襲し修正方法を表したコーディングパターンを抽出するために，コーディングパターンになり得る候補を生成する．候補の中から，プロジェクトにとって有用なコーディングパターンを抽出する手法は，RQ1で議論する．
+コーディングパターン候補は以下の3つのステップで生成する．
 \begin{description}
-  \item[hoge] 普通の箇条書1
-  \item[foo] 普通の箇条書2
-  \item[var] 普通の箇条書3
-  \item[長い箇条書のタイトル] 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-  \item[長い箇条書のタイトル] 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
+    \item[変更履歴の取得:] プロジェクトの変更履歴を取得する．
+    \item[前処理:] 変更履歴から，修正前後のソースコードを抽出し，比較可能な形に整える． 
+    \item[コーディングパターン候補の生成:]修正前後のソースコードを比較することで，修正方法から想定されるコーディングパターン候補を生成する． 
 \end{description}
 
-\subsubsection{subsubsectionのタイトル}
+\begin{table}[t]
+    \centering
+        \caption{条件ごとにパターンを抽出した結果}
+        \label{table:created_pattern}
+        \scalebox{0.63}{
+        \begin{tabular}{r|rrr|r|p{2cm}|p{4.5cm}}
+            \hline \hline
+                 \multirow{2}{*}{id} & \multicolumn{3}{c|}{順位} & \multirow{2}{*}{\begin{tabular}{c} 出現\\回数 \end{tabular}} & \multirow{2}{*}{説明} & \multirow{2}{*}{パターン}\\ \cline{2-4}
+                
+                & 条件なし & 従来 & 提案 &  &\\ 
+            \hline
+                1 & 4,068     & 1   & 1  & 2,504  & 画像メタデータをオブジェクトとして渡すように変更 & 
+                \colorbox{lightgray!50}{\texttt{VAR\_1}} \colorbox{lightgray!50}{\texttt{=}} \colorbox{lightgray!50}{\texttt{- \{}} \colorbox{lightgray!50}{\texttt{+ objects}} 
+        \newline
+        \colorbox{lightgray!50}{\texttt{+ .}} \colorbox{lightgray!50}{\texttt{+ ImageMeta}} \colorbox{lightgray!50}{\texttt{+ ,}} 
+        \newline
+        \colorbox{lightgray!50}{\texttt{+ from\_dict}} \colorbox{lightgray!50}{\texttt{+ (}} \colorbox{lightgray!50}{\texttt{+ self}} 
+        \newline
+        \colorbox{lightgray!50}{\texttt{+ .}} \colorbox{lightgray!50}{\texttt{+ test\_VAR\_1}} \colorbox{lightgray!50}{\texttt{+ )}} 
+        \\
+        \hline
+                2 & 26,738    & -   & 2  & 1,067  & デコレータの名前・引数の変更 &
+                \colorbox{lightgray!50}{\texttt{@}} \colorbox{lightgray!50}{\texttt{- exception}} \colorbox{lightgray!50}{\texttt{- .}} 
+        \newline
+        \colorbox{lightgray!50}{\texttt{wrap\_exception}}
+        \colorbox{lightgray!50}{\texttt{= (}} 
+        \newline
+        \colorbox{lightgray!50}{\texttt{- notifier}} 
+        \colorbox{lightgray!50}{\texttt{- =}} 
+        \newline
+        \colorbox{lightgray!50}{\texttt{- notifier}} \colorbox{lightgray!50}{\texttt{- ,}}
+        \newline
+        \colorbox{lightgray!50}{\texttt{- publisher\_id}} \colorbox{lightgray!50}{\texttt{- =}} 
+        \newline
+        \colorbox{lightgray!50}{\texttt{- publisher\_id}} \colorbox{lightgray!50}{\texttt{- (}} \colorbox{lightgray!50}{\texttt{- )}} \colorbox{lightgray!50}{\texttt{= )}}
+        \\ \hline
+                3 & 23,974    & 2   & -  & 1,311  & ログメッセージのローカライズ& 
+                \colorbox{lightgray!50}{\texttt{VAR\_1}} \colorbox{lightgray!50}{\texttt{.}} \colorbox{lightgray!50}{\texttt{VAR\_2}} \colorbox{lightgray!50}{\texttt{(}}
+        \newline
+        \colorbox{lightgray!50}{\texttt{- VAR\_3}} \colorbox{lightgray!50}{\texttt{+ VAR\_4}}
+        \colorbox{lightgray!50}{\texttt{(}}
+                \\
+             \hline
+        \end{tabular}
+        }
+\end{table}
 
-\paragraph{パラグラフ}
+\section{ケーススタディ}
+研究では，ケーススタディとして大規模なオープンソースプロジェクトであるOpenStackのコンポーネントの中で最大規模の Novaを対象とした．
+\subsection{RQ1: \RQone}
+本研究では，プロジェクト内に存在する実装方法をコーディングパターンとして抽出するための条件を明確にする．これを実現するために，従来手法と提案手法を比較し，その違いを分析する．
+従来手法で用いられていた条件と，提案手法で用いる条件は以下である．
+\textbf{従来手法}
+\begin{itemize}
+    \item 変更を示さないパターンを削除
+    \item 重複したパターンを削除
+\end{itemize}
+\textbf{提案手法}
+\begin{itemize}
+    \item 変更を示すトークンが1つも含まれないパターンを削除
+    \item 重複したパターンを削除
+    \item 不正な構造（括弧が閉じられていない，記号のみ）のパターンを削除
+\end{itemize}
+\subsubsection{結果・考察}
+表\ref{table:created_pattern}は，条件を適用しない場合，従来手法，および提案手法それぞれで抽出されたコーディンパターンの順位と，出現回数，抽出したパターンを示す．なお，表\ref{table:created_pattern}は，`\texttt{-}'は，その手法では，パターンとして抽出できなかったことを示す．
 
-\subparagraph{サブパラグラフ}
+RQ1の検証では，従来手法のパターン除外条件を再設計することにより，プロジェクト固有のコーディングパターンをより広範に収集することに成功した．具体的には，従来手法では除外されていた引数の追加・削除といった変更パターンの抽出を可能とし，同時に冗長なパターンの除去も実現した.
+\subsection{RQ2: \RQtwo}
+従来手法\cite{devreplay}では，抽出したコーディングパターンが時間経過に伴い使用頻度が変動することが明らかになっている．本手法では，コーディングパターンの持続性分析を通じて，効果的なパターン収集方法の確立を試みる．
+\subsubsection{結果・考察}
+RQ2の検証においては，コーディングパターンの持続性分析を通じて，効果的なパターン収集方法の確立を試みた．分析の結果，パターンは以下の3種類に分類された．
+\begin{itemize}
+    \item 分析期間を通じて変更前/変更後パターンが継続的に共存する持続共存型パターン（id\_1）
+    \item ある時点を境に，変更前パターンが完全に変更後パターンに置き換えられた移行完了型パターン（id\_2）
+    \item ある時点で，変更前/変更後パターンが出現しなくなった消失型パターン（id\_3）
+\end{itemize}
 
-文章の構造は，section, subsection, subsubsection, paragraph, subparagraph である．
+特に，移行完了型パターンは，プロジェクト独自に定義された関数への変更を含むケースが多く，多様なプログラミング言語を学習した深層学習モデルでは対応が困難な性質を持つことが明らかとなった．このことから，移行完了型パターンは本研究で定義するコーディングパターンとして特に重要な意義を持つと結論付けられる．
+\section{おわりに}
+本研究では，個別のプロジェクトに特化したコーディングパターンを収集するための条件を提案することで，自動修正に有用なパターンを抽出する方法を開発した．
 
+本研究で提案した手法は，プロジェクトの変更履歴から抽出したコーディングパターン候補に対して，有用性に基づく選別を行うことで，対象プロジェクト固有の修正パターンの発見を可能にした．この成果は，従来の汎用的な深層学習アプローチでは対応が困難であった修正パターンの抽出を実現するものであり，プロジェクト特化型の自動修正技術に活用できることが示唆される．
 %%
 %% 本文 - ここまで
 %%
-
+%-------------------
+%-------------------
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%
 %% 参考文献
 %%
 
-\begin{thebibliography}{9}	% {9}は文献に付ける通し番号の表示に必
-				% 要な幅を指定している．10件以上になる
-				% 場合には2桁の数({99}など)を指定する．
-\bibitem{wusethesis}
-  福安直樹，
-  卒業論文スタイルファイル（和歌山大学システム工学部用），
-  \url{https://github.com/fukuyasu/wuse_thesis}．
-
-\bibitem{tex}
-  Knuth, D.,
-  Remarks to Celebrate the Publication of Computers \& Typesetting,
-  TUGboat, Vol.7, No.2, pp.95--98, 1986.
-
-\bibitem{latex}
-  Lamport, L.,
-  文書処理システム\LaTeXe{}，
-  ピアソン・エデュケーション，1999，
-  \newblock{}阿瀬はる美 訳．
-
-\bibitem{latex_j}
-  奥村晴彦，\LaTeX{}入門 ---美文書作成のポイント---，技術評論社，1993．
-
-\bibitem{latex2e}
-  奥村晴彦，黒木裕介，[改定第6版] \LaTeXe~美文書作成入門，技術評論社，2013．
-
-\bibitem{latexcomp}
-  Goossens, M., Mittelbach, F. and Samarin, A.,
-  The \LaTeX{}コンパニオン，アスキー出版局，1998，
-  \newblock{}アスキー書籍編集部 監訳．
-
-\bibitem{texwiki}
-  \LaTeX 入門 --- \TeX{} Wiki，
-  \url{https://texwiki.texjp.org/?LaTeX%E5%85%A5%E9%96%80}，
-  2021年12月3日閲覧．
-\end{thebibliography}
+\bibliographystyle{junsrt}
+\bibliography{@BSthesis2024_Noguchi/BSthesis2024_Noguchi_thesis}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

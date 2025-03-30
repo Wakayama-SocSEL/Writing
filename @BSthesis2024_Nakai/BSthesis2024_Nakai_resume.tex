@@ -5,8 +5,26 @@
 
 \usepackage{wuse_resume}
 \usepackage{url}	% \url{}コマンド用．URLを表示する際に便利
+\usepackage{float}
 %\usepackage[dvipdfmx]{graphicx}  % ←graphicx.styを用いてEPSを取り込む場合有効にする
 			% 他のパッケージ・スタイルを使う場合には適宜追加
+
+\usepackage{otf}
+\usepackage{xcolor}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{float}
+%\usepackage{graphicx}  % ←graphicx.styを用いてEPSを取り込む場合有効にする
+			% 他のパッケージ・スタイルを使う場合には適宜追加
+
+\newcommand{\RQOne}{Good First Issue に貢献している開発者のうち，新参開発者の割合はどの程度か}
+\newcommand{\RQTwo}{熟練者は新参開発者をどの程度待っているか}
+\newcommand{\RQThree}{ゲーム理論に基づくと，熟練者はどの程度の期間新参開発者のために GFI の解決を待つのが適切か}
+
+\newcommand{\NIssue}{180,671}
+\newcommand{\NTrueIssue}{17,956}
+\newcommand{\NGFI}{478}
+\newcommand{\NNormal}{17,478}
+\newcommand{\NBOT}{5}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -14,20 +32,20 @@
 %% タイトル，学生番号，氏名などを設定する
 %%
 
-\タイトル{p\LaTeX によるレジュメの作成}
+\タイトル{新参開発者向けの障害対応のジレンマ\\〜熟練者が介入するタイミングの分析〜}
 \研究室{ソーシャルソフトウェア工学}
-\学生番号{60266000}
-\氏名{伊原 彰紀}
+\学生番号{60246191}
+\氏名{中井 大雄}
 
 \概要{%
-この文章は，和歌山大学システム工学部システム工学科社会情報学メジャーの卒業研究発表会に
-おいて配布されるレジュメをp\LaTeX を用いて作成するための方法を記述したものである．
-この文章もまた，統一されたレジュメの体裁に沿って作成されており，レジュメ作成の際の参考にされたい．
+本研究では,オープンソースソフトウェア（OSS）開発において，新参開発者の課題解決を熟練者がどれだけ待っているかを実証データとゲーム理論で得られる解を比較し，分析する．OSSプロジェクトは新参開発者を獲得するために，新参者が取り組みやすい課題に「Good First Issue（GFI）」ラベルを付与している．しかし，先行研究\cite{GFI}では熟練開発者がGFIを解決する事例が多いと指摘されている．本研究では,GFIに取り組む開発者の経験値を調査し，GFIが新参者に活用されているかを検証する．また，熟練者はどの程度の期間GFIを代行して解決するのを待っているかを調査し，介入時期をゲーム理論で分析する． 
 }
 
-\キーワード{レジュメ}
-\キーワード{和歌山大学システム工学部}
-\キーワード{卒業論文}
+\キーワード{オープンソースソフトウェア}
+\キーワード{GitHub}
+\キーワード{オンボーディング}
+\キーワード{Good First Issue}
+\キーワード{ゲーム理論}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -43,163 +61,117 @@
 %% 本文 - ここから
 %%
 
-\section{レジュメ}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 1章 はじめに
+\section{はじめに}\label{sec:intro}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-レジュメは，A4用紙2枚を上限とし，卒業論文提出時に同時に提出することに
-なっている\footnote{平成15年度より，レジュメのスタイルは学科である程度統一されることになった．}．
-レジュメに記述しなければならないのは，本文に加えて次の各項目である．
+OSSプロジェクトはボランティア開発者によって支えられており,安定した開発体制を維持するためには新参開発者の参加を促すことが重要である.そのため,メンタリング制度\cite{menter1}やポータルサイト\cite{portal}などを活用し,新参開発者の参入障壁を下げる取り組みが行われている.特にGitHubでは,新参開発者向けに「Good First Issue（GFI）」というラベルを付与することで,貢献しやすいIssueを明示している.しかし,先行研究\cite{GFI}では,GFIが経験豊富な開発者によって解決されるケースが指摘されており,その原因として適切でないIssueにGFIラベルが付与されていることが挙げられている.また,新参開発者が現れずにGFIが長期間放置される場合,熟練者が解決せざるを得ず,結果的に新参開発者の参入機会が失われる可能性がある.熟練者は介入のタイミングにジレンマを抱えており,本研究ではその適切なタイミングを明らかにすることを目的とする.
+
+本研究では，3つのResearch Questions（RQ）を設定し，開発者がGFIに介入する際のジレンマについて分析する．
 
 \begin{itemize}
-  \item タイトル
-  \item 所属研究室
-  \item 学生番号
-  \item 氏名
-  \item 概要
-  \item キーワード(5語程度)
-  \item 参考文献
+\item RQ1:\RQOne
+\item RQ2:\RQTwo
+\item RQ3:\RQThree
 \end{itemize}
 
-本フォーマットでは，2ページという限られた領域を有効に利用するために，2段組のレイアウトを採用して
-いる．
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 2章 データセット
+\section{データセット}\label{sec:rq1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-本レジュメフォーマットは，
-\begin{itemize}
-  \item {\tt wuse\_resume.sty}
-  \item {\tt resume\_sample.tex}
-\end{itemize}
-の2つのファイルから構成される．
-{\tt wuse\_resume.sty}ファイルは，\TeX を用いてレジュメを作成する際に，統一的なスタイルを
-与える
-\LaTeX のスタイルファイルである．
-{\tt resume\_sample.tex}ファイルは，このスタイルファイルを利用してレイアウトした文書の例であ
-る．
+GitHub上でGood First Issueを運用しており十分なデータが得られるプロジェクトとして，今回はmicrosoftのvscodeプロジェクトを対象とした．データ収集期間はvscodeプロジェクトが作成された2015年9月3日から2025年1月28日までとした．\NTrueIssue 件のIssueを取得し，GFI \NGFI 件，通常Issueは \NNormal 件に分類した．
 
-以下では，本スタイルファイルを利用するための方法，および2段組のレイアウトを効果的に使うための手
-法を解説する．
-なお，本スタイルファイルの姉妹版として，
-卒業論文用スタイルファイル\cite{wusethesis}
-も用意しているので参考にされたい．
-\TeX や\LaTeX についての情報は，書籍\cite{latex_j,latexcomp,latex2e}や
-\TeX Wiki\footnote{\url{https://texwiki.texjp.org/}}が詳しい．
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 3章 RQ1
+\section{RQ1:\RQOne}\label{sec:rq1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{タイトル，氏名，概要など}
+\subsection{手法}
+リポジトリのすべてのIssueについて解決者の経験値を取得し，GFIと通常Issueでは貢献した開発者の経験値分布にどのような違いがみられるかを箱ひげ図で比較する．また，2つの分布に有意な差がみられるかをマンホイットニーのU検定を用いて分析する.
 
-タイトルや氏名などは，それぞれ``\verb|\タイトル|''や``\verb|\氏名|''コマンドを利用して指
-定する．
-この他に，
-  所属研究室(\verb|\研究室|)，
-  学生番号(\verb|\学生番号|)，
-  概要(\verb|\概要|)，
-  キーワード(\verb|\キーワード|)
-を指定するためのコマンドが用意されている．
-これらの情報は，\verb|\maketitle|によって1ページ目上部中央に出力される．
+\subsection{結果}
+結果を図1に示す．GFIと通常Issueに有意差はないと帰無仮説を立てたとき，マンホイットニーのU検定を行うとp値は0.00000であった．また，効果量は-0.668であった．このことから，2つの分布に有意な差があるといえる．
 
-\section{図，表}\label{chap:fig-tab-exp}
-
-論文/レジュメでは，図，表などを効果的に使用する．
-
-\subsection{図}
-
-{\tt figure}環境を利用することによって図にキャプション(\verb|\caption|)を付けることができ
-る．
-図には通し番号が付けられ，キャプションに\verb|\label|を設定しておくと，
-``図\ref{fig:sample}''のように\verb|\ref|によって図を番号で参照することができる．
-図\ref{fig:sample}に{\tt figure}環境を用いた記述例を示す．
-なお，図のキャプションは，図の下部に付けるのが一般的である．
-
-\begin{figure}[t]
-  \centering
-  %% EPS形式の図を入れる場合には，以下のminipageを \includegraphics{hoge.eps}
-  %% などに置き換える．
-  \begin{minipage}{0.45\textwidth}
-    \begin{verbatim}
-	  \begin{figure}
-	    \centering
-	    図(\includegraphics{hoge.eps}など)
-	    \caption{figure環境}\label{figenv}
-	  \end{figure}
-    \end{verbatim}
-  \end{minipage}
-  %% ここまで(置き換える範囲)
-  \caption{図の例}\label{fig:sample}
+%-------------------
+\begin{figure}[H]
+\centerline{\includegraphics[width=0.9\linewidth]{@BSthesis2024_Nakai/BSthesis2024_Nakai_fig/2025-02-03_11h12_00.png}}
+\caption{経験値の箱ひげ図}
+\label{fig:milestone}
 \end{figure}
+%-------------------
 
-\verb|includegraphics|を用いてPDF形式/PNG形式/JPEG形式/EPS形式等の図を文章の中に取り込むことができる．
-この場合には，\verb|\begin{document}|の前に\verb|\usepackage[dvipdfmx]{graphicx}|を追加する．
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 4章 RQ2
+\section{RQ2:\RQTwo}\label{sec:rq2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{表}
+\subsection{手法}
+RQ1と同様のデータセットを用いて，Issueの開放期間とIssueを解決した開発者の経験値の関係を散布図で表現し，GFIと通常Issueでどのような違いがみられるかを分析する．
 
-{\tt table}環境を利用することによって図と同じように，キャプションをつけたり，ラベルにより参照したり
-することができる．
-なお，表のキャプションは，表の上部に付けるのが一般的である．
+\subsection{結果}
+結果を図２に示す．
 
-\subsection{横長の図・表}
+%-------------------
+\begin{figure}[H]
+\centerline{\includegraphics[width=0.9\linewidth]{@BSthesis2024_Nakai/BSthesis2024_Nakai_fig/fhex_blue.png}}
+\caption{Issueの開放期間とIssueを解決した開発者の経験値の散布図(GFI)}
+\label{fig:milestone}
+\end{figure}
+%-------------------
 
-2段組の文書を作成していて，1段でレイアウトしたい横長の図や表を入れるためには，
-\verb|figure*|や\verb|table*|環境を利用する．
-表\ref{tab:long_sample}に横長の表の例を示す．
+%-------------------
+\begin{figure}[H]
+\centerline{\includegraphics[width=0.9\linewidth]{@BSthesis2024_Nakai/BSthesis2024_Nakai_fig/fhex_red.png}}
+\caption{Issueの開放期間とIssueを解決した開発者の経験値の散布図(通常Issue)}
+\label{fig:milestone}
+\end{figure}
+%-------------------
 
-\begin{table*}
-  \caption{横長の表}\label{tab:long_sample}
-  \centering
-  \begin{tabular}{lrrrr}
-  \hline
-  \multicolumn{1}{c}{条件} & \multicolumn{1}{c}{その1} & \multicolumn{1}{c}{その2} & \multicolumn{1}{c}{その3} & \multicolumn{1}{c}{その4}\\ 
-  \hline
-  条件1 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979\\
-  条件2 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979\\
-  条件3 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979\\
-  \hline
-  \end{tabular}
-\end{table*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 5章 RQ3
+\section{RQ3:\RQThree}\label{sec:rq3}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{参考文献}
+\subsection{手法}
+ゲーム理論を用いて新参開発者，熟練者の貢献へのジレンマを定式化する．
 
-レジュメには，参考文献も含める．
-ここでは，一般的な\verb|thebibliography|環境を利用している．
+\subsection{結果}
+%-------------------
+\begin{figure}[H]
+\centerline{\includegraphics[width=0.9\linewidth]{@BSthesis2024_Nakai/BSthesis2024_Nakai_fig/ritoku.png}}
+\caption{新参開発者A,熟練者Bの戦略と効用}
+\label{fig:milestone}
+\end{figure}
+%-------------------
 
-\section{質問等}
+期待効用値について考える．Aが貢献する確率を$p$, Bが貢献する確率を$q$とすると，両者の得る期待効用値は以下のように計算できる．
 
-このレジュメ体裁(p\LaTeX 版)に関する質問は，
-メールにて，\verb|fukuyasu@wakayama-u.ac.jp|まで．
+\textbf{新参開発者Aの期待効用値}
 
-\section{おためし}
+$U_A = p(V_A -c_A) + (1 - p)V_Aq + 0*(1-p)(1-q)$
 
-\subsection{箇条書}
+\textbf{熟練者Bの期待効用値}
 
-\begin{itemize}
-  \item 普通の箇条書1
-  \item 普通の箇条書2
-  \item 普通の箇条書3
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-\end{itemize}
+$U_B = q(V_B -c_B) + (1 - q)V_Ap + 0*(1-p)(1-q)$
+\\
+$U_A =U_B$となるような均衡条件で解くと，p, qの均衡戦略を求めることができる．
 
-\subsection{番号付き箇条書}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 6章 おわりに
+\section{おわりに}\label{sec:conclusion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{enumerate}
-  \item 普通の箇条書1
-  \item 普通の箇条書2
-  \item 普通の箇条書3
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-\end{enumerate}
+本研究では，オープンソースソフトウェア（OSS）開発において，新参開発者の課題解決を熟練者がどれだけ待っているかを分析するため，3つのRQを設定して調査を行った．
 
-\begin{description}
-  \item[hoge] 普通の箇条書1
-  \item[foo] 普通の箇条書2
-  \item[var] 普通の箇条書3
-  \item[長い箇条書のタイトル] 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-  \item[長い箇条書のタイトル] 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-\end{description}
+RQ1では多くのGFIが新参開発者によって解決される一方で，熟練者によってGFIが解決されるケースも見られた．新参貢献者が貢献を申し出るまでの期間が長く，熟練者がこれを待ちきれなかったことが原因だと考えた．
 
-\subsubsection{subsubsectionのタイトル}
+RQ2では，貢献までの期間が通常Issueに比べてGFIのほうが長いことが分かった．これは，通常Issueの中に早期解決が容易なものが多く含まれていたことが原因だと考えた．また，新参開発者に注目すると通常IssueよりもGFIのほうが解決に時間を要していることも分かった．新参開発者どうしの譲り合いがこのような状況を引き起こすのではないかと考えた．
 
-\paragraph{パラグラフ}
+RQ3ではゲーム理論を用いた分析で熟練者が抱える介入へのジレンマを定式化し，熟練者が解決するGFIの解決までの期間にばらつきがある理由を明らかにした．
 
-\subparagraph{サブパラグラフ}
-
-文章の構造は，section, subsection, subsubsection, paragraph, subparagraph である．
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%
 %% 本文 - ここまで
@@ -211,40 +183,21 @@
 %% 参考文献
 %%
 
-\begin{thebibliography}{9}	% {9}は文献に付ける通し番号の表示に必
-				% 要な幅を指定している．10件以上になる
-				% 場合には2桁の数({99}など)を指定する．
-\bibitem{wusethesis}
-  福安直樹，
-  卒業論文スタイルファイル（和歌山大学システム工学部用），
-  \url{https://github.com/fukuyasu/wuse_thesis}．
+\begin{thebibliography}{99}
 
-\bibitem{tex}
-  Knuth, D.,
-  Remarks to Celebrate the Publication of Computers \& Typesetting,
-  TUGboat, Vol.7, No.2, pp.95--98, 1986.
+\bibitem{GFI}
+    堀口 日向. OSSプロジェクトへのオンボーディング支援のためのGood First Issue自動分類 2022.
 
-\bibitem{latex}
-  Lamport, L.,
-  文書処理システム\LaTeXe{}，
-  ピアソン・エデュケーション，1999，
-  \newblock{}阿瀬はる美 訳．
+\bibitem{menter1}
+Fabian Fagerholm, Alejandro Guinea, Jay Borenstein, and J¨urgen M¨unch. Onboarding in
+Open Source Projects. IEEE Software, Vol. 31, No. 6, pp. 54–61, 2014.
 
-\bibitem{latex_j}
-  奥村晴彦，\LaTeX{}入門 ---美文書作成のポイント---，技術評論社，1993．
+\bibitem{portal}
+ Igor Steinmacher, Tayana Uchoa Conte, Christoph Treude, and Marco Aur´elio Gerosa.
+Overcoming Open Source Project Entry Barriers with a Portal for Newcomers. In In
+Proceedings of the 38th International Conference on Software Engineering (ICSE 2016),
+pp. 273–284, 2016.
 
-\bibitem{latex2e}
-  奥村晴彦，黒木裕介，[改定第6版] \LaTeXe~美文書作成入門，技術評論社，2013．
-
-\bibitem{latexcomp}
-  Goossens, M., Mittelbach, F. and Samarin, A.,
-  The \LaTeX{}コンパニオン，アスキー出版局，1998，
-  \newblock{}アスキー書籍編集部 監訳．
-
-\bibitem{texwiki}
-  \LaTeX 入門 --- \TeX{} Wiki，
-  \url{https://texwiki.texjp.org/?LaTeX%E5%85%A5%E9%96%80}，
-  2021年12月3日閲覧．
 \end{thebibliography}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
