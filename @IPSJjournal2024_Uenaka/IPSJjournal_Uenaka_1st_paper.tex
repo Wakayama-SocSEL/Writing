@@ -1,9 +1,7 @@
 \documentclass[submit]{ipsj}
 %\documentclass{ipsj}
 
-%\usepackage{graphicx}
-%\usepackage[dvipdfmx]{graphicx,color}
-%\usepackage[dvips]{graphicx}
+
 \usepackage[dvipdfmx]{graphicx}
 \usepackage{latexsym}
 \usepackage{url}
@@ -11,9 +9,13 @@
 \usepackage{multirow}
 \usepackage{xcolor}
 \usepackage{colortbl}
-
+\usepackage{amsmath}
 
 \newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
+\newcommand{\change}[1]{\colorbox{green}{{\bf CHANGE}:}{\color{blue} {\textbf{[#1]}}}}
+\newcommand{\new}[1]{\colorbox{cyan}{{\bf NEW}:}{\color{black} {\textbf{[#1]}}}}
+\newcommand{\rqone}{従来手法の予測性能はリリースまでの期間内でどの程度変化するか？}
+\newcommand{\rqtwo}{開発状況に関する説明変数を用いることで，予測性能はリリースまでの期間によってどの程度変化するか？}
 
 %ここからソースコードの表示に関する設定
 \definecolor{darkgray}{rgb}{.4,.4,.4}
@@ -110,7 +112,7 @@ hogehoge
 \maketitle
 
 %%%%%%%%%%%%%%%%%%%%%%
-\chapter{はじめに}
+\section{はじめに}
 %%%%%%%%%%%%%%%%%%%%%%
 
 オープンソースソフトウェア (OSS : Open Source Software) は，ソースコードが無償で公開されているソフトウェアであり，利用，拡張，修正，再配布といった行為を誰でも行うことができる．OSS開発において，変更提案されたソースコードの可読性や欠陥の有無を評価するコードレビューの作業は，ソフトウェアの品質維持のために重要な役割を担っている~\cite{quality1}\cite{quality2}．特にOSSにおけるコードレビューでは，複数人のレビュアがソースコードをレビューし，ソースコードを実装した開発者と共にソースコード変更の妥当性について合意形成を図り，必要に応じて修正を繰り返す．
@@ -133,7 +135,7 @@ RQ2では，時系列で変化する特徴として，従来研究\cite{integrat
 以降，本論文では，\ref{sec:intro}章でOSS開発におけるコードレビュープロセスと従来研究について述べる．その後，\ref{sec:pre_analysis}章で事前分析の分析手法および結果を述べる．そして，\ref{sec:analysis_method}章でRQ1，RQ2の分析手法を述べ，\ref{sec:rq1}章でRQ1，\ref{sec:rq2}章でRQ2の結果および考察を述べる．そして，\ref{sec:disc}章で妥当性の脅威について述べ，\ref{sec:fig-tab-exp}章でまとめる．
 
 %%%%%%%%%%%%%%%%%%%%%%
-\chapter{ソフトウェア開発におけるコードレビュープロセス}\label{sec:intro}
+\section{ソフトウェア開発におけるコードレビュープロセス}\label{sec:intro}
 %%%%%%%%%%%%%%%%%%%%%%
 
 \section{コードレビュープロセス}
@@ -175,7 +177,7 @@ Kononenko\cite{release_merge}らは，コードレビューにかかる時間や
 
 
 %%%%%%%%%%%%%%%%%%%%%%
-\chapter{事前分析：リリースまでの期間に応じた優先されるチケットの変化の有無の調査}\label{sec:pre_analysis}
+\section{事前分析：リリースまでの期間に応じた優先されるチケットの変化の有無の調査}\label{sec:pre_analysis}
 %%%%%%%%%%%%%%%%%%%%%%
 
 \section{概要}
@@ -359,7 +361,7 @@ Kononenko\cite{release_merge}らは，コードレビューにかかる時間や
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{開発状況に基づく優先的にレビュー/マージされるコードレビューチケットの特定手法と評価方法}\label{sec:analysis_method}
+\section{開発状況に基づく優先的にレビュー/マージされるコードレビューチケットの特定手法と評価方法}\label{sec:analysis_method}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 RQ1では，従来手法と同様にチケットおよび開発者の特徴を説明変数とするモデル（ベースラインモデル）を構築し，リリースまでの期間内においてベースラインモデルの予測性能がどの程度変化するかを明らかにする．また，RQ2では，開発状況の特徴を追加で説明変数とするモデル（提案モデル）を構築し，開発状況に関する説明変数を用いることで，リリースまでの期間内で予測性能がどの程度変化するかを明らかにする．
@@ -439,45 +441,45 @@ RQ1では，従来手法と同様にチケットおよび開発者の特徴を�
 
 適合率は，式(\ref{precision})に示すように，レビューが開始された/マージされたとモデルが予測したチケットの中で，レビューが開始された/マージされたチケットの割合を表す．適合率は0から1の間で算出され，値が大きいほどモデルの予測の正確性が高いことを表す．
 
-%-----------------------
-\begin{equation}
- 適合率 = \frac{TP}{TP+FP} \label{precision}
-\end{equation}
-%-----------------------
-\vskip\baselineskip
+% %-----------------------
+% \begin{equation}
+%  適合率 = \frac{TP}{TP+FP} \label{precision}
+% \end{equation}
+% %-----------------------
+% \vskip\baselineskip
 
 再現率は，式(\ref{recall})に示すように，レビューが開始された/マージされたチケットの中で，レビューが開始された/マージされたとモデルが予測したチケットの割合を表す．再現率は0から1の間で算出され，値が大きいほどモデルの正例の網羅率が高いことを表す．
 
-%-----------------------
-\begin{equation}
- 再現率 = \frac{TP}{TP+FN} \label{recall}
-\end{equation}
-%-----------------------
-\vskip\baselineskip
+% %-----------------------
+% \begin{equation}
+%  再現率 = \frac{TP}{TP+FN} \label{recall}
+% \end{equation}
+% %-----------------------
+% \vskip\baselineskip
 
 特異度は，式(\ref{specificity})に示すように，レビューが開始されない/マージされないチケットの中で，レビューが開始されない/マージされないとモデルが予測したチケットの割合を表す．特異度は0から1の間で算出され，値が大きいほどモデルの負例の網羅率が高いことを表す．
 
 %-----------------------
 \begin{equation}
- 特異度 = \frac{TN}{TN+FP} \label{specificity}
+ \text{特異度} = \frac{TN}{TN+FP} \label{specificity}
 \end{equation}
 %-----------------------
 \vskip\baselineskip
 
 F値は，式(\ref{F1})に示すように，適合率と再現率の調和平均を表す．F値は0から1の間で算出され，値が大きいほどモデルの予測性能が高いことを表す．
 
-%-----------------------
-\begin{equation}
- F値 = 2 * \frac{適合率*再現率}{適合率+再現率} \label{F1}
-\end{equation}
-%-----------------------
+% %-----------------------
+% \begin{equation}
+%  F値 = 2 * \frac{適合率*再現率}{適合率+再現率} \label{F1}
+% \end{equation}
+% %-----------------------
 \vskip\baselineskip
 
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{RQ1：\rqone}\label{sec:rq1}
+\section{RQ1：\rqone}\label{sec:rq1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 RQ1では，従来手法と同様に，チケットおよび開発者の特徴を説明変数とするモデル（ベースラインモデル）を構築する．ベースラインモデルの予測性能を\ref{sec:kenshou}節の検証方法および\ref{sec:hyoka}節の評価方法に基づいて1日ごとに算出することで，従来手法の予測性能はリリースまでの期間内でどの程度変化するかを明らかにする．
 \ref{sec:rq1_result}節で予測結果を述べ，\ref{sec:rq1_kousatu1}節および\ref{sec:rq1_kousatu2}節で結果について考察し，\ref{sec:rq1_matome}節でまとめる．
@@ -511,7 +513,7 @@ RQ1では，従来手法と同様に，チケットおよび開発者の特徴�
 %--------------------
 
 %-----------------------
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{center}
     \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ1_result/review_Nova.pdf}
     \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ1_result/review_Neutron.pdf}
@@ -563,7 +565,7 @@ RQ1では，従来手法と同様に，チケットおよび開発者の特徴�
 %--------------------
 
 %-----------------------
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{minipage}{\textwidth}
 \vspace{0.08\textheight}
 \begin{center}
@@ -587,9 +589,9 @@ RQ1では，従来手法と同様に，チケットおよび開発者の特徴�
 
 %-----------------------
 \begin{itemize}
-  \item \textbf{回帰係数が有意に増加する（$b>0$，$P値<0.05$）：}リリースが近づくにつれてベースラインモデルの予測性能が向上することを示す
-  \item \textbf{回帰係数が有意に減少する（$b<0$，$P値<0.05$）：}リリースが近づくにつれてベースラインモデルの予測性能が低下することを示す
-  \item \textbf{回帰係数が有意に増加および減少しない（$P値>0.05$）：}リリース時期によってベースラインモデルの予測性能が変化しない（一定である）ことを示す
+  \item \textbf{回帰係数が有意に増加する（$b>0$，$P\text{値}<0.05$）：}リリースが近づくにつれてベースラインモデルの予測性能が向上することを示す
+  \item \textbf{回帰係数が有意に減少する（$b<0$，$P\text{値}<0.05$）：}リリースが近づくにつれてベースラインモデルの予測性能が低下することを示す
+  \item \textbf{回帰係数が有意に増加および減少しない（$P\text{値}>0.05$）：}リリース時期によってベースラインモデルの予測性能が変化しない（一定である）ことを示す
 \end{itemize}
 %-----------------------
 
@@ -804,7 +806,7 @@ RQ1では，従来手法と同様に，チケットおよび開発者の特徴�
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{RQ2：\rqtwo}\label{sec:rq2}
+\section{RQ2：\rqtwo}\label{sec:rq2}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 RQ2では，提案モデルとベースラインモデルの予測性能を比較し，開発状況に関する説明変数を用いることで，予測性能はリリースまでの期間によってどの程度変化するかを明らかにする．
 
@@ -893,16 +895,16 @@ RQ2では，提案モデルとベースラインモデルの予測性能を比�
 
 %-----------------------
 \clearpage
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{minipage}{\textwidth}
 \vspace{0.08\textheight}
 \begin{center}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova_review_Precision.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron_review_Precision.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder_review_Precision.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone_review_Precision.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift_review_Precision.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance_review_Precision.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova/Nova_review_Precision.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron/Neutron_review_Precision.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder/Cinder_review_Precision.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone/Keystone_review_Precision.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift/Swift_review_Precision.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance/Glance_review_Precision.pdf}
     \caption{レビュー予測モデルの適合率（上段左：Nova，上段右：Neutron，中段左：Cinder，\\ 中段右：Keystone，下段左：Swift，下段右：Glance）（赤：提案モデル，青：ベースラインモデル）}
     \label{fig:review_p}
 \end{center}
@@ -912,16 +914,16 @@ RQ2では，提案モデルとベースラインモデルの予測性能を比�
 %-----------------------
 
 %-----------------------
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{minipage}{\textwidth}
 \vspace{0.08\textheight}
 \begin{center}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova_review_Recall.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron_review_Recall.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder_review_Recall.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone_review_Recall.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift_review_Recall.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance_review_Recall.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova/Nova_review_Recall.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron/Neutron_review_Recall.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder/Cinder_review_Recall.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone/Keystone_review_Recall.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift/Swift_review_Recall.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance/Glance_review_Recall.pdf}
     \caption{レビュー予測モデルの再現率（上段左：Nova，上段右：Neutron，中段左：Cinder，\\ 中段右：Keystone，下段左：Swift，下段右：Glance）（赤：提案モデル，青：ベースラインモデル）}
     \label{fig:review_r}
 \end{center}
@@ -931,16 +933,16 @@ RQ2では，提案モデルとベースラインモデルの予測性能を比�
 %-----------------------
 
 %-----------------------
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{minipage}{\textwidth}
 \vspace{0.08\textheight}
 \begin{center}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova_review_Specificity.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron_review_Specificity.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder_review_Specificity.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone_review_Specificity.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift_review_Specificity.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance_review_Specificity.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova/Nova_review_Specificity.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron/Neutron_review_Specificity.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder/Cinder_review_Specificity.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone/Keystone_review_Specificity.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift/Swift_review_Specificity.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance/Glance_review_Specificity.pdf}
     \caption{レビュー予測モデルの特異度（上段左：Nova，上段右：Neutron，中段左：Cinder，\\ 中段右：Keystone，下段左：Swift，下段右：Glance）（赤：提案モデル，青：ベースラインモデル）}
     \label{fig:review_spec}
 \end{center}
@@ -950,14 +952,14 @@ RQ2では，提案モデルとベースラインモデルの予測性能を比�
 %-----------------------
 
 %-----------------------
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{center}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova_review_F1.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron_review_F1.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder_review_F1.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone_review_F1.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift_review_F1.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance_review_F1.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova/Nova_review_F1.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron/Neutron_review_F1.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder/Cinder_review_F1.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone/Keystone_review_F1.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift/Swift_review_F1.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance/Glance_review_F1.pdf}
     \caption{レビュー予測モデルのF値（上段左：Nova，上段右：Neutron，中段左：Cinder，\\ 中段右：Keystone，下段左：Swift，下段右：Glance）（赤：提案モデル，青：ベースラインモデル）}
     \label{fig:review_f}
 \end{center}
@@ -1049,16 +1051,16 @@ RQ2では，提案モデルとベースラインモデルの予測性能を比�
 
 %-----------------------
 \clearpage
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{minipage}{\textwidth}
 \vspace{0.08\textheight}
 \begin{center}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova_merge_Precision.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron_merge_Precision.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder_merge_Precision.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone_merge_Precision.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift_merge_Precision.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance_merge_Precision.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova/Nova_merge_Precision.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron/Neutron_merge_Precision.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder/Cinder_merge_Precision.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone/Keystone_merge_Precision.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift/Swift_merge_Precision.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance/Glance_merge_Precision.pdf}
     \caption{マージ予測モデルの適合率（上段左：Nova，上段右：Neutron，中段左：Cinder，\\ 中段右：Keystone，下段左：Swift，下段右：Glance）（赤：提案モデル，青：ベースラインモデル）}
     \label{fig:merge_p}
 \end{center}
@@ -1068,16 +1070,16 @@ RQ2では，提案モデルとベースラインモデルの予測性能を比�
 %-----------------------
 
 %-----------------------
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{minipage}{\textwidth}
 \vspace{0.08\textheight}
 \begin{center}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova_merge_Recall.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron_merge_Recall.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder_merge_Recall.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone_merge_Recall.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift_merge_Recall.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance_merge_Recall.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova/Nova_merge_Recall.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron/Neutron_merge_Recall.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder/Cinder_merge_Recall.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone/Keystone_merge_Recall.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift/Swift_merge_Recall.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance/Glance_merge_Recall.pdf}
     \caption{マージ予測モデルの再現率（上段左：Nova，上段右：Neutron，中段左：Cinder，\\ 中段右：Keystone，下段左：Swift，下段右：Glance）（赤：提案モデル，青：ベースラインモデル）}
     \label{fig:merge_r}
 \end{center}
@@ -1087,16 +1089,16 @@ RQ2では，提案モデルとベースラインモデルの予測性能を比�
 %-----------------------
 
 %-----------------------
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{minipage}{\textwidth}
 \vspace{0.08\textheight}
 \begin{center}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova_merge_Specificity.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron_merge_Specificity.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder_merge_Specificity.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone_merge_Specificity.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift_merge_Specificity.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance_merge_Specificity.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova/Nova_merge_Specificity.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron/Neutron_merge_Specificity.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder/Cinder_merge_Specificity.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone/Keystone_merge_Specificity.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift/Swift_merge_Specificity.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance/Glance_merge_Specificity.pdf}
     \caption{マージ予測モデルの特異度（上段左：Nova，上段右：Neutron，中段左：Cinder，\\ 中段右：Keystone，下段左：Swift，下段右：Glance）（赤：提案モデル，青：ベースラインモデル）}
     \label{fig:merge_spec}
 \end{center}
@@ -1106,14 +1108,14 @@ RQ2では，提案モデルとベースラインモデルの予測性能を比�
 %-----------------------
 
 %-----------------------
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{center}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova_merge_F1.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron_merge_F1.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder_merge_F1.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone_merge_F1.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift_merge_F1.pdf}
-    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance_merge_F1.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Nova/Nova_merge_F1.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Neutron/Neutron_merge_F1.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Cinder/Cinder_merge_F1.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Keystone/Keystone_merge_F1.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Swift/Swift_merge_F1.pdf}
+    \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_result/Glance/Glance_merge_F1.pdf}
     \caption{マージ予測モデルのF値（上段左：Nova，上段右：Neutron，中段左：Cinder，\\ 中段右：Keystone，下段左：Swift，下段右：Glance）（赤：提案モデル，青：ベースラインモデル）}
     \label{fig:merge_f}
 \end{center}
@@ -1182,7 +1184,7 @@ RQ2ではレビューが開始される/マージされるチケットの予測�
 
 
 %-----------------------
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{center}
     \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_kousatu/Neutron_review_num.pdf}
     \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_kousatu/Swift_review_num.pdf}
@@ -1194,7 +1196,7 @@ RQ2ではレビューが開始される/マージされるチケットの予測�
 %-----------------------
 
 %-----------------------
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{center}
     \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_kousatu/Neutron_ticket_num.pdf}
     \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_kousatu/Cinder_ticket_num.pdf}
@@ -1262,7 +1264,7 @@ RQ2ではレビューが開始される/マージされるチケットの予測�
 
 
 %-----------------------
-\begin{figure}[H]
+\begin{figure}[t]
 \begin{center}
     \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_kousatu/Nova_ticket_num.pdf}
     \includegraphics[width=0.495\textwidth]{Uenaka_fig/RQ2_kousatu/Swift_ticket_num_merge.pdf}
@@ -1274,7 +1276,7 @@ RQ2ではレビューが開始される/マージされるチケットの予測�
 
 
 %%%%%%%%%%%%%%%%%%%%%%
-\chapter{妥当性の脅威}\label{sec:disc}
+\section{妥当性の脅威}\label{sec:disc}
 %%%%%%%%%%%%%%%%%%%%%%
 
 \section{内的妥当性}
@@ -1287,7 +1289,7 @@ RQ2ではレビューが開始される/マージされるチケットの予測�
 
 
 %%%%%%%%%%%%%%%%%%%%%%
-\chapter{おわりに}\label{sec:fig-tab-exp}
+\section{おわりに}\label{sec:fig-tab-exp}
 %%%%%%%%%%%%%%%%%%%%%%
 本論文では，時期ごとにバージョン間で共通の優先基準が存在し，その基準に応じてチケットが優先される場合と優先されなくなる場合があると考え，リリースまでの期間に焦点を当てた研究を行った．従来手法と同様にチケットおよび開発者の特徴を説明変数とする予測モデルと，追加で開発状況を説明変数として用いる予測モデルの2種類のモデルを構築し，1日ごとに学習またはテストを行うことで，両モデルの予測性能を算出した．リリースまでの期間における予測性能の変化を分析することで，2つのリサーチクエスチョン (RQ) を検証した．
 
