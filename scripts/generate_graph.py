@@ -10,7 +10,7 @@ TARGET_FILES = [
     "test.tex",     
     "@IPSJ_SIGSE202511_Hashimoto/@IPSJ_SIGSE202511_Hashimoto",  
     "@IPSJ_SIGSE202511_Horio/@IPSJ_SIGSE202511_Horio",  
-    "@IPSJ_SIGSE202511_Noguchi/@IPSJ_SIGSE202511_NOguchi",
+    "@IPSJ_SIGSE202511_Noguchi/@IPSJ_SIGSE202511_Noguchi",
     "@IPSJ_SIGSE202511_Toyoshima/@IPSJ_SIGSE202511_Toyoshima"
 ] 
 DATA_FILE = "data/line_count_history.json"
