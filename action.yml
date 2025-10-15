@@ -6,6 +6,10 @@ runs:
     - name: Count LaTeX lines
       shell: bash
       run: |
-        total=$(find . -name "*.tex" -type f -exec wc -l {} + | awk '{s+=$1} END {print s}')
+        # カウントできなかった場合は0にする
+        total=$(find . -name "*.tex" -type f -exec wc -l {} + 2>/dev/null | awk '{s+=$1} END {print s}')
+        if [ -z "$total" ]; then
+          total=0
+        fi
         echo "LaTeX行数: $total"
         echo "LINES=$total" >> $GITHUB_ENV

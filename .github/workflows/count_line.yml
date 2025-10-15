@@ -1,9 +1,9 @@
-name: Count LaTeX lines
+name: Count LaTeX lines and update Google Sheets
 
 on:
   push:
-    branches: [ master ]
-  workflow_dispatch:
+    branches: [ main ]
+  workflow_dispatch:   # 手動実行も可能
 
 jobs:
   count:
@@ -11,23 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Count LaTeX lines safely
-        id: count_lines
-        run: |
-          # LaTeXファイルの行数をカウント
-          if lines=$(find . -name "*.tex" -type f -exec wc -l {} + 2>/dev/null | awk '{s+=$1} END {print s}'); then
-            # ファイルが存在しない場合 lines は空になるので0に
-            if [ -z "$lines" ]; then
-              lines=0
-            fi
-          else
-            lines=0
-          fi
-          echo "LaTeX行数: $lines"
-          echo "LINES=$lines" >> $GITHUB_ENV
+      # 自作アクションを呼び出す
+      - name: Count LaTeX lines
+        uses: Wakayama-SocSEL/Writing@master   # action.yml があるブランチ
 
+      # Google Sheets に送信
       - name: Update Google Sheets
-        uses: Wakayama-SocSEL/Writing@master
+        uses: gautamkrishnar/google-sheets-action@v1.1
         with:
           spreadsheetId: "1FUisJPN4DtvkgJq8kv_HE5eG1jJMhUnDyV05_cVJIZw"
           worksheetName: "lines"
