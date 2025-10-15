@@ -1,0 +1,22 @@
+name: Count LaTeX lines
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  count:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Count lines
+        run: |
+          total=$(find . -name "*.tex" -type f -exec wc -l {} + | awk '{s+=$1} END {print s}')
+          echo "LINES=$total" >> $GITHUB_ENV
+
+      - name: Update Google Sheets
+        uses: gautamkrishnar/google-sheets-action@v1.1
+        with:
+          spreadsheetId: "1FUisJPN4DtvkgJq8kv_HE5eG1jJMhUnDyV05_cVJIZw"
+          worksheetName: "lines"
+          credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
+          values: ${{ env.LINES }}
