@@ -23,3 +23,8 @@ jobs:
           worksheetName: "lines"
           credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
           values: '[["${{ env.LINES }}"]]'
+
+      - name: Debug
+        run: |
+          echo "LINES=${{ env.LINES }}"
+          ls -l
