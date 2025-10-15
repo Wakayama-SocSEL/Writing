@@ -37,7 +37,12 @@ jobs:
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'Graph: Update line count trend and data [skip ci]' # [skip ci]で無限ループを回避
+          # 1. プッシュ前にリモートの変更をフェッチし、リベースを試みる
+          sync: true  
+          # 2. それでも失敗した場合、強制プッシュ（上書き）を試みる
+          push_options: --force 
+          
+          commit_message: 'Graph: Update line count trend and data [skip ci]' 
           files: |
             data/line_count_history.json
             docs/line_count_graph.svg
