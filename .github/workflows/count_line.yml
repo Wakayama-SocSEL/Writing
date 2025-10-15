@@ -20,10 +20,9 @@ jobs:
         uses: Wakayama-SocSEL/Writing@master
         with:
           spreadsheetId: "1FUisJPN4DtvkgJq8kv_HE5eG1jJMhUnDyV05_cVJIZw"
-          range: "lines!A1"          # ← ここでセル範囲を指定
+          credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
+          range: "lines!A1"
           values: '[["${{ env.LINES }}"]]'
-        env:
-          GOOGLE_SHEET_API_KEY: ${{ secrets.GOOGLE_CREDENTIALS }}
 
       - name: Debug
         run: |
