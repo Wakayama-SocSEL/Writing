@@ -22,6 +22,10 @@ inputs:
   values:
     description: "Values to append"
     required: true
+  range:
+    description: "Cell range to write to"
+    required: false
+    default: "A1"
 
 runs:
   using: "composite"
