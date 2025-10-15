@@ -22,4 +22,4 @@ jobs:
           spreadsheetId: "1FUisJPN4DtvkgJq8kv_HE5eG1jJMhUnDyV05_cVJIZw"
           worksheetName: "lines"
           credentials: ${{ secrets.GOOGLE_CREDENTIALS }}
-          values: ${{ env.LINES }}
+          values: '[["${{ env.LINES }}"]]'
