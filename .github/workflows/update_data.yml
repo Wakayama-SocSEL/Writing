@@ -1,0 +1,43 @@
+name: Update Line Count Graph
+
+on:
+  # 1. 手動実行を許可（Actionsタブから「Run workflow」ボタンで実行可能）
+  workflow_dispatch:
+
+  # 2. プッシュ時に実行
+  push:
+    branches: 
+      - main  # <--- 監視したいブランチ名に変更してください (例: master, develop)
+
+jobs:
+  update_data_and_graph:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write # データのコミットに必須
+
+    steps:
+      - name: Checkout repository (Full history needed)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies (Matplotlib)
+        run: pip install matplotlib
+
+      - name: Run script to generate graph
+        # 統合スクリプトのパス
+        run: python scripts/generate_graph.py
+
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'Graph: Update line count trend and data [skip ci]' # [skip ci]で無限ループを回避
+          files: |
+            data/line_count_history.json
+            docs/line_count_graph.svg
