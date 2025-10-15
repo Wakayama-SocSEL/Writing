@@ -17,7 +17,7 @@ jobs:
 
       # Google Sheets に送信
       - name: Update Google Sheets
-        uses: gautamkrishnar/google-sheets-action@v1.1
+        uses: Wakayama-SocSEL/Writing@master
         with:
           spreadsheetId: "1FUisJPN4DtvkgJq8kv_HE5eG1jJMhUnDyV05_cVJIZw"
           worksheetName: "lines"

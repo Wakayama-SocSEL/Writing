@@ -1,15 +1,28 @@
 name: "Count LaTeX Lines"
 description: "Counts the number of lines in .tex files"
+
+inputs:
+  filename:
+    description: "The .tex file to count lines from"
+    required: true
+    default: "test.tex"
+  output_env:
+    description: "Name of the environment variable to store line count"
+    required: true
+    default: "LINES"
+
 runs:
   using: "composite"
   steps:
     - name: Count LaTeX lines
       shell: bash
       run: |
-        # カウントできなかった場合は0にする
-        total=$(find . -name "test.tex" -type f -exec wc -l {} + 2>/dev/null | awk '{s+=$1} END {print s}')
+        FILE=${{ inputs.filename }}
+        ENV_VAR=${{ inputs.output_env }}
+
+        total=$(find . -name "$FILE" -type f -exec wc -l {} + 2>/dev/null | awk '{s+=$1} END {print s}')
         if [ -z "$total" ]; then
           total=0
         fi
-        echo "LaTeX行数: $total"
-        echo "LINES=$total" >> $GITHUB_ENV
+        echo "$ENV_VAR=$total" >> $GITHUB_ENV
+        echo "LaTeX行数 ($FILE): $total"
