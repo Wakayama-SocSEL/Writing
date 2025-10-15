@@ -5,7 +5,7 @@ from datetime import datetime
 import os
 
 # --- 設定 ---
-TARGET_FILE = "README.md"  # <--- 行数を追跡したいファイル名を指定
+TARGET_FILE = "test.tex"  # <--- 行数を追跡したいファイル名を指定
 DATA_FILE = "data/line_count_history.json"
 GRAPH_FILE = "docs/line_count_graph.svg" # <--- 生成するグラフのパス
 # -------------
