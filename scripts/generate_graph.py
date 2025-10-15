@@ -7,7 +7,6 @@ import os
 # --- 設定 ---
 # 追跡したいファイルをリストで指定します。
 TARGET_FILES = [
-    "test.tex",     
     "@IPSJ_SIGSE202511_Hashimoto/IPSJ_SIGSE202511_Hashimoto.tex",  
     "@IPSJ_SIGSE202511_Horio/IPSJ_SIGSE202511_Horio.tex",  
     "@IPSJ_SIGSE202511_Noguchi/IPSJ_SIGSE202511_Noguchi.tex",
