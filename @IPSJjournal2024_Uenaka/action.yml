@@ -1,0 +1,11 @@
+name: "Count LaTeX Lines"
+description: "Counts the number of lines in .tex files"
+runs:
+  using: "composite"
+  steps:
+    - name: Count LaTeX lines
+      shell: bash
+      run: |
+        total=$(find . -name "*.tex" -type f -exec wc -l {} + | awk '{s+=$1} END {print s}')
+        echo "LaTeX行数: $total"
+        echo "LINES=$total" >> $GITHUB_ENV
