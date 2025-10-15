@@ -2,7 +2,7 @@ name: Count LaTeX lines
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
