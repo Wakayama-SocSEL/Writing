@@ -7,7 +7,7 @@ on:
   # 2. プッシュ時に実行
   push:
     branches: 
-      - main  # <--- 監視したいブランチ名に変更してください (例: master, develop)
+      - master  # <--- 監視したいブランチ名に変更してください (例: master, develop)
 
 jobs:
   update_data_and_graph:
