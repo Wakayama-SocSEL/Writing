@@ -1,3 +1,3 @@
 ## ファイル行数履歴グラフ
 
-![Line Count Graph](https://github.com/Wakayama-SocSEL/Writing/blob/main/docs/line_count_graph.svg?raw=true)
+![Line Count Graph](https://github.com/Wakayama-SocSEL/Writing/blob/master/docs/line_count_graph.svg?raw=true)
