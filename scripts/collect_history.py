@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 
 # --- 設定 ---
-TARGET_FILE = "README.md"  # 行数を追跡したいファイル名
+TARGET_FILE = "test.tex"  # 行数を追跡したいファイル名
 DATA_FILE = "data/line_count_history.json"
 # -------------
 
