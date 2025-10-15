@@ -14,7 +14,7 @@ jobs:
           echo "LINES=$total" >> $GITHUB_ENV
 
       - name: Update Google Sheets
-        uses: gautamkrishnar/google-sheets-action@v1.1
+        uses: akinori-i/google-sheets-action@v1.1
         with:
           spreadsheetId: "1FUisJPN4DtvkgJq8kv_HE5eG1jJMhUnDyV05_cVJIZw"
           worksheetName: "lines"
