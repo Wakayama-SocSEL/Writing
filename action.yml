@@ -7,7 +7,7 @@ runs:
       shell: bash
       run: |
         # カウントできなかった場合は0にする
-        total=$(find . -name "*.tex" -type f -exec wc -l {} + 2>/dev/null | awk '{s+=$1} END {print s}')
+        total=$(find . -name "test.tex" -type f -exec wc -l {} + 2>/dev/null | awk '{s+=$1} END {print s}')
         if [ -z "$total" ]; then
           total=0
         fi
