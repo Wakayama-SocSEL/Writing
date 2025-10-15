@@ -8,10 +8,10 @@ import os
 # 追跡したいファイルをリストで指定します。
 TARGET_FILES = [
     "test.tex",     
-    "@IPSJ_SIGSE202511_Hashimoto/IPSJ_SIGSE202511_Hashimoto",  
-    "@IPSJ_SIGSE202511_Horio/IPSJ_SIGSE202511_Horio",  
-    "@IPSJ_SIGSE202511_Noguchi/IPSJ_SIGSE202511_Noguchi",
-    "@IPSJ_SIGSE202511_Toyoshima/IPSJ_SIGSE202511_Toyoshima"
+    "@IPSJ_SIGSE202511_Hashimoto/IPSJ_SIGSE202511_Hashimoto.tex",  
+    "@IPSJ_SIGSE202511_Horio/IPSJ_SIGSE202511_Horio.tex",  
+    "@IPSJ_SIGSE202511_Noguchi/IPSJ_SIGSE202511_Noguchi.tex",
+    "@IPSJ_SIGSE202511_Toyoshima/IPSJ_SIGSE202511_Toyoshima.tex"
 ] 
 DATA_FILE = "data/line_count_history.json"
 GRAPH_FILE = "docs/line_count_graph.svg"
