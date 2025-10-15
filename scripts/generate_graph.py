@@ -30,20 +30,18 @@ def collect_line_count_history(file_paths):
     """複数のファイルパスを受け取り、それぞれの履歴を収集する。"""
     print("--- 複数ファイルの行数履歴を収集中 ---")
     
+    # 現在のブランチを記録
     current_branch = subprocess.check_output(
         ['git', 'rev-parse', '--abbrev-ref', 'HEAD'], 
         encoding='utf-8',
         stderr=subprocess.DEVNULL
     ).strip()
     
-    # 全ファイルの履歴データを格納する辞書
     full_history = {} 
     
-    # ファイルごとに履歴を収集
     for file_path in file_paths:
         file_history = []
         
-        # 対象ファイルが変更されたコミットハッシュと日付を取得
         try:
             log_output = subprocess.check_output(
                 ['git', 'log', '--pretty=format:%H %ct', '--', file_path],
@@ -57,7 +55,6 @@ def collect_line_count_history(file_paths):
         commits = [line.split() for line in log_output.split('\n') if line]
         
         for commit_hash, timestamp in commits:
-            # コミット時点のファイルを復元
             subprocess.check_call(
                 ['git', 'checkout', commit_hash, '--', file_path],
                 stdout=subprocess.DEVNULL, 
@@ -69,7 +66,6 @@ def collect_line_count_history(file_paths):
         file_history.sort(key=lambda x: x['date'])
         full_history[file_path] = file_history
     
-    # Git作業ツリーを元のブランチに戻す
     subprocess.call(['git', 'checkout', current_branch, '--force'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     print("収集完了。")
     return full_history
@@ -91,7 +87,9 @@ def generate_line_graph(full_history):
     plt.style.use('seaborn-v0_8-whitegrid')
     plt.figure(figsize=(12, 7))
     
-    # データをファイルごとにループしてプロット
+    # Matplotlibのデフォルトのカラーサイクラーを使用
+    # これにより、plt.plotを呼び出すたびに異なる色が自動的に割り当てられる
+    
     for file_path, history in full_history.items():
         if not history:
             continue
@@ -99,7 +97,7 @@ def generate_line_graph(full_history):
         dates = [datetime.fromtimestamp(item['date']) for item in history]
         lines = [item['lines'] for item in history]
         
-        # label=file_path で凡例にファイル名を表示
+        # 色を明示的に指定しないことで、Matplotlibが自動で異なる色を割り当てる
         plt.plot(dates, lines, marker='o', linestyle='-', label=file_path) 
     
     # グラフのメタ情報を設定
@@ -107,12 +105,15 @@ def generate_line_graph(full_history):
     plt.xlabel('Date (Commit Time)', fontsize=12)
     plt.ylabel('Lines of Code', fontsize=12)
     
-    # 凡例を表示 (ファイルごとの折れ線グラフを識別)
-    plt.legend(loc='upper left', fontsize=10) 
+    # 凡例を表示
+    plt.legend(loc='upper left', bbox_to_anchor=(1, 1), fontsize=10) # 凡例をグラフの外に配置
     plt.grid(True, linestyle='--', alpha=0.7)
     
     plt.gcf().autofmt_xdate()
     
+    # 凡例がはみ出さないようにレイアウトを調整
+    plt.tight_layout(rect=[0, 0, 0.85, 1]) # rectでグラフ描画領域を調整
+
     # グラフをSVGファイルとして保存
     os.makedirs(os.path.dirname(GRAPH_FILE), exist_ok=True)
     plt.savefig(GRAPH_FILE, format='svg', bbox_inches='tight')
@@ -121,6 +122,11 @@ def generate_line_graph(full_history):
     print(f"グラフが {GRAPH_FILE} に保存されました。")
 
 def main():
-    # 履歴データの収集
-    # TARGET_FILES を collect_line_count_history に渡す
-    history
+    history_data = collect_line_count_history(TARGET_FILES)
+    
+    if history_data is not None:
+        save_data(history_data)
+        generate_line_graph(history_data)
+
+if __name__ == "__main__":
+    main()
