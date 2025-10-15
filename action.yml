@@ -10,6 +10,18 @@ inputs:
     description: "Name of the environment variable to store line count"
     required: true
     default: "LINES"
+  spreadsheetId:
+    description: "ID of the Google Sheet"
+    required: true
+  worksheetName:
+    description: "Worksheet name"
+    required: true
+  credentials:
+    description: "Google credentials JSON"
+    required: true
+  values:
+    description: "Values to append"
+    required: true
 
 runs:
   using: "composite"
