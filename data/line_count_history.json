@@ -21,8 +21,72 @@
             "hash": "ad6a8cb03d2091874641c53e2974372595f17418"
         }
     ],
-    "@IPSJ_SIGSE202511_Hashimoto/IPSJ_SIGSE202511_Hashimoto": [],
-    "@IPSJ_SIGSE202511_Horio/IPSJ_SIGSE202511_Horio": [],
-    "@IPSJ_SIGSE202511_Noguchi/IPSJ_SIGSE202511_Noguchi": [],
-    "@IPSJ_SIGSE202511_Toyoshima/IPSJ_SIGSE202511_Toyoshima": []
+    "@IPSJ_SIGSE202511_Hashimoto/IPSJ_SIGSE202511_Hashimoto.tex": [
+        {
+            "date": 1760408496,
+            "lines": 783,
+            "hash": "e69a266f781c03e06f2f466ad93fe79c1f79fd69"
+        },
+        {
+            "date": 1760497250,
+            "lines": 778,
+            "hash": "9b564fb5a61c6f493dd898caa38a2dee23940c88"
+        },
+        {
+            "date": 1760499458,
+            "lines": 778,
+            "hash": "c2fe74c867e58b652ea4672838f6509aca65a629"
+        },
+        {
+            "date": 1760507142,
+            "lines": 749,
+            "hash": "5b29c8329895184bcbb641e6e9eada86cfa08ae8"
+        },
+        {
+            "date": 1760507594,
+            "lines": 734,
+            "hash": "947741fb4f02d90979448febb663d66b381d2eed"
+        }
+    ],
+    "@IPSJ_SIGSE202511_Horio/IPSJ_SIGSE202511_Horio.tex": [
+        {
+            "date": 1760408496,
+            "lines": 783,
+            "hash": "e69a266f781c03e06f2f466ad93fe79c1f79fd69"
+        },
+        {
+            "date": 1760496933,
+            "lines": 937,
+            "hash": "ea78f77c373612edcaccd9d09d8935b064b577b0"
+        },
+        {
+            "date": 1760507142,
+            "lines": 893,
+            "hash": "5b29c8329895184bcbb641e6e9eada86cfa08ae8"
+        }
+    ],
+    "@IPSJ_SIGSE202511_Noguchi/IPSJ_SIGSE202511_Noguchi.tex": [
+        {
+            "date": 1760408496,
+            "lines": 783,
+            "hash": "e69a266f781c03e06f2f466ad93fe79c1f79fd69"
+        },
+        {
+            "date": 1760496933,
+            "lines": 802,
+            "hash": "ea78f77c373612edcaccd9d09d8935b064b577b0"
+        }
+    ],
+    "@IPSJ_SIGSE202511_Toyoshima/IPSJ_SIGSE202511_Toyoshima.tex": [
+        {
+            "date": 1760408496,
+            "lines": 783,
+            "hash": "e69a266f781c03e06f2f466ad93fe79c1f79fd69"
+        },
+        {
+            "date": 1760507142,
+            "lines": 779,
+            "hash": "5b29c8329895184bcbb641e6e9eada86cfa08ae8"
+        }
+    ]
 }
