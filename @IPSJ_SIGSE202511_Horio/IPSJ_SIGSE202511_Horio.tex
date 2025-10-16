@@ -10,9 +10,10 @@
 \documentclass[submit,techrep,noauthor]{ipsj}
 
 
-
-\usepackage[dvips]{graphicx}
+% \usepackage[dvips]{graphicx}
+\usepackage[dvipdfmx, hiresbb]{graphicx}
 \usepackage{latexsym}
+
 
 \def\Underline{\setbox0\hbox\bgroup\let\\\endUnderline}
 \def\endUnderline{\vphantom{y}\egroup\smash{\underline{\box0}}\\}
@@ -78,12 +79,13 @@ Johoshori Uniersity}
 
 CTスキルを自身で評価・把握することは困難である．そのため，Morenoらは作品に使用されているブロックに基づき，CTスキルを計測するDr.Scratch\cite{moreno2015dr}を開発した．Dr.Scratchでは，論理，制御フロー，同期，抽象化，データ表現，ユーザ対話性，並列処理の7概念に基づいて作品評価を行う．また，各概念を0点から3点の合計21点とし，CTスコアとして評価する．表\ref{CTscoreTable}に各概念の評価方法を示す．CTスコアを3つの区分に分類し，0点から7点をBasic，8点から14点をDeveloping，15点から21点をMasterとして評価する．
 
-%-------------------
-\begin{table}[t]
+\begin{table*}[t] % table環境をtable*に変更
     \centering
     \caption{CTスコア概念\cite{hashitani2022scratch}}
     \label{CTscoreTable}
-    \scalebox{0.55}{
+    % table*はページ全体を使うため、scaleboxを調整するか、削除を検討。
+    % ページ幅全体に広げるため、0.55から0.8~0.9などに広げても良いでしょう。
+    \scalebox{0.8}{ % ページ幅全体を使うため、スケールを0.8などに広げました
     \begin{tabular}{c|c|c|c|c}
     \hline
     CTスキルの概念 & 0点 & 1点 & 2点 & 3点
@@ -148,10 +150,7 @@ CTスキルを自身で評価・把握することは困難である．そのた
     \\ \hline
     \end{tabular}
     }
-\end{table}
-
-%-------------------
-
+\end{table*}
 
 \begin{itemize}
   \item 状態
@@ -201,6 +200,16 @@ CTスキルを自身で評価・把握することは困難である．そのた
   \item 状態遷移確率：
 \end{itemize}
 
+\section{RQ1}
+
+図\ref{heatmap}が示すように
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{@IPSJ_SIGSE202511_Horio/heatmap.pdf}
+  \caption{ヒートマップ}
+  \label{heatmap}
+\end{figure*}
 
 % %2
 % \section{投稿の流れ}
