@@ -28,10 +28,7 @@
 \begin{document}
 
 
-\title{情報処理学会研究報告の準備方法\\
-（2018年10月29日版）}
-
-\etitle{How to Prepare Your Paper for IPSJ SIG Technical Report \\ (version 2018/10/29)}
+\title{大規模言語モデルによるコード生成のための反復的な要件統合と最適化プロセス\\}
 
 \affiliate{IPSJ}{情報処理学会\\
 IPSJ, Chiyoda, Tokyo 101--0062, Japan}
@@ -40,12 +37,13 @@ IPSJ, Chiyoda, Tokyo 101--0062, Japan}
 \paffiliate{JU}{情報処理大学\\
 Johoshori Uniersity}
 
-\author{情報 太郎}{Joho Taro}{IPSJ}[joho.taro@ipsj.or.jp]
-\author{処理 花子}{Shori Hanako}{IPSJ}
-\author{学会 次郎}{Gakkai Jiro}{IPSJ,JU}[gakkai.jiro@ipsj.or.jp]
+\author{豊嶋 浩基}{Toyoshima Hiroki}{IPSJ}[s276157@wakayama-u.ac.jp]
+\author{伊原 彰紀}{Ihara Akinori}{IPSJ}[ihara@wakayama-u.ac.jp]
+\author{田井 聖凪}{Tai Sena}{IPSJ,JU ???????}[s2310137@wakayama-u.ac.jp]
 
 \begin{abstract}
-本稿は，情報処理学会研究報告に投稿する原稿を執筆する際の注意点等をまとめたものである．
+大規模言語モデル（LLM）はソフトウェア開発の効率化に大きく貢献するが，複雑な要件への対応は依然として重要な課題である．我々はこれまで自然言語からコードを自動生成するマルチエージェント型フレームワークであるChatDevに対して，few-shotを用いた要件の細分化と段階的開発を実施した．これにより，入出力テストに基づいた性能の向上が確認できた一方で，局所的な最適化に留まり，システム全体の品質に課題を残す．
+そのため本研究では，分割された要件の統合と反復的改善の概念を組み合わせた新たな開発プロセスを提案する．具体的には，分割・生成されたコード群を対象に，全体の整合性を評価し，再統合と洗練を行うイテレーションを導入する．この反復的な最適化プロセスは，複雑なソフトウェア要件に対するコード生成品質を一段階引き上げるための，新たな開発指針となることを目指す．
 
 \end{abstract}
 
@@ -71,6 +69,14 @@ Johoshori Uniersity}
 
 %1
 \section{はじめに}
+・LLMの発展
+・コード生成が注目されている
+・従来のプロンプティング技術
+・(複雑な)要件を満たすコードの生成に対する壁
+・本論文では，要件の細分化と段階的開発を用いたコード生成アプローチの提案
+
+\section{関連研究}
+\label{sec:format}
 
 
 \bibliographystyle{ipsjunsrt}
