@@ -48,37 +48,33 @@ Johoshori Uniersity}
 \end{abstract}
 
 
-%
-%\begin{jkeyword}
-%情報処理学会論文誌ジャーナル，\LaTeX，スタイルファイル，べからず集
-%\end{jkeyword}
-%
-%\begin{eabstract}
-%This document is a guide to prepare a draft for submitting to IPSJ
-%Journal, and the final camera-ready manuscript of a paper to appear in
-%IPSJ Journal, using {\LaTeX} and special style files.  Since this
-%document itself is produced with the style files, it will help you to
-%refer its source file which is distributed with the style files.
-%\end{eabstract}
-%
-%\begin{ekeyword}
-%IPSJ Journal, \LaTeX, style files, ``Dos and Dont's'' list
-%\end{ekeyword}
-
 \maketitle
 
 %1
 \section{はじめに}
-・LLMの発展
-・コード生成が注目されている
-・従来のプロンプティング技術
-・(複雑な)要件を満たすコードの生成に対する壁
-・本論文では，要件の細分化と段階的開発を用いたコード生成アプローチの提案
+昨今の大規模言語モデル(LLM)の急速な発達に伴い，LLMはこれまで人間が時間や労力などのコストをかけて行なっていたタスクを自動・効率化する可能性を持つことから，幅広い分野において関心を集めている．ソフトウェア開発においても同様で，期待する要件の自然言語をプロンプトとして与えることでプログラムコードを自動生成するコード自動生成についても高い期待が高まっている．
+ 
+一方で，複数の要求を内包した複雑な要件からコードの生成を実施する場合，使用漏れや依存関係の不整合などにより，要件を満たさない不完全なコードが生成されやすいという課題が挙げられる．それに対して， プロンプトに最終的な結論に至るまでの考え方を含めることでLLMの推論能力を高めるChain of Thoughtや，少量の例を学習させることで期待した内容を生成させるfew-shot学習などと言った従来のプロンプト技術は，実装方法や記述方法など，同様の要件に対して等価な解が存在しており，コードの例を提示したとしてもLLMは十分な理解を示さない．
+\todo{キーアイディア: 複雑な要件の細分化による局所最適化，全体概要を学習させることによる全体整合，統合と再分割}
 
+本論文では，〜〜〜を提案する．
+
+%2
 \section{関連研究}
 \label{sec:format}
 
+%2.1
+\subsection{ChatDev: マルチエージェントによる段階的開発フレームワーク}
+本研究では，設計・実装・レビュー・テストと言ったウォーターフォールモデルに則り，各フェーズを役割を学習させたLLMに開発を行わせるChatDev\todo{参考文献: https://arxiv.org/pdf/2307.07924}をベースラインとして使用する．本フレームワークでは，各フェーズにおいてチャットを介して，要件と生成された成果物の引き渡し，それらを基にLLMエージェント同士が対話を行い，合意形成と生成を実施していく．一方で，与えられた全ての要件を一度に生成する使用上，複数機能を内包する要件に対しては不完全なコードが生成されてしまう．\todo{各フェーズにおけるタスクの粒度が大きい，みたいな話が伝わるように推敲 and はじめにの部分と同じこと言ってる}
+\todo{どの章で何について話すか}
 
+%2.2
+\subsection{要件の複雑度が一定を上回ると，急にLLMの精度が落ちる(apple learning research)}
+
+
+%2.3
+\subsection{TOSEM}
+\todo{これを参考文献に出すとfew-shotで分割したら性能上がった！って話がこれで済んじゃうから書き方どうしよう...}
 \bibliographystyle{ipsjunsrt}
 \bibliography{bibsample}
 
