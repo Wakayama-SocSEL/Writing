@@ -40,7 +40,7 @@ def collect_line_count_history(file_paths):
         stderr=subprocess.DEVNULL
     ).strip()
     full_history = {} 
-    cutoff_timestamp = 1760553600  # 2025年10月16日 00:00:00 (UTC)
+    cutoff_timestamp = 1760640000  # 2025年10月17日 00:00:00 (UTC)
 
     for file_path in file_paths:
         file_history = []
@@ -56,7 +56,7 @@ def collect_line_count_history(file_paths):
         commits = [line.split() for line in log_output.split('\n') if line]
         for commit_hash, timestamp in commits:
             if int(timestamp) < cutoff_timestamp:
-                continue  # 2025年10月16日より前はスキップ
+                continue  # 2025年10月17日より前はスキップ
             subprocess.check_call(
                 ['git', 'checkout', commit_hash, '--', file_path],
                 stdout=subprocess.DEVNULL, 
