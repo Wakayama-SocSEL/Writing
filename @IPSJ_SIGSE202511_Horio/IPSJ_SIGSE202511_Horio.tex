@@ -16,7 +16,7 @@
 \usepackage{amsmath}
 \usepackage{enumitem}
 \usepackage{amssymb} 
-
+\usepackage{url}
 
 \newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
 \newcommand{\ihara}[1]{\colorbox{green}{{\bf IHARA}:}{\color{blue} {\textbf{[#1]}}}}
@@ -39,14 +39,8 @@
 
 % \etitle{How to Prepare Your Paper for IPSJ SIG Technical Report \\ (version 2018/10/29)}
 
-% \affiliate{IPSJ}{情報処理学会\\
-% IPSJ, Chiyoda, Tokyo 101--0062, Japan}
-
 \affiliate{WU}{和歌山大学\\
 Wakayama University, 930 Sakaedani, Wakayama 640--8510, Japan}
-
-% \paffiliate{JU}{情報処理大学\\
-% Johoshori Uniersity}
 
 
 
@@ -89,13 +83,11 @@ Wakayama University, 930 Sakaedani, Wakayama 640--8510, Japan}
 
 CTスキルを自身で評価・把握することは困難である．そのため，Morenoらは作品に使用されているブロックに基づき，CTスキルを計測するDr.Scratch\cite{moreno2015dr}を開発した．Dr.Scratchでは，論理，制御フロー，同期，抽象化，データ表現，ユーザ対話性，並列処理の7概念に基づいて作品評価を行う．また，各概念を0点から3点の合計21点とし，CTスコアとして評価する．表\ref{CTscoreTable}に各概念の評価方法を示す．CTスコアを3つの区分に分類し，0点から7点をBasic，8点から14点をDeveloping，15点から21点をMasterとして評価する．
 
-\begin{table*}[t] % table環境をtable*に変更
+\begin{table*}[t]
     \centering
     \caption{CTスコア概念\cite{hashitani2022scratch}}
     \label{CTscoreTable}
-    % table*はページ全体を使うため、scaleboxを調整するか、削除を検討。
-    % ページ幅全体に広げるため、0.55から0.8~0.9などに広げても良いでしょう。
-    \scalebox{0.8}{ % ページ幅全体を使うため、スケールを0.8などに広げました
+    \scalebox{0.8}{
     \begin{tabular}{c|c|c|c|c}
     \hline
     CTスキルの概念 & 0点 & 1点 & 2点 & 3点
@@ -211,7 +203,7 @@ Fesakisらはリミックス元作品の協調性フィルタリングによる�
     
 \end{itemize}
 
-分析手法として，ヒートマップを用いる．横軸をリミックス後作品のスコア，横軸をリミックス前作品のスコアとし，CTスコア，CT各概念ごとに結果を示す．また，データの偏りによる影響を防ぐため，リミックス前作品のスコアで相対的に出力する．
+分析手法としてヒートマップを用いる．横軸にリミックス後作品のスコア，縦軸にリミックス前作品のスコアを配置し，CTスコアおよび各CT概念ごとに結果を示す．また，データの偏りによる影響を抑えるため，リミックス前作品のスコアを基準として相対的に値を算出する．
 
 \subsection{結果}
 結果は図\ref{heatmap}に示す．CTスコアの結果では，リミックス前作品のCTスコアが7点以下のユーザはリミックスを経ることで，CTスコアが低下しているユーザより向上しているユーザの割合が大きくなっている．．しかし，リミックス前作品のCTスコアが8点以上のユーザはリミックスを経ても，CTスコアが向上しているユーザより低下しているユーザの割合が大きくなっている．
@@ -235,63 +227,76 @@ CT各概念の結果では，リミックスによって向上しやすいもの
 ユーザが作品制作した過程をマルコフ決定過程として捉え，強化学習を用いてユーザが選択するリミックス元作品のCTスコアを予測するモデルを構築するために，以下のように定義する．
 
 \begin{itemize}
-  \item 状態
+    \item 状態
+        
+        $s_t$：ある作品制作地点での状態（8次元）
     
-    $s_t$：ある作品制作地点での状態（8次元）
-
-    $x_t$：ある作品のCTスコア概念のベクトル（7次元）
-
-    $m_t\in\{0,1\}$：リミックスであるか否か（1次元）
-
-    \begin{equation}
-        s_t = 
-        \begin{bmatrix}
-           x_t \\
-           m_t 
-        \end{bmatrix}
-    \end{equation}
-
-  \item 行動
-
-    $a_t$：選択したリミックス元作品のCTスコア概念のベクトル（7次元）
-
-    % $a_t$：t+1番目に制作する作品のCTスコア概念のベクトル（7次元）
-  
-  \item 報酬
-
-    $r_t$：リミックス前後作品のCTスコアの差分のスカラー
+        $x_t$：ある作品のCTスコア概念のベクトル（7次元）
     
-    $c_t$：リミックス前作品のCTスコア
-
-    $c'_t$：リミックス後作品のCTスコア
+        $m_t\in\{0,1\}$：リミックスであるか否か（1次元）
     
-    \begin{equation}
-        r_t = c'_t - c_t
-    \end{equation}
+        \begin{equation}
+            s_t = 
+            \begin{bmatrix}
+               x_t \\
+               m_t 
+            \end{bmatrix}
+        \end{equation}
 
-    % $r_t$：前後作品のCTスコアの差分のスカラー
-    
-    % $c_t$：t番目の作品のCTスコア
+    \item 行動
 
-    % $c'_t$：t-1番目の作品のCTスコア
+        $a_t$：選択したリミックス元作品のCTスコア概念のベクトル（7次元）
     
-    % \begin{equation}
-    %     r_t = c'_t - c_t
-    % \end{equation}
-  
-  \item 状態遷移確率
-\begin{equation}
-    P(s' \mid s, a)
-\end{equation}
-  \item 期待累積報酬
-\begin{equation}
-    Q^{\pi}(s, a) = \mathbb{E}_{s' \sim P(\cdot \mid s, a)} 
-    \left[ r(s, a) + \gamma \, 
-    \mathbb{E}_{a' \sim \pi(\cdot \mid s')} 
-    \big[ Q^{\pi}(s', a') \big] \right]
-\end{equation}
+        % $a_t$：t+1番目に制作する作品のCTスコア概念のベクトル（7次元）
+      
+    \item 報酬
+    
+        $r_t$：リミックス前後作品のCTスコアの差分のスカラー
+        
+        $c_t$：リミックス前作品のCTスコア
+    
+        $c'_t$：リミックス後作品のCTスコア
+        
+        \begin{equation}
+            r_t = c'_t - c_t
+        \end{equation}
+    
+        % $r_t$：前後作品のCTスコアの差分のスカラー
+        
+        % $c_t$：t番目の作品のCTスコア
+    
+        % $c'_t$：t-1番目の作品のCTスコア
+        
+        % \begin{equation}
+        %     r_t = c'_t - c_t
+        % \end{equation}
+
+    \item 状態遷移確率
+        \begin{equation}
+            P(s' \mid s, a)
+        \end{equation}
+
+    \item 期待累積報酬
+
+        $Q^{\pi}(s, a)$：期待累積報酬
+    
+        $\gamma$：割引率
+        
+        $\pi$：エージェントが従う方策
+
+        \begin{equation}
+            Q^{\pi}(s, a) = \mathbb{E}_{s' \sim P(\cdot \mid s, a)} 
+            \left[ r(s, a) + \gamma \, 
+            \mathbb{E}_{a' \sim \pi(\cdot \mid s')} 
+            \big[ Q^{\pi}(s', a') \big] \right]
+        \end{equation}
 
 \end{itemize}
+
+ユーザの学習過程は連続的なものであるため，強化学習はTwin Delayed DDPG（TD3）を用いる．
+評価方法として，教師あり学習であるランダムフォレストと推定平均報酬の比較を行う．
+
+
 
 \subsection{結果}
 
