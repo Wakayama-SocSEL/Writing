@@ -40,7 +40,7 @@ def collect_line_count_history(file_paths):
         stderr=subprocess.DEVNULL
     ).strip()
     full_history = {} 
-    cutoff_timestamp = 1760640000  # 2025年10月17日 00:00:00 (UTC)
+    cutoff_timestamp = 1760665250  # 2025年10月17日 00:00:00 (UTC)
 
     for file_path in file_paths:
         file_history = []
