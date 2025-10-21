@@ -12,6 +12,12 @@ TARGET_FILES = [
     "@IPSJ_SIGSE202511_Noguchi/IPSJ_SIGSE202511_Noguchi.tex",
     "@IPSJ_SIGSE202511_Toyoshima/IPSJ_SIGSE202511_Toyoshima.tex"
 ] 
+FILE_LABELS = {
+    "@IPSJ_SIGSE202511_Hashimoto/IPSJ_SIGSE202511_Hashimoto.tex": "橋本",
+    "@IPSJ_SIGSE202511_Horio/IPSJ_SIGSE202511_Horio.tex": "堀尾",
+    "@IPSJ_SIGSE202511_Noguchi/IPSJ_SIGSE202511_Noguchi.tex": "野口",
+    "@IPSJ_SIGSE202511_Toyoshima/IPSJ_SIGSE202511_Toyoshima.tex": "豊嶋"
+}
 DATA_FILE = "data/line_count_history.json"
 GRAPH_FILE = "docs/line_count_graph.svg"
 # -------------
@@ -28,19 +34,16 @@ def get_file_line_count(file_path):
 def collect_line_count_history(file_paths):
     """複数のファイルパスを受け取り、それぞれの履歴を収集する。"""
     print("--- 複数ファイルの行数履歴を収集中 ---")
-    
-    # 現在のブランチを記録
     current_branch = subprocess.check_output(
         ['git', 'rev-parse', '--abbrev-ref', 'HEAD'], 
         encoding='utf-8',
         stderr=subprocess.DEVNULL
     ).strip()
-    
     full_history = {} 
-    
+    cutoff_timestamp = 1760553600  # 2025年10月16日 00:00:00 (UTC)
+
     for file_path in file_paths:
         file_history = []
-        
         try:
             log_output = subprocess.check_output(
                 ['git', 'log', '--pretty=format:%H %ct', '--', file_path],
@@ -50,10 +53,10 @@ def collect_line_count_history(file_paths):
         except subprocess.CalledProcessError:
             print(f"警告: ファイル '{file_path}' の履歴が見つかりません。スキップします。")
             continue
-            
         commits = [line.split() for line in log_output.split('\n') if line]
-        
         for commit_hash, timestamp in commits:
+            if int(timestamp) < cutoff_timestamp:
+                continue  # 2025年10月16日より前はスキップ
             subprocess.check_call(
                 ['git', 'checkout', commit_hash, '--', file_path],
                 stdout=subprocess.DEVNULL, 
@@ -61,10 +64,8 @@ def collect_line_count_history(file_paths):
             )
             line_count = get_file_line_count(file_path)
             file_history.append({'date': int(timestamp), 'lines': line_count, 'hash': commit_hash})
-        
         file_history.sort(key=lambda x: x['date'])
         full_history[file_path] = file_history
-    
     subprocess.call(['git', 'checkout', current_branch, '--force'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     print("収集完了。")
     return full_history
@@ -96,8 +97,8 @@ def generate_line_graph(full_history):
         dates = [datetime.fromtimestamp(item['date']) for item in history]
         lines = [item['lines'] for item in history]
         
-        # 色を明示的に指定しないことで、Matplotlibが自動で異なる色を割り当てる
-        plt.plot(dates, lines, marker='o', linestyle='-', label=file_path) 
+        label = FILE_LABELS.get(file_path, file_path)  # 対応辞書から表示名を取得
+        plt.plot(dates, lines, marker='o', linestyle='-', label=label) 
     
     # グラフのメタ情報を設定
     plt.title('Multi-File Line Count History', fontsize=16)
