@@ -18,11 +18,6 @@
     ],
     "@IPSJ_SIGSE202511_Horio/IPSJ_SIGSE202511_Horio.tex": [
         {
-            "date": 1760599706,
-            "lines": 902,
-            "hash": "4329693b3a4c42c7c9564951c64cf58cf4586ce3"
-        },
-        {
             "date": 1760666605,
             "lines": 220,
             "hash": "38ef91565220b2130b7ba291ec49a8576951ac19"
@@ -34,21 +29,6 @@
         }
     ],
     "@IPSJ_SIGSE202511_Noguchi/IPSJ_SIGSE202511_Noguchi.tex": [
-        {
-            "date": 1760578217,
-            "lines": 252,
-            "hash": "5110fe589c163b652cadde27d8a255ee4df1bae9"
-        },
-        {
-            "date": 1760582278,
-            "lines": 242,
-            "hash": "a9edf30c81dcf574fb14119f666303c48c156678"
-        },
-        {
-            "date": 1760588922,
-            "lines": 241,
-            "hash": "310737b1f212d48c2be8ca4589354a69b03dd3ad"
-        },
         {
             "date": 1760665248,
             "lines": 241,
