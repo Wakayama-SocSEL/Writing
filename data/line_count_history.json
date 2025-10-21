@@ -1,11 +1,6 @@
 {
     "@IPSJ_SIGSE202511_Hashimoto/IPSJ_SIGSE202511_Hashimoto.tex": [
         {
-            "date": 1760666605,
-            "lines": 106,
-            "hash": "38ef91565220b2130b7ba291ec49a8576951ac19"
-        },
-        {
             "date": 1760688148,
             "lines": 137,
             "hash": "8ea98cc5faebe57ff1cface5b7f5e2411c415dfb"
@@ -13,22 +8,12 @@
     ],
     "@IPSJ_SIGSE202511_Horio/IPSJ_SIGSE202511_Horio.tex": [
         {
-            "date": 1760666605,
-            "lines": 220,
-            "hash": "38ef91565220b2130b7ba291ec49a8576951ac19"
-        },
-        {
             "date": 1761028579,
             "lines": 303,
             "hash": "94d67b9a526b09d4871f1ffbb50074203883ea41"
         }
     ],
     "@IPSJ_SIGSE202511_Noguchi/IPSJ_SIGSE202511_Noguchi.tex": [
-        {
-            "date": 1760666605,
-            "lines": 197,
-            "hash": "38ef91565220b2130b7ba291ec49a8576951ac19"
-        },
         {
             "date": 1760926799,
             "lines": 204,
@@ -51,11 +36,6 @@
         }
     ],
     "@IPSJ_SIGSE202511_Toyoshima/IPSJ_SIGSE202511_Toyoshima.tex": [
-        {
-            "date": 1760666605,
-            "lines": 80,
-            "hash": "38ef91565220b2130b7ba291ec49a8576951ac19"
-        },
         {
             "date": 1760688148,
             "lines": 86,
