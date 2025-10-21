@@ -13,10 +13,10 @@ TARGET_FILES = [
     "@IPSJ_SIGSE202511_Toyoshima/IPSJ_SIGSE202511_Toyoshima.tex"
 ] 
 FILE_LABELS = {
-    "@IPSJ_SIGSE202511_Hashimoto/IPSJ_SIGSE202511_Hashimoto.tex": "橋本",
-    "@IPSJ_SIGSE202511_Horio/IPSJ_SIGSE202511_Horio.tex": "堀尾",
-    "@IPSJ_SIGSE202511_Noguchi/IPSJ_SIGSE202511_Noguchi.tex": "野口",
-    "@IPSJ_SIGSE202511_Toyoshima/IPSJ_SIGSE202511_Toyoshima.tex": "豊嶋"
+    "@IPSJ_SIGSE202511_Hashimoto/IPSJ_SIGSE202511_Hashimoto.tex": "Hashimoto",
+    "@IPSJ_SIGSE202511_Horio/IPSJ_SIGSE202511_Horio.tex": "Horio",
+    "@IPSJ_SIGSE202511_Noguchi/IPSJ_SIGSE202511_Noguchi.tex": "Noguchi",
+    "@IPSJ_SIGSE202511_Toyoshima/IPSJ_SIGSE202511_Toyoshima.tex": "Toyoshima"
 }
 DATA_FILE = "data/line_count_history.json"
 GRAPH_FILE = "docs/line_count_graph.svg"
