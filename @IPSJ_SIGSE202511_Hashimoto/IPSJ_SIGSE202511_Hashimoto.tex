@@ -14,6 +14,7 @@
 % \usepackage[dvips]{graphicx}
 \usepackage{latexsym}
 \usepackage[dvipdfmx]{graphicx}
+\usepackage{tabularx}
 
 \newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
 \newcommand{\ihara}[1]{\colorbox{green}{{\bf IHARA}:}{\color{blue} {\textbf{[#1]}}}}
@@ -100,7 +101,14 @@ ELuriらの研究[todo]では，新規貢献者がプロジェクトに参加し
 \section{強化学習・逆強化学習}
 本研究では，逆強化学習を使用する．以下で強化学習と合わせて説明する．
 \subsection{強化学習}
-\todo{強化学習イメージ}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\linewidth]{./Hashimoto_fig/RL.pdf}
+    \caption{強化学習のイメージ図}
+    \label{fig:RL}
+\end{figure}
+
+
 強化学習(Reinforcement Learning, RL)は，エージェントと環境が相互作用を通じて，累積報酬を最大化するような行動の方策を学習する機械学習の一分野である．以下の基本的な構成要素から成る
 \begin{itemize}
     \item エージェント：学習・意思決定を行う主体
@@ -203,7 +211,9 @@ ELuriらの研究[todo]では，新規貢献者がプロジェクトに参加し
 \subsubsection{行動}
 \todo{特徴量入れる}
 
-\subsection{学習}
+\subsection{学習：損失関数と報酬関数の推定}
+\todo{図} \\
+本研究のモデル学習は主に，目的関数である損失関数の設定と，逆強化学習(IRL)の原理に基づく報酬関数の最適化のプロセスから成る．
 \subsubsection{損失関数：Focal Loss}
 長期貢献者の予測というタスクにおいて，約８割の開発者が長期貢献者になる前に，離脱してしまうということが知られている[todo]，そのため，正例と負例の間で学習データ数に不均衡が生じる．この不均衡問題を対処するために，本研究では，Focal Lossを使用する．
 \subsubsection{Focal Lossの定義}
@@ -226,9 +236,32 @@ L_{\mathrm{FL}} = - \frac{1}{N} \sum_{i=1}^{N} \alpha (1 - p_i)^{\gamma} y_i \lo
 \(\gamma = 0\) のとき，Focal Loss は BCE に一致する．
 
 
-\subsubsection{評価関数}
+\subsubsection{報酬関数}
+逆強化学習では専門家の行動を説明する報酬関数を学習する．具体的には，状態sで行動aを選択することの価値を表す報酬関数R(s,a；θ)を，ニューラルネットワーぅのパラメータθとして学習する．本研究での専門家は継続したレビュアーを指し，非専門家は離脱したレビュアーを指す．学習においては，専門家（継続者）の活動軌跡に対しては高い累積報酬を与え，非専門家（離脱者）の活動軌跡に対しては低い累積報酬を与えるように，報酬関数R(s,a;θ)を調整する．
+\subsubsection{エンコーダと時系列処理}
+学習に使用するネットワークは主に以下のものから構成される
+\begin{itemize}
+    \item エンコーダ
+    \begin{itemize}
+        \item レビュアーの各活動を表現している，状態(State),行動(Action)の2つの特徴量ベクトルをそれぞれ別の独立したエンコーダ(多層パーセプトロン:MLP)に入力する．これらのエンコーダは元のベクトルよりもより表現力のある高次元のベクトルに変換する役割を持つ．
+    \end{itemize}
+    \item LSTM
+        \begin{itemize}
+    \item 各時点tでエンコードされた状態・行動ベクトルを連結し，時系列プロセッサであるLSTM（Long Short-Term Memory）に入力する．LSTMは活動履歴を記憶し，時間的な依存関係を理解するため，単一の活動のみでなく，活動量が徐々に低下するといった動的なパターンを理解することができる．
+    \end{itemize}
+    \item デコーダ
+    \begin{itemize}
+        \item  LSTMによりレビュアーの全活動が処理された後に，MLP(予測器)で処理を行う．ここでは LSTMで処理されたレビュアーの全活動履歴を考慮した情報をデーコード（解釈）し，最終的な継続確率Pを算出する．
+    \end{itemize}
+\end{itemize}
+\subsubsection{Focal Lossによる報酬関数の最適化}
+4.5.4で算出される継続確率Pはシグモイド関数σを通して，軌跡の累積報酬todoに関連付いている．累積報酬が高いほど継続確率Pは高くなる．学習時には\todo{3章くらい}で定義した継続ラベルを活用し，この予測確率Pと継続ラベルの誤差を計算するために，\todo{前述}のFocal Lossを活用する．\todo{詳細書くか検討}この誤差が最小となるように最適化アルゴリズム(Adam Optimizer)で反復してを行うことにより，継続者のパターンを高く評価し，離脱者のパターンを低く評価する報酬関数を作成する．
+
+
+
 
 \subsection{予測・評価}
+
 
 \subsubsection{クロス評価}
 \subsubsection{評価指標}
@@ -248,14 +281,15 @@ OpenStack/Nova
 
 
 \subsection{RQ1:逆強化学習に基づく提案モデルは，コードレビューにおける長期貢献者をどの程度予測できるか？}
-\begin{table}[]
+\begin{table}[h]
     \centering
-    \begin{tabular}{c|c}
-         &  \\
-         & 
-    \end{tabular}
     \caption{0-0mモデルで0-0m後の貢献を予測した結果}
-    \label{tab:placeholder}
+    \begin{tabularx}{\columnwidth}{XXXX}
+       Precision & Recall & F1 & AUC-ROC \\
+       \hline
+       0.758  & 0.657 & 0.658 & 0.787 \\
+       \hline
+    \end{tabularx}
 \end{table}
 % \begin{figure*}[t]
 %     \centering
@@ -266,11 +300,12 @@ OpenStack/Nova
 
 \todo{学習期間，予測期間を１つ固定したモデルの精度を載せる}
 
-\subsection{RQ2:学習・予測期間の長さに応じて，予測モデルの精度はどのように変化するか?}
+\subsection{RQ2:学習時のラベルの付け方・予測期間の長さに応じて，予測モデルの精度はどのように変化するか?}
+あああああ
 \begin{figure*}[t]
     \centering
     \includegraphics[width=0.8\linewidth]{./Hashimoto_fig/heatmap_conbined.pdf}
-    \caption{各モデルのクロス評価（左：AUC，右：Recall}
+    \caption{各モデルのクロス評価（左：AUC，右：Recall）}
     \label{fig:Approach}
 \end{figure*}
 
