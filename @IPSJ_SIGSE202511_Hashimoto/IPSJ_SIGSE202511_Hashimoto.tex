@@ -251,7 +251,7 @@ L_{\mathrm{FL}} = - \frac{1}{N} \sum_{i=1}^{N} \alpha (1 - p_i)^{\gamma} y_i \lo
     \end{itemize}
     \item デコーダ
     \begin{itemize}
-        \item  LSTMによりレビュアーの全活動が処理された後に，MLP(予測器)で処理を行う．ここでは LSTMで処理されたレビュアーの全活動履歴を考慮した情報をデーコード（解釈）し，最終的な継続確率Pを算出する．
+        \item  LSTMによりレビュアーの全活動が処理された後に，MLP(予測器)で処理を行う．ここでは LSTMで処理されたレビュアーの全活動履歴を考慮した情報をデーコード（解釈）し，シグモイド関数により最終的な継続確率Pを算出する．
     \end{itemize}
 \end{itemize}
 \subsubsection{Focal Lossによる報酬関数の最適化}
