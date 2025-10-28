@@ -29,3 +29,26 @@ keywords = {Project failure, Open Source Software, GitHub},
 location = {Paderborn, Germany},
 series = {ESEC/FSE 2017}
 }
+
+@article{related1,
+title = {Predicting long-time contributors for GitHub projects using machine learning},
+journal = {Information and Software Technology},
+volume = {138},
+pages = {106616},
+year = {2021},
+issn = {0950-5849},
+doi = {https://doi.org/10.1016/j.infsof.2021.106616},
+url = {https://www.sciencedirect.com/science/article/pii/S0950584921000902},
+author = {Vijaya Kumar Eluri and Thomas A. Mazzuchi and Shahram Sarkani},
+keywords = {Long-time contributor, GitHub, GHTorrent, BigQuery, Machine learning models},
+abstract = {Context:
+Many organizations develop software systems using open source software (OSS), which is risky due to the high possibility of losing support. Contributors are critical for the survival of OSS projects, but very few new contributors remain with OSS projects to become long-time contributors (LTCs). Identification of factors that contribute to become an LTC can help OSS project owners utilize limited resources to retain new contributors.
+Objective:
+In this paper, we investigate whether we can effectively predict new contributors to OSS repositories becoming long time contributors based on repository and contributor meta-data collected from GitHub.
+Method:
+We construct a dataset containing 70,899 observations from 888 most popular repositories with 56,766 contributors. Each observation represents a contributor who joined the repository and is categorized as either an LTC or a non-LTC, depending on whether their project tenure is longer than 3 years. Each observation has 31 features that are calculated using the information of the new contributor and the repository when a new contributor joins the project. We build several machine learning models, including naive Bayes, k-nearest neighbor, logistic regression, decision tree, and random forest to predict LTC validated using 10-fold cross-validation. We compare our best model with state of the art model in terms of precision, recall, F1-score, Matthews correlation coefficient (MCC), and area under the curve (AUC).
+Results:
+In 10-fold cross-validation, the precision, recall, F1-score, MCC, and AUC of our best model (random forest) are 0.695, 0.079, 0.140, 0.226, and 0.913, respectively. These values are 27.29%, 92.68%, 86.67%, 56.94%, and 0.55%, respectively better than the best baseline state of the art model (random forest).
+Conclusion:
+Compared to state of the art models, the models built using our approach use less than 50% features (31 vs 63), have no wait time of one month after the contributor joins to predict future LTC status, and produce better results.}
+}
