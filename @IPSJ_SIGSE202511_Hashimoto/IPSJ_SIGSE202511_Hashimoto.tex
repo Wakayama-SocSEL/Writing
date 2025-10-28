@@ -15,6 +15,7 @@
 \usepackage{latexsym}
 \usepackage[dvipdfmx]{graphicx}
 \usepackage{tabularx}
+\usepackage{stfloats}
 
 \newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
 \newcommand{\ihara}[1]{\colorbox{green}{{\bf IHARA}:}{\color{blue} {\textbf{[#1]}}}}
@@ -237,7 +238,17 @@ L_{\mathrm{FL}} = - \frac{1}{N} \sum_{i=1}^{N} \alpha (1 - p_i)^{\gamma} y_i \lo
 
 
 \subsubsection{報酬関数}
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width = 1.0\textwidth]{./Hashimoto_fig/prediction.pdf}
+    \caption{図：学習から予測のフロー\todo{修正}}
+    \label{fig:RL}
+\end{figure*}
+
 逆強化学習では専門家の行動を説明する報酬関数を学習する．具体的には，状態sで行動aを選択することの価値を表す報酬関数R(s,a；θ)を，ニューラルネットワーぅのパラメータθとして学習する．本研究での専門家は継続したレビュアーを指し，非専門家は離脱したレビュアーを指す．学習においては，専門家（継続者）の活動軌跡に対しては高い累積報酬を与え，非専門家（離脱者）の活動軌跡に対しては低い累積報酬を与えるように，報酬関数R(s,a;θ)を調整する．
+
+
+
 \subsubsection{エンコーダと時系列処理}
 学習に使用するネットワークは主に以下のものから構成される
 \begin{itemize}
@@ -263,8 +274,11 @@ L_{\mathrm{FL}} = - \frac{1}{N} \sum_{i=1}^{N} \alpha (1 - p_i)^{\gamma} y_i \lo
 \subsection{予測・評価}
 
 
-\subsubsection{クロス評価}
+
 \subsubsection{評価指標}
+ 評価指標には,AUC_ROC(ROC 曲線下面積)
+
+\subsubsection{クロス評価}
 \todo{}
 
 
