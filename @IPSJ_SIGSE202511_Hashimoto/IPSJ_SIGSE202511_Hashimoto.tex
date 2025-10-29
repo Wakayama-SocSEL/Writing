@@ -17,6 +17,7 @@
 \usepackage{tabularx}
 \usepackage{stfloats}
 \usepackage{booktabs}
+\usepackage{amsmath}
 
 \newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
 \newcommand{\ihara}[1]{\colorbox{green}{{\bf IHARA}:}{\color{blue} {\textbf{[#1]}}}}
@@ -325,11 +326,10 @@ L_{\mathrm{BCE}} = - \frac{1}{N} \sum_{i=1}^{N} \left[ y_i\log(p_i) + (1 - y_i)\
 ここで，
 \[p_i = \sigma(z_i) = \frac{1}{1 + e^{-z_i}}\]はシグモイド関数であり，\(y_i \in \{0,1\}\) は正解ラベルを表す．
 
-\todo{修正}
-\[\textbf{Focal Loss (FL)}\]
-\[
-L_{\mathrm{FL}} = - \frac{1}{N} \sum_{i=1}^{N} \alpha (1 - p_i)^{\gamma} y_i \log(p_i) + (1 - \alpha) p_i^{\gamma} (1 - y_i) \log(1 - p_i)
-\]
+\begin{multiline}
+L_{\mathrm{FL}} = - \frac{1}{N} \sum_{i=1}^{N} \Bigl( \alpha (1 - p_i)^{\gamma} y_i \log(p_i) \\
++ (1 - \alpha) p_i^{\gamma} (1 - y_i) \log(1 - p_i) \Bigr)
+\end{multiline}
 
 ここで，
 \(\alpha \in [0,1]\) はクラス不均衡を補正する重みパラメータ，  
