@@ -236,12 +236,12 @@ Listing~\ref{programmer_sample}は，開発を担当するLLMへ与えるプロ�
 
 %----------------------------------
 \begin{lstlisting}[caption=実装を行うLLMへ与えるプロンプト例, label=programmer_sample, captionpos=t, columns=fullflexible, breaklines=true]
-"Programmer_1": [
-    "{overall_task}",
-    "You are Programmer_1 at ChatDev. Focus subtask: {subtask1}.",
+"Programmer_2": [
+    "You are Programmer_1 at ChatDev. Focus subtask: {subtask2}.",
+    "The overall outline of the project is as follows: {overall_task}",  
     "Strictly follow the current phase's Output rules.",
     "Constraints: single file `main.py`; STDIN/STDOUT only; stdlib only; no extra logs.",
-    "Respect any required region markers (e.g., '# [SUBTASK 1 START]' / '# [SUBTASK 1 END]'); do NOT add `__main__` unless asked.",
+    "Respect any required region markers (e.g., '# [SUBTASK 2 START]' / '# [SUBTASK 2 END]'); do NOT add `__main__` unless asked.",
     "Output EXACTLY ONE file in the requested format: start with 'FILENAME: main.py' then a single code block."
 ]
 \end{lstlisting}
@@ -253,20 +253,20 @@ Listing~\ref{programmer_sample}は，開発を担当するLLMへ与えるプロ�
 
 2.2節で示したように，要件に対する実装量が過度に小さい場合，LLMの注意資源や推論能力を必要以上に消費し，意図しない要件を実装する可能性が存在する\cite{tosem}．
 本研究では，各要件に対して生成されたソースコード規模が小さい場合，ソースコード生成後に要件の分割粒度を再検討し，要件を統合して再生成する．
-統合の判断基準は，$i$番目の要件$r_i$に基づき生成したソースコードのスナップショット$S_i$において，ソースコードの総行数を$LoC_i$とする．連続する2つのスナップショット対を$S_{i-1}$から$S_i$までで追加及び修正された行数を$\Delta LoC_i = S_i - S_{i-1}$ とする．
+本研究では，各要件の重要度をその要件$r_i$ を実装するステップで新規に追加・修正された行数を用いて評価し，その重要度を用いて要件の統合の判断基準として使用する．
+具体的には，$i$番目の要件$r_i$に基づき生成したソースコードのスナップショット$S_i$において，ソースコードの総行数を$LoC_i$とする．連続する2つのスナップショット対を$S_{i-1}$から$S_i$までで追加及び修正された行数を$\Delta LoC_i = S_i - S_{i-1}$ とする．
 
-\memo{書きたい事
 
-・$r_i$から生成されたコード行数から，$r_i$の重要度を定義
-
-・重要度の閾値は，全体行数LoC / N (1要件から作成される平均コード行数) 
+\memo{書きたい事\\
+・$r_i$から生成されたコード行数から，$r_i$の重要度を定義\\
+・重要度の閾値は，全体行数 LoC / N（1要件から作成される平均コード行数）
 }
+
 式(\ref{form:delta})で算出した差分行数$\Delta LoC_i$が，本研究で決定した閾値を下回ると，要件$r_i$は直前の要件$r_{i-1)}$と統合する．
 
 \begin{equation}\label{form:delta}
-    \Delta LoC_i \leq LoC / ReqNum \todo{}
+    \Delta LoC_i \leq LoC_n / n
 \end{equation}
-\todo{プロンプト例も必要．要求と要件と，それまでの成果物をどのようなプロンプトで入力するのか．}
 
 その後に，統合した要件群を基に再度コードを生成し，統合の可否について調査を実施し，テストを通過したケースの統合後の要件を取得する．
 取得した要件の中から無作為にサンプルを抽出し，計画フェーズと同様にfew-shotの例として提示し，要求から要件への再分割を実施し，それを基にコードの生成を実施する．
@@ -452,5 +452,3 @@ ChatDevをベースとして開発を行う各ステップで分割された要�
 \bibliography{bibsample}
 
 \end{document}
-
-
