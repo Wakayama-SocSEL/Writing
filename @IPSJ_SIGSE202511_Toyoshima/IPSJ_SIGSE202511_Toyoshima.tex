@@ -1,14 +1,48 @@
 \documentclass[submit,techrep,noauthor]{ipsj}
 
+
 \usepackage[dvipdfmx]{graphicx}
 \usepackage{latexsym}
 \usepackage{url}
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{amsmath,amssymb}
+\usepackage{tabularx}
+\usepackage{stfloats}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{caption}
+
+\newcounter{patternID}
+
+% コード例を載せるためのあれこれ
+\definecolor{lightred}{RGB}{255,230,230}
+\definecolor{lightgreen}{RGB}{230,255,230}
+
+\lstset{
+    basicstyle=\small\ttfamily,
+    abovecaptionskip=0pt,
+    captionpos=b,
+    frame=tb,
+    framexleftmargin=2em,
+    numbers=left,
+    numberstyle={\scriptsize},
+    xleftmargin=\parindent,
+    escapechar=|
+}
+
+%ListingのキャプションがFigureになってしまうのをListingに直すコマンド
+\usepackage{caption}
+\makeatletter
+\let\MYcaption\@makecaption
+\makeatother
+\usepackage{caption}
+\makeatletter
+\let\@makecaption\MYcaption
+\makeatother
 
 \newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
-\newcommand{\memo}[1]{\colorbox{magenta!30}{\textbf{MEMO}}{\color{red!50}\textbf{[#1]}}}
+\newcommand{\memo}[1]{\colorbox{magenta!30}{{\bf MEMO}:}{\color{red!50} {\textbf{[#1]}}}}
 \newcommand{\ihara}[1]{\colorbox{green}{{\bf IHARA}:}{\color{blue} {\textbf{[#1]}}}}
 
 \def\Underline{\setbox0\hbox\bgroup\let\\\endUnderline}
@@ -16,10 +50,9 @@
 \def\|{\verb|}
 %
 
-%\setcounter{巻数}{59}%vol59=2018
-%\setcounter{号数}{10}
-%\setcounter{page}{1}
-
+\def\Underline{\setbox0\hbox\bgroup\let\\\endUnderline}
+\def\endUnderline{\vphantom{y}\egroup\smash{\underline{\box0}}\\}
+\def\|{\verb|}
 
 \begin{document}
 
@@ -54,10 +87,10 @@ Johoshori Uniersity}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 大規模言語モデル (LLM) 技術の急速な発展に伴い\cite{Growing_LLM}，LLMはこれまで人間が時間や労力をかけていたタスクの自動化を実現し，幅広い分野の作業を効率化する技術として関心を集めている．
-ソフトウェア開発においても，コードレビュー，リファクタリング，テストケース生成など，様々な場面において飛躍的に生産性を向上することが確認されている．\cite{LLM_CodeReview}\cite{LLM_Refactoring}\cite{LLM_Gene_Test}
-その中でも，開発者の意図や要件をプロンプトとして提示し，ソースコードの自動生成には期待が大きい.\cite{LLM_CodeGeneration}
+ソフトウェア開発においても，コードレビュー，リファクタリング，テストケース生成など，様々な場面において飛躍的に生産性を向上することが確認されている\cite{LLM_CodeReview}\cite{LLM_Refactoring}\cite{LLM_Gene_Test}．
+その中でも，開発者の意図や要件をプロンプトとして提示し，ソースコードの自動生成には期待が大きい\cite{LLM_CodeGeneration}.
 
-LLMは，自然言語で記述された要求文に基づきソースコードの自動生成を実現し，昨今では複雑で，大規模なソフトウェア開発の自動化に向けた研究が進められている．\cite{LLM_CodeGeneration}
+LLMは，自然言語で記述された要求文に基づきソースコードの自動生成を実現し，昨今では複雑で，大規模なソフトウェア開発の自動化に向けた研究が進められている\cite{LLM_CodeGeneration}．
 一部の要求は実現できる一方で，複数のソフトウェア要件が内包し，それぞれが相互に依存し合う大規模なソフトウェア要件を満たすソースコード生成には課題が多い
 従来研究ではソフトウェア要件が複雑になると，LLMが十分に推論せずに，短絡的なソースコードを生成する．
 例えば，仕様の一部が欠損している場合や，要件の文脈を正しく理解できていない場合には，ロジック誤りが生じることがある．
@@ -65,7 +98,7 @@ LLMは，自然言語で記述された要求文に基づきソースコード�
 
 LLMの理解や推論を補助するプロンプト技術として，思考の過程を明示的に示すChain of Thought (CoT) や，要求を満たす例を少数提示するfew-shot学習が用いられているが，\cite{LLM_fewshot} これらは局所的な推論の補完や思考パターンの学習には有効である一方で，プログラミング言語のように記述方法や実装方法によって同一の要件に対して多様な解が存在する領域では，これらの手法のみでは十分な性能を発揮しにくい．
 
-これに対して先行研究では，全体の流れをfew-shot学習を用いて要件を抽出するフェーズと，それらを基にコードを生成するフェーズの2つに分割する手法が取り入れられており．\cite{tosem}
+これに対して先行研究では，全体の流れをfew-shot学習を用いて要件を抽出するフェーズと，それらを基にコードを生成するフェーズの2つに分割する手法が取り入れられており\cite{tosem}．
 前者では，大量のデータ収集やそれに対するラベリング，再学習などを要するファインチューニングと比較して，追加学習をようさずにLLM挙動を制御できることからfew-shot学習が採用されている．
 同研究では，複数の機能を個別に生成し，生成されたコード断片を最終的に結合する構造では，各断片における前提が共有されず，関数やファイル単位での依存関係や，グローバル変数の扱いや，エラーハンドリングなど，ソースコード単位での整合性が破綻してしまう可能性についても示唆されている．
 
@@ -125,8 +158,8 @@ Jiangら\cite{tosem}は，few-shotによりLLMを用いて要件文から小さ�
 %--------------------
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=1.0\linewidth]{./Toyoshima_fig/approach_abst_v2.pdf}
-    \caption{アプローチの概要図1}
+    \includegraphics[width=1.0\linewidth]{./Toyoshima_fig/approach_abst_v3.pdf}
+    \caption{アプローチの概要図}
     \label{approach_abst}
 \end{figure*}
 %--------------------
@@ -165,14 +198,28 @@ Jiangら\cite{tosem}は，few-shotによりLLMを用いて要件文から小さ�
 \subsection{計画フェーズ}
 要求文の分割は，異なる開発者が行うと分割粒度が異なることも少なくない\cite{split_size}．LLMも同様に，共通した粒度で要求文を要件に分割することは容易でない．
 本手法では，評価対象とは別のソフトウェア開発における要求文を手動で要件に分割した結果をfew-shot学習を行ったLLMモデルを用いて，要求文の分割を実施する．
+Listing~\ref{sample_split}は，要求文を分割するプロンプトの一部を抜粋したものである．
 few-shot学習に用いるソフトウェア開発データは，分割後の要件に基づきLLMで生成したコードが入出力テストを全て通過しているものとする．
 また，分割時に「重要な機能であればあるほど前方に配置する」の命令を与え，ソースコードの主要処理から実装するように実装する順番もLLMが決定する．
 実装する順に要件には，$r_1$，$r_2$，$r_3$，\dots,$r_n$のようにラベルを付与する．
 
 \todo{分割のための具体的なプロンプトをここに書いておいた方が良い}
+%----------------------------------
+\begin{lstlisting}[caption=要求分割のためのプロンプト（一部抜粋）, label=sample_split, captionpos=t, columns=fullflexible, breaklines=true]
+# Role
+You are an expert in software requirements elicitation.
 
+# Objective
+From an AtCoder problem statement and its constraints, extract the requirements and split them into 10 or fewer subtasks.
 
-\todo{統合と再分割は，計画フェーズに入れた方がいい？}
+# Requirements
+- Identify the input format and state how it will be handled in the first requirement.
+- Decide which function to pass the given arguments to, and name functions/variables wherever possible.
+- Mention the output format in the last requirement.
+- Think of this as converting a story-like text into a list of implementable events.
+- Return only the subtask list (no extra commentary).
+\end{lstlisting}
+%----------------------------------
 
 % few-shotによる要件細分化の安定性を図るため，本研究では著者が要件文を手動で小要件群に分割し，その分割に基づいてLLMにコードを生成する．そのコードが用意した入出力テストを全て通過した場合に，その手動で行った分割は「正しい分割」である，と定義しする．その後に，分割前の文章と分割後の文章をペアとして，few-shotの例としてLLMへ提示する．2.3節の方針に基づき，ここで与える分割例の数は8件と固定する．その後，few-shot学習を実施したLLMに対して未分割の要件を与え，分割を実施する．この際，分割数の最大数は，分割のコストを考慮し，最大数を10個に制限する．また，分割例と共「重要な機能であればあるほど前方に配置する」という命令を与え，コア機能から開発を実施し，段階的に機能を拡張する，と言た構造とする．
 
@@ -180,45 +227,51 @@ few-shot学習に用いるソフトウェア開発データは，分割後の要
 \subsection{実装フェーズ}
 
 実装フェーズは，各要件を満たすソースコードをLLMを用いて生成する．
-従来研究\todo{TOSEM?}では，分割した要件のみに基づき，各要件を実現するソースコードを並行して生成していたため，要求間の断片化が発生し，全体整合性が崩壊していた．
+Jiangらは，分割した要件のみに基づき，各要件を実現するソースコードを並行して生成する場合，要求間の断片化が発生し，全体整合性が崩壊するという課題が発生している\cite{tosem}
 本研究は，要件$r_1$に加え，要求文をLLMに入力し，ソースコードを生成する．
+Listing~\ref{programmer_sample}は，開発を担当するLLMへ与えるプロンプトの一部を抜粋したものである．
 ここで生成されたソースコード一式をスナップショット1 ($S_1$) とする．次の要件要件$r_2$は，要求文と前の要件$r_1$で生成したスナップショット1$S_1$を入力とし，ソースコードを生成する．
 ここで生成されたソースコード一式をスナップショット2 ($S_2$) とする．
 このように，本研究では従来研究のような要件のみでソースコードを生成するのとは異なり，要求文と前の要件で生成したスナップショットも入力として用いる．
 
-\todo{実装のための具体的なプロンプトをここに書いておいた方が良い}
-
-% これらのアプローチにより，分割パターンの多様性確保とプロンプト長の管理を両立しながら，要件に含まれる要求の境界を明確化し，局所的開発の最適化を目指す．
-\todo{分割例を1つ提示する}
+%----------------------------------
+\begin{lstlisting}[caption=実装を行うLLMへ与えるプロンプト例, label=programmer_sample, captionpos=t, columns=fullflexible, breaklines=true]
+"Programmer_1": [
+    "{overall_task}",
+    "You are Programmer_1 at ChatDev. Focus subtask: {subtask1}.",
+    "Strictly follow the current phase's Output rules.",
+    "Constraints: single file `main.py`; STDIN/STDOUT only; stdlib only; no extra logs.",
+    "Respect any required region markers (e.g., '# [SUBTASK 1 START]' / '# [SUBTASK 1 END]'); do NOT add `__main__` unless asked.",
+    "Output EXACTLY ONE file in the requested format: start with 'FILENAME: main.py' then a single code block."
+]
+\end{lstlisting}
+%----------------------------------
 
 %3.4
 \subsection{再計画フェーズ}
-再計画フェーズでは，スナップショットの追加行数の
+再計画フェーズでは，スナップショットの追加行数に基づく要件の統合と，統合した結果を用いた再分割を実施する．
 
+2.2節で示したように，要件に対する実装量が過度に小さい場合，LLMの注意資源や推論能力を必要以上に消費し，意図しない要件を実装する可能性が存在する\cite{tosem}．
+本研究では，各要件に対して生成されたソースコード規模が小さい場合，ソースコード生成後に要件の分割粒度を再検討し，要件を統合して再生成する．
+統合の判断基準は，$i$番目の要件$r_i$に基づき生成したソースコードのスナップショット$S_i$において，ソースコードの総行数を$LoC_i$とする．連続する2つのスナップショット対を$S_{i-1}$から$S_i$までで追加及び修正された行数を$\Delta LoC_i = S_i - S_{i-1}$ とする．
 
-%3.5 
-\subsection{スナップショット差分行数に基づく要件統合\todo{ほとんど修正していない}}
+\memo{書きたい事
 
-要件に対する実装量が過度に小さい場合，LLMの注意資源や推論能力を必要以上に消費し，意図しない要件を実装する可能性がある．
-本研究では，各要件に対して生成されたソースコード規模が小さい場合，ソースコード生成後に要件の分割粒度を再検討し，要件を統合して再生生する．
-統合の判断基準は，$i$番目の要件$r_i$に基づき生成したソースコードのスナップショット$S_i$において，ソースコードの総行数を$LoC_i$とする．
-連続する2つのスナップショット対を$S_{i-1}$と$S_i$の差分に含まれる追加及び修正された行数を$\Delta LoC_i = S_i - S_{i-1}$ となる．式(\ref{form:delta})で算出した差分行数$\Delta LoC_i$が，本研究で決定した閾値\todo{どこに閾値書く？データセット？}を下回ると，要件$r_i$は直前の要件$r_{i-1)}$と統合する．
+・$r_i$から生成されたコード行数から，$r_i$の重要度を定義
 
-\textcolor{red}{で生成されたコード行数linessnapを取得し，最終的に生成されたコードの総行数をLoC，細分化した要件数をReqNumとして，(1)の式を満たす場合に，その要件を1つ前の要件に統合を実施し，統合後の要件から再度コード生成を実施し，入出力テストの通過率を基に評価を行う．}\todo{$\leftarrow$この文章いみふ}
+・重要度の閾値は，全体行数LoC / N (1要件から作成される平均コード行数) 
+}
+式(\ref{form:delta})で算出した差分行数$\Delta LoC_i$が，本研究で決定した閾値を下回ると，要件$r_i$は直前の要件$r_{i-1)}$と統合する．
 
 \begin{equation}\label{form:delta}
-    \Delta LoC_i \leq LoC / ReqNum
+    \Delta LoC_i \leq LoC / ReqNum \todo{}
 \end{equation}
-
-その後に，統合した要件群を基に再度コードを生成し，統合の可否について調査を実施する．
-
 \todo{プロンプト例も必要．要求と要件と，それまでの成果物をどのようなプロンプトで入力するのか．}
 
+その後に，統合した要件群を基に再度コードを生成し，統合の可否について調査を実施し，テストを通過したケースの統合後の要件を取得する．
+取得した要件の中から無作為にサンプルを抽出し，計画フェーズと同様にfew-shotの例として提示し，要求から要件への再分割を実施し，それを基にコードの生成を実施する．
 
-%3.4
-\subsection{統合後の要件に基づく要件の再分割\todo{ほとんど修正していない}}
-3.3節で得られた生成結果のうち，統合後に入出力テストを全て通過したケースにおいて，当該ケースで採用した要件群を新たな分割の例と認定し，few-shotで提示する分割例と置換する．
-これにより，分割粒度や分割後要件の並び順などの最適化が行われ，分割精度と実装安定性の向上が期待される．
+以上のような統合と再分割により，分割粒度や要件の並び順などの最適化を目指す．
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -237,15 +290,16 @@ few-shot学習に用いるソフトウェア開発データは，分割後の要
 満たすべき要件が自然言語で書かれた問題文や，生成されたコードを評価するための入出力セットが備わっていることから競技プログラミングサイトであるAtCoder\cite{AtCoder}より541件の入出力テストをもつ200問の問題を取得した．
 尚，難易度の低い問題では分割の必要がないことから，難易度はC問題，D問題からそれぞれ100問ずつ取得した．
 
-又，LLMの事前学習に用いられる学習用データの多くは英語が中心であり，多言語と比較して性能の差が挙げられる．\cite{LLM_En} 
+又，LLMの事前学習に用いられる学習用データの多くは英語が中心であり，多言語と比較して性能の差が挙げられる\cite{LLM_En} ．
 そのため，要件の理解の一貫性や再現性を担保しやすいと考えられるため，問題などの自然言語は全て英語のものを取得した．
 
 %4.2
 \subsection{実験設定}
-\todo{手動分割のこと，要件分割数のことはここに書く．}
-\todo{2.3節の方針に基づき，ここで与える分割例の数は8件と固定する．その後，few-shot学習を実施したLLMに対して未分割の要件を与え，分割を実施する．この際，分割数の最大数は，分割のコストを考慮し，最大数を10個に制限する．}
+本研究の計画フェーズでは，著者が手動で要求分から要件分を作成し，それらをLLMにfew-shotとして学習させ，AtCoderの問題200問の分割の自動化を行った．
+LLMに対して要求分と要件群の例以外に，根幹となる機能ほど順番を前にする事，分割コストの観点から分割の上限数を10個に制限する事の2点を追加で指示を行った．
+Jiangらの研究上で，要件の分割を行う際にfew-shotで与えるべき分割例の最適な数は4~8個と述べられているため，本研究では8個(C問題，D問題で各4問)の例を提示した．
 
-LLMは実行ごとに生成結果にばらつきが発生するため，AtCoderの問題200問に対して，要件の細分化とコードの生成を各問題あたり3回実施することで，再現性を確保した．
+又，LLMは実行ごとに生成結果にばらつきが発生するため，AtCoderの問題200問に対して，要件の細分化とコードの生成を各問題あたり3回実施することで，再現性を確保した．
 評価に関しては，問題ごとに提供される入出力サンプルを入出力テストとして扱い，全体のテスト通過率をベースに評価を実施する．
 AtCoderの問題の特性上，入出力は標準入力・出力が想定されているため，3.1節で拡張した段階的に開発を行う各LLMに対して，アプリケーションのようなインタフェースは作成しないように命令を追加した．
 
@@ -352,7 +406,7 @@ RQ2で定義した問題単位のテスト結果の分布を図\ref{rq3_1}に示
 \memo{実際の分割例ってどこに置くか考える．付録か...？}
 
 本研究で扱った特定の問題において，統合前と再分割後の細分化された要件を目視で比較する．
-統合前の場合1つあたりの要件は，変数や関数の宣言，値の代入，条件分岐の作成などと言った単発の作業の単位で区切られているのに対して，再分割後の要件は宣言・初期化・関数への引き渡しまでを同じまとまりとするような，意味のつながった一連の作業をひとかたまりとしてコードを生成可能単位に移行された事が確認された．\todo{絶対伝わるわけない気がする}
+統合前の場合1つあたりの要件は，変数や関数の宣言，値の代入，条件分岐の作成などと言った単発の作業の単位で区切られているのに対して，再分割後の要件は宣言・初期化・関数への引き渡しまでを同じまとまりとするような，意味のつながった一連の作業をひとかたまりとしてコードを生成可能単位に移行された事が確認された．\todo{絶対伝わるわけない気がするので要推敲}
 
 %6.1.2
 \subsubsection{ケース2: 再分割により改善が見られたケース}
@@ -398,3 +452,5 @@ ChatDevをベースとして開発を行う各ステップで分割された要�
 \bibliography{bibsample}
 
 \end{document}
+
+
