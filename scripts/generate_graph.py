@@ -7,16 +7,18 @@ import os
 # --- 設定 ---
 # 追跡したいファイルをリストで指定します。
 TARGET_FILES = [
-    "@IPSJ_SIGSE202511_Hashimoto/IPSJ_SIGSE202511_Hashimoto.tex",  
-    "@IPSJ_SIGSE202511_Horio/IPSJ_SIGSE202511_Horio.tex",  
-    "@IPSJ_SIGSE202511_Noguchi/IPSJ_SIGSE202511_Noguchi.tex",
-    "@IPSJ_SIGSE202511_Toyoshima/IPSJ_SIGSE202511_Toyoshima.tex"
+    "@Bachelor2025_Hashimoto/Bachelor2025_Hashimoto.tex",  
+    "@Bachelor2025_Noguchi/Bachelor2025_Noguchi.tex",  
+    "@Bachelor2025_Toyoshima/Bachelor2025_Toyoshima.tex",
+    "@Bachelor2025_Yoshida/Bachelor2025_Yoshida.tex",
+    "@Master2025_Kameoka/Master2025_Kameoka.tex"
 ] 
 FILE_LABELS = {
-    "@IPSJ_SIGSE202511_Hashimoto/IPSJ_SIGSE202511_Hashimoto.tex": "Hashimoto",
-    "@IPSJ_SIGSE202511_Horio/IPSJ_SIGSE202511_Horio.tex": "Horio",
-    "@IPSJ_SIGSE202511_Noguchi/IPSJ_SIGSE202511_Noguchi.tex": "Noguchi",
-    "@IPSJ_SIGSE202511_Toyoshima/IPSJ_SIGSE202511_Toyoshima.tex": "Toyoshima"
+    "@Bachelor2025_Hashimoto/Bachelor2025_Hashimoto.tex": "Hashimoto",
+    "@Bachelor2025_Noguchi/Bachelor2025_Noguchi.tex": "Noguchi",
+    "@Bachelor2025_Toyoshima/Bachelor2025_Toyoshima.tex": "Toyoshima",
+    "@Bachelor2025_Yoshida/Bachelor2025_Yoshida.tex": "Yoshida",
+    "@Master2025_Kameoka/Master2025_Kameoka.tex": "Kameoka"
 }
 DATA_FILE = "data/line_count_history.json"
 GRAPH_FILE = "docs/line_count_graph.svg"
@@ -40,8 +42,7 @@ def collect_line_count_history(file_paths):
         stderr=subprocess.DEVNULL
     ).strip()
     full_history = {} 
-    cutoff_timestamp = 1760682000   # 2025年10月17日午前6時（日本時間, JST, UTC+9）
-
+    cutoff_timestamp = 1763902800   # 2025年11月24日午前6時（日本時間, JST, UTC+9）
     for file_path in file_paths:
         file_history = []
         try:
