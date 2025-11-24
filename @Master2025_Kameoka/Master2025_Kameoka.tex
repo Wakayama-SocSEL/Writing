@@ -1,0 +1,147 @@
+%%
+%% 修士論文
+%%
+%% USE 機能的に等しい
+%% not 外的振る舞いが等しい
+%%
+%% USE 大規模言語モデル
+%% not LLM
+%%
+%% USE 低下させる
+%% not 下げる
+%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%
+%% 利用するコマンドの準備
+%%
+
+%% 必須パッケージ
+\documentclass[11pt]{jreport}
+\usepackage{wuse_thesis}
+\usepackage{indentfirst}
+
+%% 追加パッケージ
+%\usepackage{graphicx}
+\usepackage{comment}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{url}
+
+\usepackage{latexsym}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{listings}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+
+\lstset{
+basicstyle=\small\ttfamily,
+abovecaptionskip=0pt,
+captionpos=b,
+frame=tb,
+framexleftmargin=2em,
+numbers=left,
+numberstyle={\scriptsize},
+xleftmargin=\parindent
+}
+
+%ListingのキャプションがFigureになってしまうのをListingに直すコマンド
+\usepackage{caption}
+\makeatletter
+\let\MYcaption\@makecaption
+\makeatother
+\usepackage{caption}
+\makeatletter
+\let\@makecaption\MYcaption
+\makeatother
+
+\def\Underline{\setbox0\hbox\bgroup\let\\\endUnderline}
+\def\endUnderline{\vphantom{y}\egroup\smash{\underline{\box0}}\\}
+\def\|{\verb|}
+%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%
+%% 主に表紙を作成するための情報
+%%
+
+%% タイトル(修論の場合は英語表記も指定)
+\title{修士論文タイトル}
+\etitle{Title}
+
+%% 著者名(修論の場合は英語表記も指定)
+\author{亀岡 令}
+\eauthor{Ryo Kameoka}
+
+%% 修士論文(M2用)
+\master
+
+%% 学科・クラスタ
+\department{システム工}
+
+%% 学生番号
+\studentid{aaaa}
+
+%% 卒業年度
+\gyear{2025}
+
+%% 論文提出日(修士の場合は月まで)
+\date{2026年2月}
+\edate{February 2026}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%
+%% 表紙・概要・目次
+%%
+
+\begin{document}
+
+%% 表紙
+\maketitle
+
+%% 概要
+\begin{abstract}
+ほげほげ
+\end{abstract}
+
+%% 目次
+\tableofcontents
+
+%% 図目次
+%\listoffigures
+
+%% 表目次
+%\listoftables
+
+\newpage
+\pagenumbering{arabic}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%
+%% 謝辞
+%%
+
+%\begin{acknowledgements}
+%感謝します．
+%\end{acknowledgements}
+
+
+
+
+\end{document}
