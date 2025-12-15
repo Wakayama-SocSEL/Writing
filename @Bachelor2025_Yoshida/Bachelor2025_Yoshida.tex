@@ -6,6 +6,7 @@
 %\usepackage{graphicx}  % ←graphicx.styを用いてEPSを取り込む場合有効にする
 			% 他のパッケージ・スタイルを使う場合には適宜追加
 \newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
+\newcommand{\memo}[1]{\colorbox{magenta}{\textbf{MEMO}}{\color{red}\textbf{[#1]}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -14,8 +15,7 @@
 %%
 
 %%  タイトル(修論の場合は英語表記も指定)
-\title{\todo{タイトルを考える}\\
-       p\LaTeX による卒業・修士論文の作成}
+\title{\todo{仮}類似機能メソッドの削除実態調査と削除候補メソッドの検出手法の提案}
 %\etitle{Test\\Test\\Test}
 
 %%  著者名(修論の場合は英語表記も指定)
@@ -76,31 +76,100 @@
 \chapter{はじめに}
 
 \todo{}
-
+\memo{aaa}
 
 \chapter{不要コードの削除}
 
 \section{不要コードの定義}
 
-\subsection{到達不能コード}
+\todo{3種類ありますよっていうことを述べる．従来研究より引用}
 
-\subsection{未実行コード}
+\subsection{デッドコード（Dead Code）}
+\todo{コールグラフ上において，到達できないコード}
 
-\subsection{不要コード}
+\memo{コード例入れるかも}
 
+\subsection{未実行コード（Unused Code）}
+\todo{特定の期間において，本番環境で実行されなかったコード}
+
+\memo{コード例入れるかも}
+
+\subsection{不要コード（Unnecessary Code）}
+\todo{ステークホルダが関心を失ったコード←従来研究の定義}
+
+\todo{本研究で対象とする不要コードの定義}
+\begin{itemize}
+    \item 過去の履歴上，削除されたコード
+    \begin{itemize}
+        \item 移動などにより，削除/追加されたコードはノイズ
+    \end{itemize}
+    \item 類似機能メソッドが存在しており，片方に代替されたメソッド
+\end{itemize}
+
+\memo{コード例入れるかも}
 
 \section{不要コードが引き起こす問題}
+\todo{リソースの浪費}
+
+\todo{コードベースの理解阻害}
+
+したがって，不要コードは検出し，削除することで，コードベースから取り除く必要がある．
 
 \section{関連研究}
 
-\subsection{静的解析によるデッドコードの解析}
+\subsection{デッドコードの検出}
+\todo{静的解析によるデッドコードの検出}
 
-\subsection{動的解析による未実行コードの解析}
+\todo{静的解析ツールの限界}
+動的依存関係の取得が困難
 
-\subsection{機能的代替機能の検出}
+
+\subsection{未実行コードの検出}
+
+\todo{ランタイム使用状況から検出}
+
+\todo{ランタイム使用状況取得における課題}
+\begin{itemize}
+    \item 長期間を要する
+    \item 少なくとも一回実行されたコードは全体の2割ほどしかない
+    \item 使用されていないからといって削除しても良いとは限らない
+    \begin{itemize}
+        \item エラー処理コード
+        \item 復旧コード
+        \item 移行コード
+    \end{itemize}
+\end{itemize}
+
+
+\subsection{不要コードの検出}
+\todo{静的メトリクスを用いた検出手法}
+
+\todo{課題}
+
+
+\subsection{類似機能メソッドの検出}
+\todo{意味的に同じ機能を持つメソッド群の検出}
+
+\todo{課題}
+\begin{itemize}
+    \item 一時的なクローンか，削除されるクローンかの識別ができない
+\end{itemize}
+
+\subsection{削除メソッドの特徴分析}
+\todo{エンピリカルスタディはされているが，定量的には分析できていない}
 
 \section{本研究の位置付け}
 
+\todo{既存研究の共通課題}
+\begin{itemize}
+    \item 削除されたメソッドの特徴を使用していない
+\end{itemize}
+
+\todo{既存研究との違い}
+\begin{itemize}
+    \item 削除されたメソッドの特徴からパターンを作成する
+    \item 単体のコードではなく，類似機能メソッド群の中での役割の違いに着目
+\end{itemize}
 
 
 \chapter{事前分析：削除されたコードの特徴}
@@ -121,20 +190,48 @@
 
 \section{分析手法}
 \subsection{類似機能メソッドの検出}
+\todo{コードクローン検出器NILを使用して類似機能メソッドを検出}
+
 \subsection{削除メソッドと生存メソッドの抽出}
+\todo{生存メソッド：リビジョン間で類似するメソッドが存在する}
+
+\todo{削除メソッド：リビジョン間で類似するメソッドが存在しない}
+
 \subsection{メソッドの変遷パターンの分類}
+\todo{類似しなくなったメソッドに着目}
+
+
+\subsection{\memo{メソッドのパターン間で差があるか}}
 
 \section{分析結果}
 \subsection{類似機能メソッドの生存実態}
+\todo{メソッドの生存履歴を以下の3パターンに分類できたこと}
+\begin{itemize}
+    \item クローンメソッドの片方が削除
+    \item クローンメソッドの両方が削除
+    \item クローンメソッドがリファクタリングにより改善
+\end{itemize}
+
 \subsection{削除されたメソッドの特徴}
+
+\todo{クローンメソッドの片方が削除の特徴}
+
+\todo{クローンメソッドの両方が削除の特徴}
+\begin{itemize}
+    \item ファイルごと削除
+    \item メソッドの中で定義されたメソッドが削除
+\end{itemize}
+
+\todo{クローンメソッドがリファクタリングにより改善したメソッドの特徴}
 
 \section{まとめ}
 
-\chapter{RQ2：削除されたメソッドの特徴は汎化できるか}
+\chapter{RQ2：削除されたメソッドの特徴はルール化できるか}
 
 \section{概要}
 
 \section{検出ルールの作成}
+\todo{RQ1で得られた，メソッドのパターンごとに検出ルールを作成}
 
 \section{評価方法}
 
