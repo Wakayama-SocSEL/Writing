@@ -2,8 +2,10 @@
 \usepackage{wuse_thesis}
 \usepackage{indentfirst}
 \usepackage{url}	% \url{}コマンド用．URLを表示する際に便利
+\usepackage[dvipdfmx]{graphicx,xcolor}
 %\usepackage{graphicx}  % ←graphicx.styを用いてEPSを取り込む場合有効にする
 			% 他のパッケージ・スタイルを使う場合には適宜追加
+\newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -12,7 +14,7 @@
 %%
 
 %%  タイトル(修論の場合は英語表記も指定)
-\title{タイトルを考える\\
+\title{\todo{タイトルを考える}\\
        p\LaTeX による卒業・修士論文の作成}
 %\etitle{Test\\Test\\Test}
 
