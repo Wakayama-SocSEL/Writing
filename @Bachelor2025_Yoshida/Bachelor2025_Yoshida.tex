@@ -51,35 +51,7 @@
 %%  概要
 %%
 \begin{abstract}
-本稿では，
-「和歌山大学システム工学部卒業論文/
-  大学院システム工学研究科修士論文用スタイルファイル」
-を用いて卒業論文を作成する方法を解説する．
-本稿自身，
-「和歌山大学システム工学部卒業論文/
-  大学院システム工学研究科修士論文用スタイルファイル」
-を用いて記述されており，例によってその使い方を示している．
-「和歌山大学システム工学部卒業論文/
-  大学院システム工学研究科修士論文用スタイルファイル」
-では，タイトルページ，概要，目次，参考文献などの書式を設定している．
-
-「和歌山大学システム工学部卒業論文/
-  大学院システム工学研究科修士論文用スタイルファイル」
-は，
-\begin{quote}
-  \begin{description}
-    \item[\tt wuse\_thesis.sty:] 卒業/修士論文用スタイルファイル
-    \item[\tt thesis\_sample.tex:] スタイルファイル利用例
-  \end{description}
-\end{quote}
-からなる．
-
-なお，この卒業論文用スタイルファイル(p\LaTeX 版)に関する質問は，
-メールにて
-\begin{quote}
-ihara@wakayama-u.ac.jp
-\end{quote}
-まで．
+\todo{概要を考える}
 
 \end{abstract}
 
@@ -103,141 +75,87 @@ ihara@wakayama-u.ac.jp
 
 \chapter{はじめに}
 
-{\bf 「和歌山大学システム工学部卒業論文/
-大学院システム工学研究科修士論文用スタイルファイル」}\cite{wusethesis}
-では，専用のタイトルページを出力する．
-記述すべき項目は，
-\begin{itemize}
-  \item タイトル
-  \item 著者名
-  \item 学士(4年)/修士(M2)の設定
-  \item 学科名/クラスタ名
-  \item 学生番号
-  \item 卒業年度
-  \item 論文提出日
-\end{itemize}
-である．
-これらのデータは，\verb|\maketitle|によってタイトルページに出力される．
-また，概要の部分において，論文の内容をまとめる．その内容は論文の2ペー
-ジ目(タイトルページの次)に出力される．
-このソースでは，目次(\verb|\tableofcontents|)を出力している．
-他に，図目次(\verb|\listoffigures|)，表目次(\verb|\listoftables|)を
-出力することもできるので，必要ならばそれぞれのコメントをはずす．
-図目次，表目次については，第\ref{chap:fig-tab-exp}章において説明する．
-
-\section{タイトル}
-\subsection{title}
-論文のタイトルを記述する．
-
-\section{著者}
-\subsection{author}
-著者名を記述する．
-
-\subsection{bachelar/master}
-卒業論文の場合には，\verb|\master|をコメントアウトし，
-\verb|\bachelar|を設定する．
-修士論文の場合には，\verb|\bachelar|をコメントアウトし，
-\verb|\master|を設定する．
-
-\subsection{department}
-所属を記述する．
-システム工学科所属（学部生）の場合には``システム工''，
-デザイン科学クラスタ所属（大学院生）の場合には``デザイン科学''と記述する．
-
-\subsection{studentid}
-学生番号を記述する．
-
-\subsection{gyear}
-卒業年度を記述する．
-
-\section{提出日}
-\subsection{date}
-論文提出日を記述する．
+\todo{}
 
 
-\chapter{図，表，数式}\label{chap:fig-tab-exp}
+\chapter{不要コードの削除}
 
-論文では，図，表，数式などを効果的に使用する．
+\section{不要コードの定義}
 
-\section{図}
+\subsection{到達不能コード}
 
-{\tt figure}環境を利用することによって図にキャプション
-(\verb|\caption|)を付けることができる．図に付けられたキャプションは
-\verb|\listoffigures|によって図目次として出力される．図には章ごとに通
-し番号が付けられ，キャプションに\verb|\label|を設定しておくと，
-``図\ref{fig:sample}''のように\verb|\ref|によって図を番号で参照するこ
-とができる．図\ref{fig:sample}に{\tt figure}環境を用いた記述例を示す．
+\subsection{未実行コード}
 
-\begin{figure}
-  \centering
-    ここで図を取り込む．
-    % 試しに，tiger.psが自分のマシンのどこに格納されているかを調べて
-    % 以下の命令を有効にしてみて下さい．
-    % ただし，同時に\begin{document}より前にある\usepackage{graphicx}
-    % も有効にする必要があります．
-    %\includegraphics[width=5cm,clip]{/usr/local/share/ghostscript/7.07/examples/tiger.ps}
-  \caption{図の例}
-  \label{fig:sample}
-\end{figure}
+\subsection{不要コード}
 
-また，{\tt graphicx.sty}などのスタイルファイルを利用することによって
-EPS形式やPDF形式の図を文章の中に取り込むことができる．
-この場合，\verb|\begin{document}|の前に\verb|\usepackage{graphicx}|を
-追加する．
 
-なお，図表の配置は基本的には\LaTeX{}が決めるので，思った位置に入らない
-からといって無理に場所を指定するのはよくない．
-どうしても位置を固定したい場合には，すべての文章が書きあがった後に指定
-するとよい\footnote{そうしないと文章を書き換えるたびに，位置がずれる可能性がある}．
+\section{不要コードが引き起こす問題}
 
-\section{表}
+\section{関連研究}
 
-{\tt table}環境を利用することによって図と同じように，キャプションをつ
-けたり，ラベルにより参照したりすることができる．また
-\verb|\listoftables|によって表目次として出力される．
-表\ref{tab:sample}に{\tt table}環境で作成した表を示す．
+\subsection{静的解析によるデッドコードの解析}
 
-\begin{table}
-  \caption{表の例}
-  \label{tab:sample}
-  \centering
-  \begin{tabular}{|c|c|c|}
-    \hline
-    8 & 3 & 4\\
-    \hline
-    1 & 5 & 9 \\
-    \hline
-    6 & 7 & 2 \\
-    \hline
-  \end{tabular}
-\end{table}
+\subsection{動的解析による未実行コードの解析}
 
-\section{数式}
+\subsection{機能的代替機能の検出}
 
-\TeX では数式のための機能が豊富である．
-{\tt equation}環境などを利用することによって数式に番号を付けることがで
-きる．図や表と同じくラベルを付けておけば，``式\ref{exp:sample}''のよう
-に数式を番号で参照することができる．
+\section{本研究の位置付け}
 
-\begin{equation}
-  y = ax^2 + bx + c \label{exp:sample}
-\end{equation}
 
-\chapter{参考文献}
 
-文献を参照する場合には，論文の最後に参考文献として列挙するとともに，
-\verb|\cite|を使って，例えば，
-\begin{quote}
-  文献\cite{latex}によれば…
-\end{quote}
-や，
-\begin{quote}
-  …である\cite{latex2e}．
-\end{quote}
-のように参照する．
+\chapter{事前分析：削除されたコードの特徴}
 
-文献の列挙には，{\tt thebibliography}環境などを用いる\footnote{使い方
-は，この資料のソースを参照．}．
+\section{概要}
+
+\section{分析手法}
+
+\section{データセット}
+
+\section{分析結果}
+
+\section{キーアイデア}
+
+\chapter{RQ1：類似機能メソッド群の生存と削除にはどのような特徴があるか}
+
+\section{概要}
+
+\section{分析手法}
+\subsection{類似機能メソッドの検出}
+\subsection{削除メソッドと生存メソッドの抽出}
+\subsection{メソッドの変遷パターンの分類}
+
+\section{分析結果}
+\subsection{類似機能メソッドの生存実態}
+\subsection{削除されたメソッドの特徴}
+
+\section{まとめ}
+
+\chapter{RQ2：削除されたメソッドの特徴は汎化できるか}
+
+\section{概要}
+
+\section{検出ルールの作成}
+
+\section{評価方法}
+
+\section{評価結果}
+\subsection{全体の検出精度}
+\subsection{ルール別の検出精度}
+
+\section{まとめ}
+
+
+\chapter{考察}
+
+\section{生存するのに削除されると予測されたのはなぜか}
+
+\chapter{妥当性の脅威}
+
+\section{内的妥当性}
+
+\section{外的妥当性}
+
+\chapter{おわりに}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
