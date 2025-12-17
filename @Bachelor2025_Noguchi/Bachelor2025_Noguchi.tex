@@ -3,12 +3,45 @@
 \usepackage{indentfirst}
 \usepackage{url}	% \url{}コマンド用．URLを表示する際に便利
 \usepackage{xcolor}
+\usepackage{listings}
+\usepackage{amsmath,amssymb}
+\usepackage{tabularx}
+\usepackage{stfloats}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{caption}
 %\usepackage{graphicx}  % ←graphicx.styを用いてEPSを取り込む場合有効にする
 			% 他のパッケージ・スタイルを使う場合には適宜追加
 
 \newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
 \newcommand{\memo}[1]{\colorbox{magenta!30}{{\bf MEMO}:}{\color{red!50} {\textbf{[#1]}}}}
 \newcommand{\ihara}[1]{\colorbox{green}{{\bf IHARA}:}{\color{blue} {\textbf{[#1]}}}}
+
+% コード例を載せるためのあれこれ
+\definecolor{lightred}{RGB}{255,230,230}
+\definecolor{lightgreen}{RGB}{230,255,230}
+
+\lstset{
+    basicstyle=\small\ttfamily,
+    abovecaptionskip=0pt,
+    captionpos=b,
+    frame=tb,
+    framexleftmargin=2em,
+    numbers=left,
+    numberstyle={\scriptsize},
+    xleftmargin=\parindent,
+    escapechar=|
+}
+
+%ListingのキャプションがFigureになってしまうのをListingに直すコマンド
+\usepackage{caption}
+\makeatletter
+\let\MYcaption\@makecaption
+\makeatother
+\usepackage{caption}
+\makeatletter
+\let\@makecaption\MYcaption
+\makeatother
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -102,14 +135,9 @@ ihara@wakayama-u.ac.jp
 
 性能効率性を向上するためのプログラム変更は，実装が進行するにつれて複雑になりやすい\cite{complicate}．
 保守性や可読性など，他のプログラム品質に否定的な影響を与えることもある\cite{negative}．
-性能効実装が進むほどに開発者に対して広範な知識や経験を要するようになることが考えられる．そのため，ソフトウェアの性能効率性を，実装途中の早期の段階で見積もり，性能低下の原因となるボトルネックを検出することは，性能効率性の改善にかかる修正工数を小さくできる．
+実装が進むほどに改善のための変更は大変．
+ソフトウェアの性能効率性を，実装途中の早期の段階で見積もり，性能低下の原因となるボトルネックを検出することは，性能効率性の改善にかかる修正工数を小さくできる．
 
-ソフトウェアの性能効率性を評価する方法として，プロファイラなどの動的解析ツールが広く用いられている．動的解析ツールは，実行時の関数呼び出しやリソース使用状況を精緻に観測し，性能低下の原因となる箇所を特定することができる．しかし，動的解析ツールによる性能効率性の評価は，評価対象の機能が実行できるまで実装が進んだ状態でなければ評価できないため，開発途中に性能効率性を評価することは難しい．
-
-実装途中においても，部分的なソースコードの性能を定量的に評価する手法として，マイクロベンチマークを使用する方法がある．マイクロベンチマークは機能的に等価な複数の異なるソースコード片に対して実行時間を測定することで，ソースコード間の性能効率性を比較できる．マイクロベンチマークを共有するサービスには，JavaScriptを対象としたJsPerf\footnote{JsPerf: \url{https://jsperf.app/}}やMeasureThat.net\footnote{MeasureThat.net: \url{https://measurethat.net/}}がある．これらのサービスでは，ブラウザ上でマイクロベンチマークの実行環境を提供しており，JavaScriptのソースコード片の実行速度の測定および比較ができる．また，評価されたソースコード片，および測定結果はサービス上で公開されている．
-
-開発者はマイクロベンチマーク共有サービスを用いて複数の実装方法を比較することはもちろん，サービス上でマイクロベンチマークを証拠としてソースコードの改善案を作成している事例もある\cite{saiki}．
-しかし，マイクロベンチマーク共有サービスで公開されているベンチマークに基づいて，開発者が実装するソフトウェアの中から性能効率性が向上できる箇所を検出し，その修正を実現することは容易ではない．これは，実装するソフトウェアにおけるソースコード間の依存関係や構造に対する，開発者の知識や技量に依存するためである．
 
 % ソースコード「片」で統一
 本研究では，ソフトウェア中に潜在する，修正することで実行速度の向上が期待されるソースコード片の検出を目的とする．具体的には，マイクロベンチマーク共有サービスでベンチマークとして比較されたソースコード片の構造的な差分から低速コードパターンを作成する．作成した低速コードパターンを利用し，静的解析エンジンであるCodeQL\footnote{\url{https://codeql.github.com/}}\cite{ql}を用いて，ソースコード中から低速なソースコード片を検出する．CodeQLは，マイクロベンチマーク共有サービスで公開されるソースコード片とは入出力が異なっていても，構造が類似するソースコードの検出が期待される．
@@ -121,87 +149,175 @@ ihara@wakayama-u.ac.jp
 
 \chapter{プログラム実行速度の改善}\label{chap:background}
 
-論文では，図，表，数式などを効果的に使用する．
+\section{ソフトウェアの性能効率性と部分的な最適化}
+\todo{\textbf{はじめに}との棲み分けを考える}
+ ソフトウェアの性能効率性は，ユーザ体験や運用コスト，さらにはシステム全体の品質に直結する重要な要素である\cite{performance1}\cite{performance2}\cite{negative}．
+ 部分的なソースコードの最適化を積み重ねることで実現することも多い．
 
-\section{図}
+\section{マイクロベンチマーク共有サービス}
 
-{\tt figure}環境を利用することによって図にキャプション
-(\verb|\caption|)を付けることができる．図に付けられたキャプションは
-\verb|\listoffigures|によって図目次として出力される．図には章ごとに通
-し番号が付けられ，キャプションに\verb|\label|を設定しておくと，
-``図\ref{fig:sample}''のように\verb|\ref|によって図を番号で参照するこ
-とができる．図\ref{fig:sample}に{\tt figure}環境を用いた記述例を示す．
+マイクロベンチマーク共有サービスは，開発者がプログラムの実行速度を比較・共有するためのオンラインサービスである．図\ref{fig:jsPerf}は，マイクロベンチマーク共有サービスの1つであるJsPerf上で実際に投稿されているマイクロベンチマークの例を示す．
 
-\begin{figure}
-  \centering
-    ここで図を取り込む．
-    % 試しに，tiger.psが自分のマシンのどこに格納されているかを調べて
-    % 以下の命令を有効にしてみて下さい．
-    % ただし，同時に\begin{document}より前にある\usepackage{graphicx}
-    % も有効にする必要があります．
-    %\includegraphics[width=5cm,clip]{/usr/local/share/ghostscript/7.07/examples/tiger.ps}
-  \caption{図の例}
-  \label{fig:sample}
+マイクロベンチマーク共有サービスにおける各ベンチマークは，1つのセットアッププログラムと，1つ以上のテストプログラムから構成される．図上部に示すセットアッププログラムは，検証対象のソースコードで共通して利用される変数や関数の初期化などが行われる．一方，図下部に示すテストプログラムでは，同一の機能を異なる方法で実装したソースコード片が複数提示され，それぞれの実行速度を計測し，比較できる．
+このようなマイクロベンチマークは，データ構造や制御構文の選択，メソッド呼び出しの方法などに多様性が見られることが特徴であり，実行速度の差とその要因となる実装方法を捉えることができる．
+
+% 本研究では，このようなマイクロベンチマーク共有サービス上の実装対を，性能効率性，特に実行速度に影響を与える構造的特徴を分析および抽出するために利用する．
+
+%----------------------
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1.0\linewidth]{./Noguchi_fig/jsPerf_example.pdf}
+    \caption{マイクロベンチマーク共有サービスの投稿例\protect\footnotemark}
+    \label{fig:jsPerf}
 \end{figure}
 
-また，{\tt graphicx.sty}などのスタイルファイルを利用することによって
-EPS形式やPDF形式の図を文章の中に取り込むことができる．
-この場合，\verb|\begin{document}|の前に\verb|\usepackage{graphicx}|を
-追加する．
+\footnotetext{\url{https://jsperf.app/qiwudo}}
+%----------------------
 
-なお，図表の配置は基本的には\LaTeX{}が決めるので，思った位置に入らない
-からといって無理に場所を指定するのはよくない．
-どうしても位置を固定したい場合には，すべての文章が書きあがった後に指定
-するとよい\footnote{そうしないと文章を書き換えるたびに，位置がずれる可能性がある}．
 
-\section{表}
 
-{\tt table}環境を利用することによって図と同じように，キャプションをつ
-けたり，ラベルにより参照したりすることができる．また
-\verb|\listoftables|によって表目次として出力される．
-表\ref{tab:sample}に{\tt table}環境で作成した表を示す．
+開発者はマイクロベンチマーク共有サービスを用いて複数の実装方法を比較することはもちろん，サービス上でマイクロベンチマークを証拠としてソースコードの改善案を作成している事例もある\cite{saiki}．
+% しかし，マイクロベンチマーク共有サービスで公開されているベンチマークに基づいて，開発者が実装するソフトウェアの中から性能効率性が向上できる箇所を検出し，その修正を実現することは容易ではない．これは，実装するソフトウェアにおけるソースコード間の依存関係や構造に対する，開発者の知識や技量に依存するためである．
 
-\begin{table}
-  \caption{表の例}
-  \label{tab:sample}
-  \centering
-  \begin{tabular}{|c|c|c|}
-    \hline
-    8 & 3 & 4\\
-    \hline
-    1 & 5 & 9 \\
-    \hline
-    6 & 7 & 2 \\
-    \hline
-  \end{tabular}
-\end{table}
 
-\section{数式}
+\section{低速な箇所の検出における難しさ}
 
-\TeX では数式のための機能が豊富である．
-{\tt equation}環境などを利用することによって数式に番号を付けることがで
-きる．図や表と同じくラベルを付けておけば，``式\ref{exp:sample}''のよう
-に数式を番号で参照することができる．
+\memo{動的検出では実装が進まないできないこと}
+ソフトウェアの性能効率性を評価する方法として，プロファイラなどの動的解析ツールが広く用いられている．動的解析ツールは，実行時の関数呼び出しやリソース使用状況を精緻に観測し，性能低下の原因となる箇所を特定することができる．しかし，動的解析ツールによる性能効率性の評価は，評価対象の機能が実行できるまで実装が進んだ状態でなければ評価できないため，開発途中に性能効率性を評価することは難しい．
 
-\begin{equation}
-  y = ax^2 + bx + c \label{exp:sample}
-\end{equation}
+\memo{静的検出では「正解」がないこと}
+\memo{マイクロベンチマーク（規模が小さい）ならではの難しさ}
 
-\chapter{参考文献}
 
-文献を参照する場合には，論文の最後に参考文献として列挙するとともに，
-\verb|\cite|を使って，例えば，
-\begin{quote}
-  文献\cite{latex}によれば…
-\end{quote}
-や，
-\begin{quote}
-  …である\cite{latex2e}．
-\end{quote}
-のように参照する．
+\section{関連研究}
 
-文献の列挙には，{\tt thebibliography}環境などを用いる\footnote{使い方
-は，この資料のソースを参照．}．
+\subsection{実行速度向上を目的としたリファクタリングの調査}
+
+Selakovicら\cite{jsRefac}は，JavaScriptを利用しているプロジェクトにおいて，開発者が高速化のために行ったリファクタリングを調査している．調査の結果，開発者は10行程度の小さい範囲の修正によって高速化への対処を行なっていることを明らかにした．この結果は，マイクロベンチマーク共有サービスで頻繁に比較される短いソースコード片の修正が，ソフトウェア高速化につながっていることを示し，本研究の動機づけとなっている．また，\cite{jsRefac}では，JavaScriptプロジェクトの解析によって10件の頻出する高速化修正パターンを作成している．この改良パターンを用いた自動修正は一定の高速化効果を示しているが，該当箇所の特定における制約などから，広範な適用には至っていない．
+
+\subsection{静的解析と動的解析を用いた性能ボトルネックの検出}
+
+Turcotte ら\cite{DrAsync}は，JavaScript 言語における非同期処理に注目した性能アンチパターンを定義し，静的解析エンジンであるCodeQL\cite{ql}を利用したアンチパターンの検出と，動的解析を利用したパフォーマンスの監視を組み合わせ，修正可能な性能アンチパターンの検出を行った．本研究の静的解析による低速コードパターンの検出はこれに着想を得ている．\todo{このキモ文章は直す}
+
+
+\subsection{本研究の位置付け}
+
+\todo{SIGSEから卒論用に表現を直す．ゴールっぽくする}
+本研究では，マイクロベンチマーク共有サービスで公開される実装対における低速コードから，構造的差分に基づいて低速コードパターンを抽出し，静的解析を用いた性能ボトルネックの早期検出を行うことを目指す．本論文は，その第一歩として，ベンチマークのソースコード片のうち，繰り返し処理にターゲットを絞り，ベンチマークに基づいて修正することで実行速度の向上が期待されるソースコード片の検出を目的とする．
+
+
+\chapter{事前分析：マイクロベンチマークにおける低速コードの特徴}\label{chap:pre-analysis}
+
+\section{データセット}
+
+本研究では，大森ら\cite{omori}が作成したデータセットを分析対象とする．当該データセットは，マイクロベンチマーク共有サービスJsPerfで評価されたベンチマークの中で，実行速度に有意差があり，外的振る舞いが等しいことが検証された実装対29,809件を含む．以降，分析対象とするベンチマークで比較されたソースコード片の対をマイクロベンチマーク実装対，各実装対において，実行速度が遅いコードを低速コード，実行時間が速いコードを高速コードとする．
+
+\section{抽象構文木に基づく実装方法の分析}
+
+マイクロベンチマーク実装対を目視調査した結果，実装対の両方もしくは片方に繰り返し処理を含むものが多く存在することを確認した．特に，巨大な配列や長大な繰り返し処理を用いることで性能差が顕著になる実装対や，\texttt{for}と\texttt{for-of}のように，繰り返し処理の実装方法の違いによって実行時間に差が生じる実装対など，繰り返し処理に関する複数の特徴を確認した．
+このような観察結果から，本研究ではマイクロベンチマーク実装対に対して繰り返し処理構造に着目した特徴分析を行う．対象とする繰り返し処理は，JavaScriptにおける \texttt{for}，\texttt{for-of}，\texttt{for-in}，\texttt{while}，および \texttt{do-while}の構文を対象とする．
+以後，マイクロベンチマーク実装対のもつ特徴について，実施した分析内容とともに例を示す．
+
+マイクロベンチマーク実装対の特徴分析には，各実装対のソースコードをGumTree\cite{gumtree}により抽象構文木へと変換し，実装対の抽象構文木間の差分解析を行った．差分解析の結果に対して，次の2点を確認し，繰り返し処理に関連する差分要素として収集する．\\
+\noindent(1) 差分が直接繰り返し処理構造を含むか\\
+\noindent(2) 差分要素の構造的な親要素に繰り返し処理を含むか\\
+抽出された箇所に応じて目視で確認を行い，実装対の構造的特徴および性能差との関係を整理した．
+
+\section{繰り返し処理を含む低速コードの主要パターン}
+
+分析の結果，マイクロベンチマーク実装対において，実行速度に差が生じる繰り返し処理の使用パターンを複数確認した．具体例として，Listing~\ref{diff-loop}，Listing~\ref{diff-inloop}，Listing~\ref{diff-method}に，特徴となる部分について示す．
+
+Listing~\ref{diff-loop}は，それぞれ\texttt{for-in}文を用いて配列に含まれる要素にアクセスする実装と，同様の処理を\texttt{for}文で実装したソースコード片である．ここで示すパターンは実行時間の差が，繰り返し処理の実装方法の違いに起因するパターンである．
+%----------------------------------
+\begin{lstlisting}[caption=Pairs with loop differences, label=diff-loop, captionpos=t, columns=flexible]
+// slow
+for (key in VAR_1) {
+    if (!VAR_1.hasOwnProperty(key)) continue;
+    VAR_2 = VAR_1[key];
+}
+
+// fast
+for (var VAR_8=0; VAR_8<VAR_1.length; ++VAR_8) {
+    VAR_2 = VAR_1[VAR_8];
+}
+\end{lstlisting}
+%----------------------------------
+
+Listing~\ref{diff-inloop}は，それぞれ\texttt{for}文内で \texttt{concat}メソッド，\texttt{push}メソッドを用いている実装対である．これは，繰り返し処理の実装方法は一致しているが，繰り返し内部で実行する処理が異なるパターンである．
+%----------------------------------
+\begin{lstlisting}[caption=Pairs with differences within the loop, label=diff-inloop, captionpos=t, columns=flexible]
+// slow
+for (var VAR_2=0; VAR_2<5000; VAR_2++)
+    VAR_1 = VAR_1.concat([\"1\", \"2\"]);
+
+// fast
+for (var VAR_2=0; VAR_2<5000; VAR_2++)
+    VAR_1.push(\"1\", \"2\");
+\end{lstlisting}
+%----------------------------------
+
+Listing~\ref{diff-method}は，繰り返し処理を\texttt{forEach}メソッドで実装したものと\texttt{for-of}文で実装したものである．これは，メソッドによる処理とそれに代替する繰り返し処理について比較したパターンである．
+%----------------------------------
+\begin{lstlisting}[caption=Pairs of Method and alternative loop, label=diff-method, captionpos=t, columns=flexible]
+// slow
+var VAR_5 = new Set(VAR_2);
+VAR_5.forEach(VAR_6 => {});
+
+// fast
+for (let VAR_7 of VAR_2) {}
+\end{lstlisting}
+%----------------------------------
+
+これらの結果から，マイクロベンチマーク実装対には繰り返し処理の実装および繰り返し内部の操作内容の違いが性能差の要因の1つとして存在することを確認した．本研究では，このような繰り返し処理に関する構造の差分に基づいて低速コードの特徴を捉え，次章で述べる低速コードパターンの抽出および静的検出に利用する．
+
+
+\chapter{構造的差分に基づく低速コードパターンの検出手法}
+
+\section{}
+
+\section{}
+
+\section{}
+
+\section{}
+
+
+\chapter{類似度に基づく検出結果の順位付け}
+
+\section{}
+
+\section{}
+
+\section{}
+
+
+\chapter{ケーススタディ}
+
+\section{}
+
+\section{}
+
+\section{}
+
+\section{}
+
+
+\chapter{考察}
+
+\section{}
+
+\section{}
+
+
+
+\chapter{妥当性の脅威}
+
+\section{}
+
+\section{}
+
+
+\chapter{おわりに}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
