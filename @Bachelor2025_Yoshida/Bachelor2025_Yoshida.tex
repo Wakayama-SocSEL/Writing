@@ -3,6 +3,25 @@
 \usepackage{indentfirst}
 \usepackage{url}	% \url{}コマンド用．URLを表示する際に便利
 \usepackage[dvipdfmx]{graphicx,xcolor}
+\usepackage{listings}
+\lstset{
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\smallitshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-0.5ex
+}
 %\usepackage{graphicx}  % ←graphicx.styを用いてEPSを取り込む場合有効にする
 			% 他のパッケージ・スタイルを使う場合には適宜追加
 \newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
@@ -176,20 +195,116 @@
 \chapter{事前分析：削除されたコードの特徴}
 
 \section{概要}
+\todo{概要は後で書く}
 
 \section{分析手法}
+Gitの開発履歴を用いて，削除されたメソッドをフィルタリングする．そのうちの一つについて，ソースコードを取得し，目視で確認する．
 
 \section{データセット}
+GitHub上でソースコードが公開されているpandasプロジェクトを使用した．プロジェクトの選定方法は以下である．
+Pythonのプロジェクトであること．大規模なライブラリであり，ユーザが多数存在すること．開発年数が長期であること．メジャーリリースが2つ以上存在すること．
 
 \section{分析結果}
-\todo{依存ライブラリのバージョン更新などが原因で仕様変更が行われ，古いAPIが新しいAPIに置き換えられる時に削除が発生する．}
 
-\section{\memo{キーアイデアとして，独立させる必要もないかも}キーアイデア}
-\todo{事前分析の結果からRQに繋げる．}
+pandasプロジェクトにおいて，v0.19.0がリリースされた時点でのメソッドの例を以下に示す．これら二つのメソッドはコードクローン検出器によると類似度\todo{〇〇\%}となっており，コードクローンタイプ3である．どちらもPanelオブジェクトを生成しているという点では類似している．
+
+%----------------------------------
+\begin{lstlisting}[caption=非推奨な記述方法を含むメソッド, label=include-deprecated-API, captionpos=t, columns=flexible]
+def test_backwards_compat_without_term_object(self):
+    with ensure_clean_store(self.path) as store:
+
+        wp = Panel(np.random.randn(2, 5, 4), items=['Item1', 'Item2'],
+                   major_axis=date_range('1/1/2000', periods=5),
+                   minor_axis=['A', 'B', 'C', 'D'])
+        store.append('wp', wp)
+        with assert_produces_warning(expected_warning=FutureWarning,
+                                     check_stacklevel=False):
+            result = store.select('wp', [('major_axis>20000102'),
+                                         ('minor_axis', '=', ['A', 'B'])])
+        expected = wp.loc[:,
+                          wp.major_axis > Timestamp('20000102'),
+                          ['A', 'B']]
+        assert_panel_equal(result, expected)
+\end{lstlisting}
+%----------------------------------
+
+Listing~\ref{include-deprecated-API}は，古い形式のクエリの書き方が後方互換性を維持して正しく動作するかを検証するメソッドである．
+コード内で\texttt{wp = Panel(...)}とある．ここでは，条件を\texttt{('カラム名','演算子','値')}というタプルのリストで渡している．そして，\texttt{with assert\textunderscore produces\textunderscore warning(FutureWarning)}を使って，「この記述方法が将来的に消える」という警告が出ることをテストしている．
+
+
+%----------------------------------
+\begin{lstlisting}[caption=推奨APIを含むメソッド, label=include-inplace-API, captionpos=t, columns=flexible]
+def test_panel_assignment(self):
+    # GH3777
+    wp = Panel(
+        randn(2, 5, 4), items=['Item1', 'Item2'],
+        major_axis=date_range('1/1/2000', periods=5),
+        minor_axis=['A', 'B', 'C', 'D'])
+    wp2 = Panel(
+        randn(2, 5, 4), items=['Item1', 'Item2'],
+        major_axis=date_range('1/1/2000', periods=5),
+        minor_axis=['A', 'B', 'C', 'D'])
+
+    # TODO: unused?
+    # expected = wp.loc[['Item1', 'Item2'], :, ['A', 'B']]
+
+    def f():
+        wp.loc[['Item1', 'Item2'], :, ['A', 'B']] = wp2.loc[
+            ['Item1', 'Item2'], :, ['A', 'B']]
+
+    self.assertRaises(NotImplementedError, f)
+\end{lstlisting}
+%----------------------------------
+
+Listing~\ref{include-inplace-API}は，まだ実装されていない操作に対して，適切にエラーを発生させているかを検証するテストメソッドである．
+実行したい処理を内部関数\texttt{f()}の中で，\texttt{wp.loc[...] = wp2.loc[...]}という代入処理を記述している．そして，\texttt{self.assertRaises(NotImplementedError, f)}により関数\texttt{f()}を実行した際に，未実装のエラーが発生することをテストしている．
+
+Listing~\ref{include-deprecated-API}における\texttt{test\textunderscore backwards\textunderscore compat\textunderscore without\textunderscore term\textunderscore object}メソッドは，v0.20.0リリース時には削除された．つまり，v0.19.0の時点では必要であったメソッドがv0.20.0の時点では不要であったため，削除されたと言える．
+一方，Listing~\ref{include-inplace-API}における\texttt{test\textunderscore panel\textunderscore assignment}メソッドはv0.20.0の時点でも削除されずに生存していたため，v0.20.0の時点では不要ではなく，必要なメソッドであると考えられる．その後，メジャーバージョンであるv1.0.0リリース直前のv0.25.0において不要となり，削除された．
+
+この結果から，v0.20.0では，\texttt{store.select}メソッドの古い形式の記述方法のサポートが終了したため，それを利用している側のコードが削除されたと考えられる．さらに，v0.25.0においては，\texttt{Panel}オブジェクトが削除されたため，それを呼び出しているメソッドも削除されたと考えられる．
+
+
+\section{事前分析から得られた示唆と研究課題}
+
+本章では，pandas プロジェクトを対象として，削除されたメソッドの事前分析を行った．
+その結果，類似した機能を持つメソッドであっても，すべてが同時に削除されるわけではなく，
+一部のメソッドのみが早期に削除され，別のメソッドは長期間生存する事例が確認された．
+
+これらの事例では，削除されたメソッドが非推奨APIを利用していたことや，
+上位概念となるオブジェクトの削除に伴って不要となったことが，
+後からであれば説明可能であった．
+しかし，これらの違いはメソッド単体のコード品質や規模のみから
+直ちに判断できるものではなく，
+類似機能を持つメソッド群の中での役割や位置づけが
+影響している可能性が示唆される．
+
+このように，削除の有無は単一のメソッドを独立に分析するだけでは十分に説明できず，
+類似機能を持つ複数のメソッドを一つのグループとして捉え，
+その中での生存および削除の傾向を分析する必要があると考えられる．
+
+そこで本研究では，まず類似機能メソッド群に着目し，
+それらの生存および削除にはどのような特徴が存在するのかを明らかにすることを目的として，
+以下の研究質問を設定する．
+
+\begin{itemize}
+  \item \textbf{RQ1：類似機能メソッド群の生存と削除にはどのような特徴があるか}
+\end{itemize}
+
+さらに，削除されたメソッドの特徴が体系的に整理できるのであれば，
+それをルールとして表現することで，将来的に削除されやすいメソッドを
+事前に検出できる可能性がある．
+この点を検証するため，次の研究質問を設定する．
+
+\begin{itemize}
+  \item \textbf{RQ2：削除されたメソッドの特徴はルール化できるか}
+\end{itemize}
+
 
 \chapter{RQ1：類似機能メソッド群の生存と削除にはどのような特徴があるか}
 
 \section{概要}
+\todo{概要を考える}
 
 \section{分析手法}
 \subsection{類似機能メソッドの検出}
@@ -284,7 +399,7 @@ Gitの履歴で削除されたメソッドを抽出すると，メソッドの�
 \subsection{メソッドの生存期間}
 \begin{figure*}[t]
     \centering
-\includegraphics[width=1.0\textwidth]{./Yoshida_fig/survival.pdf}
+\includegraphics[width=1.0\textwidth]{./Yoshida_fig/state_plot.pdf}
     \caption{メソッドの生存期間}
     \label{fig:result}
 \end{figure*}
