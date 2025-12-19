@@ -248,7 +248,7 @@ OSS開発者の中には，一時的にプロジェクトでの活動を休止�
 \section{学習指標の作成}\memo{順番変更}
 \begin{figure}[h]
     \centering
-    \includegraphics[width = 0.5\textwidth]{./Hashimoto_fig/label.pdf}
+    \includegraphics[width = 1.0\textwidth]{./Hashimoto_fig/label.pdf}
     \caption{指定期間が0-3mであった時の例}
     \label{fig:label}
 \end{figure}
@@ -345,8 +345,13 @@ OSS開発者の中には，一時的にプロジェクトでの活動を休止�
 
 \section{モデル構造と学習フロー}\memo{順序入れ替え}
 \subsection{エンコーダ}
+レビュアーの各活動を表す状態 (State) および行動 (Action) の2つの特徴量ベクトルを，それぞれ独立したエンコーダ（多層パーセプトロン)に入力する．これらのエンコーダは元のベクトルよりもより表現力のある高次元のベクトルに変換する役割を持つ．
 \subsection{LSTM}
+各時点でエンコードされた状態ベクトルと行動ベクトルを連結し，時系列プロセッサであるLSTM (Long Short-Term Memory) に入力する．LSTMは活動履歴を記憶し，時間的な依存関係を理解するため，単一の活動だけでなく，活動量が徐々に低下する動的なパターンも把握できる．
+
 \subsection{デコーダ}
+LSTMによりレビュアーの全活動が処理された後，LSTMで得られた時系列情報（特徴ベクトル）をもとに多層パーセプトロンで最終的な予測値を算出する．ここではLSTMで処理されたレビュアーの全活動履歴を考慮した情報をデーコードし，シグモイド関数により最終的な継続確率$P$を算出する.
+
 \subsection{損失関数}
 \subsection{損失関数による報酬関数の最適化}
 
@@ -408,11 +413,12 @@ L_{\mathrm{FL}} = - \frac{1}{N} \sum_{i=1}^{N} \Bigl( & \alpha (1 - p_i)^{\gamma
 % \subsection{モデル構造と学習フロー}
 本研究で学習に用いるニューラルネットワークは，エンコーダ，LSTM，デコーダから構成される．
 
-\noindent\textbf{エンコーダ}：レビュアーの各活動を表す状態 (State) および行動 (Action) の2つの特徴量ベクトルを，それぞれ独立したエンコーダ（多層パーセプトロン)に入力する．これらのエンコーダは元のベクトルよりもより表現力のある高次元のベクトルに変換する役割を持つ．
 
-\noindent\textbf{LSTM}：各時点でエンコードされた状態ベクトルと行動ベクトルを連結し，時系列プロセッサであるLSTM (Long Short-Term Memory) に入力する．LSTMは活動履歴を記憶し，時間的な依存関係を理解するため，単一の活動だけでなく，活動量が徐々に低下する動的なパターンも把握できる．
 
-\noindent\textbf{デコーダ}：LSTMによりレビュアーの全活動が処理された後，LSTMで得られた時系列情報（特徴ベクトル）をもとに多層パーセプトロンで最終的な予測値を算出する．ここではLSTMで処理されたレビュアーの全活動履歴を考慮した情報をデーコードし，シグモイド関数により最終的な継続確率$P$を算出する．
+
+
+
+
 
 
 
@@ -452,6 +458,7 @@ L_{\mathrm{FL}} = - \frac{1}{N} \sum_{i=1}^{N} \Bigl( & \alpha (1 - p_i)^{\gamma
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{ケーススタディ}
+\todo{色々やる}
 \label{sec:casestudy}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -483,33 +490,41 @@ L_{\mathrm{FL}} = - \frac{1}{N} \sum_{i=1}^{N} \Bigl( & \alpha (1 - p_i)^{\gamma
 \section{RQ1:逆強化学習に基づく提案モデルは，コードレビューにおけるタスク受け入れをどの程度予測できるか？}
 
 %--------------------
-\begin{table}[h]
-    \label{table:train}
-    \centering
-    \caption{3-6mモデルの学習期間内における貢献予測結果}
-    \begin{tabularx}{\columnwidth}{XXXXX}
-        \hline
-       Precision & Recall & F1値 & AUC-ROC \\
-       \hline
-       0.909  & 0.556 & 0.689 & 0.818 \\ 
-       \hline
-    \end{tabularx}
-\end{table}
-%--------------------
+% \begin{table}[h]
+%     \label{table:train}
+%     \centering
+%     \caption{3-6mモデルの学習期間内における貢献予測結果}
+%     \begin{tabularx}{\columnwidth}{XXXXX}
+%         \hline
+%        Precision & Recall & F1値 & AUC-ROC \\
+%        \hline
+%        0.909  & 0.556 & 0.689 & 0.818 \\ 
+%        \hline
+%     \end{tabularx}
+% \end{table}
+% %--------------------
 
+% %--------------------
+% \begin{table}[h]
+%     \label{table:predict}
+%     \centering
+%     \caption{3-6mモデルで3-6m後の貢献予測結果}
+%     \begin{tabularx}{\columnwidth}{XXXXX}
+%         \hline
+%        Precision & Recall & F1値 & AUC-ROC \\
+%        \hline
+%        0.769  & 0.556 & 0.645 & 0.820 \\ 
+%        \hline
+%     \end{tabularx}
+% \end{table}
 %--------------------
-\begin{table}[h]
-    \label{table:predict}
+%--------------------
+\begin{figure*}[t]
     \centering
-    \caption{3-6mモデルで3-6m後の貢献予測結果}
-    \begin{tabularx}{\columnwidth}{XXXXX}
-        \hline
-       Precision & Recall & F1値 & AUC-ROC \\
-       \hline
-       0.769  & 0.556 & 0.645 & 0.820 \\ 
-       \hline
-    \end{tabularx}
-\end{table}
+\includegraphics[width=0.7\textwidth]{./Hashimoto_fig/RQ1.pdf}
+    \caption{訓練・予測期間における予測結果}
+    \label{fig:result1}
+\end{figure*}
 %--------------------
 
 表6は学習で使用したデータでどの程度予測を行うことができるのかを検証した結果であり，
@@ -521,9 +536,9 @@ L_{\mathrm{FL}} = - \frac{1}{N} \sum_{i=1}^{N} \Bigl( & \alpha (1 - p_i)^{\gamma
 %--------------------
 \begin{figure*}[t]
     \centering
-\includegraphics[width=0.7\textwidth]{./Hashimoto_fig/heatmap.pdf}
+\includegraphics[width=1.0\textwidth]{./Hashimoto_fig/heatmap.pdf}
     \caption{各モデルのクロス評価}
-    \label{fig:result}
+    \label{fig:result2}
 \end{figure*}
 %--------------------
 % 図4のヒートマップは縦軸を予測する区間でスライドさせたものであり，横軸は学習時に付与するラベルの指定期間をスライドさせたものである．それぞれのモデルでスライドさせた予測期間を5つの評価指標で評価し．ヒートマップを作成した結果である．学習時のラベル付の期間と予測期間が一致する際に予測精度が最も高くなることが期待されていたが，結果として，全てのモデルにおいて，予測期間3-6mでAUC-PRが最大になった．他の予測期間においても，全てのモデルで同様の結果が見られ，AUC-PRが高いものから順に並べると3-6m, 0-3m, 9-12m, 6-9mの順になった．
@@ -538,7 +553,7 @@ L_{\mathrm{FL}} = - \frac{1}{N} \sum_{i=1}^{N} \Bigl( & \alpha (1 - p_i)^{\gamma
 
 \begin{figure}[h]
     \centering
-\includegraphics[width=0.5\textwidth]{./Hashimoto_fig/importance.pdf}
+\includegraphics[width=1.0\textwidth]{./Hashimoto_fig/importance.pdf}
     \caption{各特徴量の予測における重要度}
     \label{fig:importance}
 \end{figure}
@@ -548,6 +563,7 @@ L_{\mathrm{FL}} = - \frac{1}{N} \sum_{i=1}^{N} \Bigl( & \alpha (1 - p_i)^{\gamma
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{考察}
 \section{時系列データの考慮が予測に与える影響}
+\todo{やる}
 \label{sec:discussion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{短期予測と長期予測における特徴量の違い}
