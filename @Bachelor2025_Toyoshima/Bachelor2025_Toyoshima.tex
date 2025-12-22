@@ -2,8 +2,32 @@
 \usepackage{wuse_thesis}
 \usepackage{indentfirst}
 \usepackage{url}	% \url{}コマンド用．URLを表示する際に便利
+\usepackage[dvipdfmx]{graphicx,xcolor}
+\usepackage{listings}
+\lstset{
+  basicstyle={\ttfamily},
+  identifierstyle={\small},
+  commentstyle={\smallitshape},
+  keywordstyle={\small\bfseries},
+  ndkeywordstyle={\small},
+  stringstyle={\small\ttfamily},
+  frame={tb},
+  breaklines=true,
+  columns=[l]{fullflexible},
+  numbers=left,
+  xrightmargin=0zw,
+  xleftmargin=3zw,
+  numberstyle={\scriptsize},
+  stepnumber=1,
+  numbersep=1zw,
+  lineskip=-0.5ex
+}
+\usepackage{siunitx}
+\sisetup{group-separator={,}} % 3桁ごとにコンマを入れる設定
 %\usepackage{graphicx}  % ←graphicx.styを用いてEPSを取り込む場合有効にする
 			% 他のパッケージ・スタイルを使う場合には適宜追加
+\newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
+\newcommand{\memo}[1]{\colorbox{magenta}{\textbf{MEMO}}{\color{red}\textbf{[#1]}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -12,12 +36,11 @@
 %%
 
 %%  タイトル(修論の場合は英語表記も指定)
-\title{卒業・修士論文用スタイルファイルを用いた\\
-       p\LaTeX による卒業・修士論文の作成}
+\title{タイトル}
 %\etitle{Test\\Test\\Test}
 
 %%  著者名(修論の場合は英語表記も指定)
-\author{伊原 彰紀}
+\author{豊嶋 浩基}
 %\eauthor{Akinori Ihara}
 
 %% 卒業論文・修士論文(以下のどちらかを選択)
@@ -30,7 +53,7 @@
 %\department{デザイン科学}
 
 %%  学生番号
-\studentid{60276000}
+\studentid{60276157}
 
 %%  卒業年度
 \gyear{2025}		% 提出年が2022年なら，2021年度
@@ -49,21 +72,10 @@
 %%  概要
 %%
 \begin{abstract}
-本稿では，
-「和歌山大学システム工学部卒業論文/
-  大学院システム工学研究科修士論文用スタイルファイル」
-を用いて卒業論文を作成する方法を解説する．
-本稿自身，
-「和歌山大学システム工学部卒業論文/
-  大学院システム工学研究科修士論文用スタイルファイル」
-を用いて記述されており，例によってその使い方を示している．
-「和歌山大学システム工学部卒業論文/
-  大学院システム工学研究科修士論文用スタイルファイル」
-では，タイトルページ，概要，目次，参考文献などの書式を設定している．
-
-「和歌山大学システム工学部卒業論文/
-  大学院システム工学研究科修士論文用スタイルファイル」
-は，
+大規模言語モデル(LLM) はソフトウェア開発自動化に大きく貢献するが，複雑な要件を持つソフトウェア開発の実現には課題が多い．
+本研究は，このような課題の解決に向けて，自然言語からソースコードを自動生成するマルチエージェント型のプラットフォームChatDevを拡張する．
+具体的には，few-shot学習を用いた要件の細分化と各ステップの開発を行うLLM に要件の全体概要の学習によるソースコード自動生成並びに，生成ステップ毎の差分行数に基づく要件の統合及び，統合結果を分割例と再分割を組み合わせた反復的に進める開発プロセスを提案する．
+ケーススタディとして，競技プログラミングサイトであるAtCoderの問題を題材に，この提案手法を実施した結果，few-shot学習と全体概要の共有の組み合わせによりテスト通過率が向上し，統合に基づく要件の再分割により生成されたソースコードはさらにテスト通過率が向上することを明らかにした．
 \begin{quote}
   \begin{description}
     \item[\tt wuse\_thesis.sty:] 卒業/修士論文用スタイルファイル
@@ -99,58 +111,11 @@ ihara@wakayama-u.ac.jp
 %%  本文はここから
 %%
 
-\chapter{タイトルページ，概要，目次}
+\chapter{はじめに}
 
-{\bf 「和歌山大学システム工学部卒業論文/
-大学院システム工学研究科修士論文用スタイルファイル」}\cite{wusethesis}
-では，専用のタイトルページを出力する．
-記述すべき項目は，
-\begin{itemize}
-  \item タイトル
-  \item 著者名
-  \item 学士(4年)/修士(M2)の設定
-  \item 学科名/クラスタ名
-  \item 学生番号
-  \item 卒業年度
-  \item 論文提出日
-\end{itemize}
-である．
-これらのデータは，\verb|\maketitle|によってタイトルページに出力される．
-また，概要の部分において，論文の内容をまとめる．その内容は論文の2ペー
-ジ目(タイトルページの次)に出力される．
-このソースでは，目次(\verb|\tableofcontents|)を出力している．
-他に，図目次(\verb|\listoffigures|)，表目次(\verb|\listoftables|)を
-出力することもできるので，必要ならばそれぞれのコメントをはずす．
-図目次，表目次については，第\ref{chap:fig-tab-exp}章において説明する．
+大規模言語モデル(LLM)技術の急速な発展に伴い\todo{引用}，LLMはこれまで人間が時間や労力をかけて取り組んできたタスクの自動化を実現し，幅広い分野において作業を効率化する技術として関心を集めている．ソフトウェア開発においても同様に，コードレビュー，リファクタリング，テストケース生成など，様々な場面において飛躍的に生産性を向上させることが確認されている．\todo{引用，引用，引用} その中でも，開発者の意図や要件をプロンプトとして提示し，ソースコードを自動生成するタスクに対して大きな期待が寄せられている．
 
-\section{タイトル}
-\subsection{title}
-論文のタイトルを記述する．
-
-\section{著者}
-\subsection{author}
-著者名を記述する．
-
-\subsection{bachelar/master}
-卒業論文の場合には，\verb|\master|をコメントアウトし，
-\verb|\bachelar|を設定する．
-修士論文の場合には，\verb|\bachelar|をコメントアウトし，
-\verb|\master|を設定する．
-
-\subsection{department}
-所属を記述する．
-システム工学科所属（学部生）の場合には``システム工''，
-デザイン科学クラスタ所属（大学院生）の場合には``デザイン科学''と記述する．
-
-\subsection{studentid}
-学生番号を記述する．
-
-\subsection{gyear}
-卒業年度を記述する．
-
-\section{提出日}
-\subsection{date}
-論文提出日を記述する．
+LLMは，自然言語で記述された要求文に基づきソースコードの自動生成を実現し，昨今では複雑で，大規模なソフトウェア開発の自動化に向けた研究が進められている．\todo{引用}
 
 
 \chapter{図，表，数式}\label{chap:fig-tab-exp}
