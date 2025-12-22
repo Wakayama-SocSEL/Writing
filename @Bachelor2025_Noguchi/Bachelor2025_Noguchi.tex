@@ -402,7 +402,7 @@ CodeQLは，対象となるソースコードを解析し，抽象構文木，�
 
 \subsection{低速コードパターンからCodeQLクエリへの変換}
 
-6つの低速コードパターンをCodeQLで検出可能な形式に変換するため，各パターンの構造的特徴に基づいたQLクエリを手作業で構築した．
+6つの低速コードパターンをCodeQLで検出可能な形式に変換するため，各パターンの構造的特徴に基づいたQLクエリを手作業で作成した．
 
 % 
 \todo{具体例で説明}
@@ -426,39 +426,37 @@ CodeQLは，対象となるソースコードを解析し，抽象構文木，�
     \caption{低速コードパターン}
     \label{tab:slow_code_patterns}
     \setcounter{patternID}{0} % 表が始まる前にカウンタを0にリセット
-    \resizebox{1.0\linewidth}{!}{
-        \begin{threeparttable}
-            \begin{tabular}{clrr}
-                \toprule
-                \textbf{ID} & \textbf{特徴} & \textbf{元実装対数\tnote{*}} & \textbf{検索結果} \\
-                \midrule
-                
-                \refstepcounter{patternID}\label{ptn:for-in}
-                \thepatternID & \texttt{for-in}文 & 534 & 1011 \\
-                
-                \refstepcounter{patternID}\label{ptn:forEach}
-                \thepatternID & \texttt{.forEach()}呼び出し & 194 & 364 \\
-                
-                \refstepcounter{patternID}\label{ptn:hasOwnProperty}
-                \thepatternID & \texttt{if}文に\texttt{.hasOwnProperty()}呼び出しを持つ\texttt{for-in}文 & 102 & 195 \\
-
-                \refstepcounter{patternID}\label{ptn:applymap}
-                \thepatternID & \texttt{.apply().map()}呼び出し & 12 & 89 \\
-                
-                \refstepcounter{patternID}\label{ptn:json}
-                \thepatternID & \texttt{.parse(.stringify())}呼び出し & 11 & 18 \\
-                
-                \refstepcounter{patternID}\label{ptn:push}
-                    \thepatternID & \texttt{.push()}呼び出しを持つ\texttt{for-of}文 & 8 & 43\\
-                \bottomrule
-            \end{tabular}
+    \begin{threeparttable}
+        \begin{tabular}{clrr}
+            \toprule
+            \textbf{ID} & \textbf{特徴} & \textbf{元実装対数\tnote{*}} & \textbf{検索結果} \\
+            \midrule
             
-            \begin{tablenotes}
-                \raggedleft
-                \item[*] 各パターンを持つマイクロベンチマーク実装対の数
-            \end{tablenotes}
-        \end{threeparttable}
-    }
+            \refstepcounter{patternID}\label{ptn:for-in}
+            \thepatternID & \texttt{for-in}文 & 534 & 1011 \\
+            
+            \refstepcounter{patternID}\label{ptn:forEach}
+            \thepatternID & \texttt{.forEach()}呼び出し & 194 & 364 \\
+            
+            \refstepcounter{patternID}\label{ptn:hasOwnProperty}
+            \thepatternID & \texttt{if}文に\texttt{.hasOwnProperty()}呼び出しを持つ\texttt{for-in}文 & 102 & 195 \\
+
+            \refstepcounter{patternID}\label{ptn:applymap}
+            \thepatternID & \texttt{.apply().map()}呼び出し & 12 & 89 \\
+            
+            \refstepcounter{patternID}\label{ptn:json}
+            \thepatternID & \texttt{.parse(.stringify())}呼び出し & 11 & 18 \\
+            
+            \refstepcounter{patternID}\label{ptn:push}
+                \thepatternID & \texttt{.push()}呼び出しを持つ\texttt{for-of}文 & 8 & 43\\
+            \bottomrule
+        \end{tabular}
+        
+        \begin{tablenotes}
+            \raggedleft
+            \item[*] 各パターンを持つマイクロベンチマーク実装対の数
+        \end{tablenotes}
+    \end{threeparttable}
 \end{table}
 %----------------------
 
@@ -506,20 +504,18 @@ CodeQLは，対象となるソースコードを解析し，抽象構文木，�
     \centering
     \caption{低速コードパターンに基づく検出結果}
     \label{tab:result_detect}
-    \resizebox{0.9\linewidth}{!}{
-        \begin{tabular}{crrr}
-            \toprule
-            \textbf{ID} & \textbf{検出リポジトリ数} & \textbf{最大検出数 (件)} & \textbf{総検出数 (件)} \\
-            \midrule           
-            \ref{ptn:for-in} & 689 & 7,378 & 90,592 \\
-            \ref{ptn:forEach} & 842 & 12,675 & 161,681 \\
-            \ref{ptn:hasOwnProperty} & 308 & 1,125 & 9,516 \\
-            \ref{ptn:json} & 282 & 142 & 2,684 \\
-            \ref{ptn:applymap} & 48 & 12 & 138 \\
-            \ref{ptn:push} & 477 & 3,351 & 30,075 \\
-            \bottomrule
-        \end{tabular}
-    }
+    \begin{tabular}{crrr}
+        \toprule
+        \textbf{ID} & \textbf{検出リポジトリ数} & \textbf{最大検出数 (件)} & \textbf{総検出数 (件)} \\
+        \midrule           
+        \ref{ptn:for-in} & 689 & 7,378 & 90,592 \\
+        \ref{ptn:forEach} & 842 & 12,675 & 161,681 \\
+        \ref{ptn:hasOwnProperty} & 308 & 1,125 & 9,516 \\
+        \ref{ptn:json} & 282 & 142 & 2,684 \\
+        \ref{ptn:applymap} & 48 & 12 & 138 \\
+        \ref{ptn:push} & 477 & 3,351 & 30,075 \\
+        \bottomrule
+    \end{tabular}
 \end{table}
 %----------------------
 
