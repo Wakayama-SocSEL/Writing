@@ -78,3 +78,18 @@ series = {ESEC/FSE 2021}
   keywords={Software systems;Maintenance engineering;Software engineering;Interviews;Tools;Open source software;Dead code;unreachable code;unused code;bad smell;empirical investigation;multi-study},
   doi={10.1109/TSE.2018.2842781}}
 
+@INPROCEEDINGS {study-of-test-deletion,
+author = { Bhatta, Suraj and Kendemah, Frank and Jha, Ajay Kumar },
+booktitle = { 2025 IEEE/ACM 22nd International Conference on Mining Software Repositories (MSR) },
+title = {{ Understanding Test Deletion in Java Applications }},
+year = {2025},
+volume = {},
+ISSN = {},
+pages = {408-420},
+abstract = { Obsolete and redundant tests increase regression testing costs. Therefore, developers should remove them from test suites; however, identifying these tests is non-trivial. Automated techniques for identifying obsolete and redundant tests could help developers reduce regression testing costs. Nonetheless, we have limited empirical evidence of how and why developers delete tests. Therefore, in this work, we first create DelTest, a dataset of 24,431 manually confirmed deleted tests, by analyzing 449,592 commits from seven open-source Java projects. We then perform an empirical study on DelTest to understand test deletion. Our findings show that test deletion frequency and the number of deleted tests vary significantly across projects, suggesting that test deletion is more likely driven by project-specific needs than the broader development cycle. Developers delete only one or two tests in most commits, suggesting test deletion is mostly small and incremental. In DelTest, 83.2% of tests are deleted along with the corresponding test classes, while $16.8 \%$ are deleted individually. We find that $91.4 \%$ of deleted tests in six projects are obsolete tests (i.e., production code is deleted), $7 \%$ are redundant tests (i.e., passing tests), and $1.6 \%$ are failing tests. The deletion of $20 \%$ of redundant tests reduces code coverage or mutation scores. We also evaluate test suite reduction (TSR) approaches on DelTEST and find that a TSR approach identifies up to 54% of the redundant tests. Our findings can help improve automated techniques for identifying obsolete and redundant tests. },
+keywords = {Java;Codes;Costs;Production;Software;Maintenance;Data mining;Testing;Software development management},
+doi = {10.1109/MSR66628.2025.00071},
+url = {https://doi.ieeecomputersociety.org/10.1109/MSR66628.2025.00071},
+publisher = {IEEE Computer Society},
+address = {Los Alamitos, CA, USA},
+month =apr}
