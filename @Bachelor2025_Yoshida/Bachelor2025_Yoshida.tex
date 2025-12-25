@@ -133,25 +133,35 @@ APIの削除という大きな変更に関しては，急に行うと，ソフ�
 \label{chap:deletecode}
 
 \section{不要コードの種類}
-ソフトウェアにとっての不要コードはステークホルダやタイミングによって異なる．クライアントにとって必要な機能であってもライブラリ開発者にとっては，保持したくないコードもある．例えば，後方互換性を保証するためのコードはライブラリにとっては不要であるが，クライアントにとっては必要である．他にも，よく使われるライブラリのAPIは必要であるが，より効率的でクリーンな実装の代替APIが登場すれば，現状のAPIは価値が落ち，不要とみなされることがある．その中でも普遍的に不要であると判断されるコードは存在し，活発に研究で議論されてきた．以下に狭義での不要コードを示す．
-
-\begin{itemize}
-    \item \textbf{デッドコード}：プログラム中で到達不可能なコードのことを指す．
-    \item \textbf{未実行コード}：観測期間において，実行されないコードのことを指す．
-    \item \textbf{冗長コード}：同じ役割を果たすコードのことを指す．
-\end{itemize}
-
-より広義での不要コードを以下に示す．
-\begin{itemize}
-    \item \textbf{削除コード}：履歴上で削除されたコードのことを指す．
-    \item \textbf{開発者が不要と判断したコード}：開発者へのインタビューで開発者が不要と判断したコードのことを指す．
-\end{itemize}
-
-広義での不要コードは普遍的に不要であると判断できないため，特定が難しい．
+ソフトウェアにとっての不要コードはステークホルダやタイミングによって異なる．クライアントにとって必要な機能であってもライブラリ開発者にとっては，保持したくないソースコードもある．例えば，後方互換性を保証するためのソースコードはライブラリにとっては保持したくない不要コードであるが，クライアントにとっては必要である．他にも，よく使われるライブラリのAPIは必要であるが，より効率的でクリーンな実装の代替APIが登場すれば，現状のAPIは価値が落ち，不要とみなされることがある．その中でも普遍的に不要であると判断されるソースコードは存在し，活発に研究で議論されてきた．表~\ref{tab:broadly-speaking}に狭義での不要コードを示す．
+広義での不要コードは普遍的に不要であると判断できないため，特定が難しい．表~\ref{tab:narrow-sense}に本研究で定義する広義での不要コードを示す．
 以後，単に不要コードと記述する場合，これらのコードを統括的に含んだ意味を示すものとする．
 
+\begin{table}[]
+    \centering
+    \caption{狭義の不要コード}
+    \begin{tabular}{c|c} \hline
+        種類 & 定義 \\ \hline
+        デッドコード & プログラム中で到達不可能なソースコード \\
+        未実行コード & 観測期間において，実行されないソースコード \\
+        冗長コード & 同じ役割を果たすソースコード \\ \hline
+    \end{tabular}
+    \label{tab:broadly-speaking}
+\end{table}
+
+\begin{table}[]
+    \centering
+    \caption{広義の不要コード}
+    \begin{tabular}{c|c} \hline
+        種類 & 定義 \\ \hline
+        削除コード & 履歴上で削除されたソースコード \\
+        開発者が不要と判断したコード & 開発者へのインタビューで開発者が不要と判断したソースコード \\ \hline
+    \end{tabular}
+    \label{tab:narrow-sense}
+\end{table}
+
 \section{不要コードが引き起こす問題}
-不要コードがコードベースに蓄積することは様々な問題を引き起こす．Sebastian\cite{increase-maintainability}らの研究では，不要コードは保守コストの増加を引き起こすと言われている．コードの修正時に，未使用のコードも同時に修正する必要があり，無駄なコストを作り出してしまう．また，Simone\cite{decrease-readability}らの研究では，コードベースを理解する際に，不要コードを読んでしまうことで，コード理解の有効性や効率を下げてしまうと言われている．
+不要コードがコードベースに蓄積することは様々な問題を引き起こす．Sebastianら\cite{increase-maintainability}の研究では，不要コードは保守コストの増加を引き起こすと言われている．コードの修正時に，未使用のコードも同時に修正する必要があり，無駄なコストを作り出してしまう．また，Simoneら\cite{decrease-readability}の研究では，コードベースを理解する際に，不要コードを読んでしまうことで，コード理解の有効性や効率を下げてしまうと言われている．
 したがって，不要コードは検出し，削除することで，コードベースから取り除く必要がある．
 
 \section{関連研究}
@@ -159,15 +169,15 @@ APIの削除という大きな変更に関しては，急に行うと，ソフ�
 \subsection{不要コードの検出}
 
 観測期間において，実行されていないコードを検出し，自動で削除する研究が提案されている\cite{dynamic-analysis}．ソフトウェア中のさまざまなコンポーネントにログを組み込み，実環境で一定期間運用することで実行状況のログを取得する．実行状況のログの中で実行履歴がないコンポーネントを不要コードと判定する．
-しかし，ソフトウェアの使用状況に基づく不要コードの検出では，偽陽性が発生する．例えば，エラー処理のコードや復旧用のコード，移行コードは観測期間において，実行されなければ，不要コードであると検出される．このようなコードは実行されていなくとも，他からの依存関係があるので，削除してはいけない．したがって，実行状況の監視と共に依存関係の取得も必要である．
+しかし，ソフトウェアの使用状況に基づく不要コードの検出では，偽陽性が発生する．例えば，エラー処理のソースコードや復旧用のソースコード，移行のためのソースコードは観測期間において，実行されなければ，不要コードであると検出される．このようなコードは実行されていなくとも，他からの依存関係があるので，削除してはいけない．したがって，実行状況の監視と共に依存関係の取得も必要である．
 
-そこで，依存関係に着目し，他との依存関係を持たないデッドコードを静的に検出する手法が提案されている．\cite{}\todo{デッドコードの検出手法の説明}しかし，リフレクションのように動的に依存関係が決まる場合，偽陽性を発生させてしまう．そして，デッドコードの検出については，静的には全ての依存関係を取得することが不可能であるという結論も出ている．\cite{}
+そこで，依存関係に着目し，他との依存関係を持たないデッドコードを静的に検出する手法が提案されている\todo{引用}．\todo{デッドコードの検出手法の説明}しかし，リフレクションのように動的に依存関係が決まる場合，偽陽性を発生させてしまう．そして，デッドコードの検出については，静的には全ての依存関係を取得することが不可能であるという結論も出ている\todo{引用}．
 
 これらは普遍的な不要コードを検出することを目的としている．本研究では，普遍的な不要コードよりも広い概念での不要コードの特徴を調査することを目的としている．
 
 
 \subsection{削除コードの実証的研究}
-削除ファイルの特徴を分析した研究では，「最近変更されておらず，依存の中心にいない」特徴を持つファイルが生存するファイルに比べて，有意に差があるということを発見した\cite{static-analysis}．
+削除ファイルの特徴を分析した研究では，「最近変更されておらず，依存の中心にいない特徴を持つファイル」が「生存するファイル」に比べ，有意に差があるということを発見した\cite{static-analysis}．
 
 テストコードの削除に着目した研究\cite{study-of-test-deletion}では，削除されたテストメソッドの83.2\%はテストクラスごと削除され，7\%は冗長なテストであった．さらに，削除されたテストメソッドの91.4\%はプロダクションコードの廃止による副次的な削除であることがわかった．
 
@@ -199,30 +209,38 @@ Pythonのプロジェクトであること．大規模なライブラリであ�
 \section{事前分析から得られた示唆と研究課題}
 
 
-\chapter{RQ1：類似機能メソッド群の生存と削除にはどのような特徴があるか}
+\chapter{RQ1：クローングループの生存と削除にはどのような特徴があるか}
 
 \section{概要}
-\todo{概要を考える}
+
+リポジトリ内の全てのメソッドをバージョンごとに抽出し，バージョン間で追加，生存，削除されたメソッドを分類する．さらに，削除されたメソッドの中でもクローングループから削除されたメソッドに着目し，クローングループの有無でメソッドにどのような違いがあるかを目視で確認し，考察する．
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{./Yoshida_fig/approach.pdf}
+    \caption{アプローチの概要}
+    \label{fig:overview-of-approach}
+\end{figure}
 
 \section{分析手法}
-\subsection{類似機能メソッドの検出}
+\subsection{クローングループの検出}
 対象とするOSSのGitHubのリポジトリをクローンする．
 クローンしたリポジトリ内で，タグを含むコミットを全て取得する．タグを含むコミットからセマンティックバージョニングを使用しているコミットのみをフィルタリングする．
-さらに，セマンティックバージョニングの末尾に「rc」や「dev」といった\todo{〇〇}が含まれるタグについては，正規表現で排除する．\todo{排除する理由}
+さらに，セマンティックバージョニングの末尾に「rc」や「dev」といったプレリリースが含まれるタグについては，正規表現で排除する．\todo{排除する理由}
 また，パッチバージョンについては，0のみを使用する．
 これらの操作によって，マイナーバージョンのタグとそのコミットのみを全て抽出できる．例えば，「v1.2.0」のようなタグとコミットを取得できる．
 
 次に，取得したマイナーバージョンのコミットハッシュを利用して，最も古いバージョンにチェックアウトする．
-そして，チェックアウトしたバージョン内の全ての「.py」ファイルを対象に抽象構文木（Abstract Syntacs Tree）へパースする．（以降，ASTとする．）このASTからクラスの定義とメソッドの定義を取得し，一意のメソッド名を構築する（「クラス名.メソッド名」という形式）．
+そして，チェックアウトしたバージョン内の全ての「.py」ファイルを対象に抽象構文木（Abstract Syntacs Tree）へパースする．（以降，ASTとする）このASTからクラスの定義とメソッドの定義を取得し，一意のメソッド名を構築する（「クラス名.メソッド名」という形式）．
 同時にメソッドのソースコードもASTから取得しておき，N-gramでハッシュ化する．\todo{なぜASTを使用するのか}
 
 メソッド間の類似度をN-gramから算出する．算出方法は最長共通部分文字列（以降，LCSとする）を使用する．
 しかし，LCSは計算に時間がかかるため，まず，N-gramの単純な類似度でフィルタリングし，閾値0.7を超えた時点で無条件にコードクローンであると判定する．
 N-gramの類似度で閾値0.7未満であったメソッドに対して，LCSを適用し，類似度を算出し，0.7を超えていれば，コードクローンであると判定する．
-このコードクローンの判定には，コードクローン検出における既存研究のツールNILを使用する．\cite{NIL}\todo{なぜNILを使用するのか}\todo{コードクローンの偽陽性，偽陰性の話}
+このコードクローンの判定には，コードクローン検出における既存研究のツールNIL\cite{NIL}を使用する．\todo{なぜNILを使用するのか}\todo{コードクローンの偽陽性，偽陰性の話}
 
 コードクローンは二つのメソッドのペアとして算出される．\todo{ペアではダメな理由}
-したがって，コードクローンのペアの推移的関係を用いて，クローンペアを集約することで2つ以上のコードクローンメソッドのグループを作成する．
+したがって，コードクローンのペアの推移的関係を用いて，クローンペアを集約することで2つ以上のコードクローンメソッドのグループ（以降，クローングループ）を作成する．
 
 これらの操作を全てのバージョンコミットにチェックアウトし，繰り返す．
 
@@ -245,15 +263,12 @@ Gitの履歴で削除されたメソッドを抽出すると，メソッドの�
 
 
 \subsection{メソッドの変遷パターン間での生存期間の違いの取得}
-4.2.3で分類したメソッドごとに生存期間を算出し，違いがあるかを分析する．
+4.2.3で分類したメソッドごとに生存期間を算出し，違いがあるかを分析する．\memo{いらないかも}
 
 \section{分析結果}
-\subsection{類似機能メソッドの生存実態}
+\subsection{メソッドの生存実態}
 
-表~\ref{tab:pattern-method}は，各バージョンにいて，追加されたメソッドの数，削除されたメソッドの数（クローングループ内のすべてのメソッドが削除，クローングループ内の一部のメソッドが削除，単独でメソッドが削除），生存したメソッドの数をそれぞれ表した表である．
-
-観測開始地点のバージョン0.4.0は，プロジェクトの初期なので，多くのメソッドが追加されている．メソッドは基本的には，追加が続けられており，全体の総数としては上昇する．例えば，v1.0.0のリリース時は，グループの全削除が496件，単独削除が522件起こっている．さらに，v2.0.0のメジャーバージョンのリリース時にもグループの全削除が345件，単独削除が416件起こっている．これは，メジャーバージョンの1においては，最大の削除数となっている．
-このことから，メジャーバージョンのリリース時には，多くのメソッドが削除される．
+表~\ref{tab:pattern-method}は，各バージョンにいて，追加されたメソッドの数，削除されたメソッドの数（クローングループ内のすべてのメソッドが削除，クローングループ内の一部のメソッドが削除，単独でメソッドが削除），生存したメソッドの数をそれぞれ表している．
 
 \begin{table}[]
     \centering
@@ -298,6 +313,9 @@ Gitの履歴で削除されたメソッドを抽出すると，メソッドの�
     \label{tab:pattern-method}
 \end{table}
 
+観測開始地点のバージョン0.4.0は，プロジェクトの初期なので，多くのメソッドが追加されている．メソッドは基本的には，追加が続けられており，全体の総数としては上昇する．例えば，v1.0.0のリリース時は，グループの全削除が496件，単独削除が522件起こっている．さらに，v2.0.0のメジャーバージョンのリリース時にもグループの全削除が345件，単独削除が416件起こっている．これは，メジャーバージョンの1においては，最大の削除数となっている．
+このことから，メジャーバージョンのリリース時には，多くのメソッドが削除されることがわかる．
+
 
 % \subsection{メソッドの生存期間}
 % \begin{figure*}[t]
@@ -308,14 +326,15 @@ Gitの履歴で削除されたメソッドを抽出すると，メソッドの�
 % \end{figure*}
 % メソッドごとの生存期間は図4.1に示す．\todo{この図は差し替える}
 
-\subsection{クローンメソッド群の一部が削除}
+\subsection{クローングループの一部が削除}
 
 
-pandasプロジェクトにおいて，v0.19.0がリリースされた時点でのメソッドの例を以下に示す．これら二つのメソッドはコードクローン検出器によると類似度\todo{〇〇\%}となっており，コードクローンタイプ3である．どちらもPanelオブジェクトを生成しているという点では類似している．
+pandasプロジェクトにおいて，v0.19.0がリリースされた時点でのメソッドの例をListing~\ref{lis:include-deprecated-API}とListing~\ref{lis:include-inplace-API}に示す．これら二つのメソッドはコードクローン検出器によると類似度\todo{〇〇\%}となっており，コードクローンタイプ3である．どちらもPanelオブジェクトを生成しているという点では類似している．
+
 
 %----------------------------------
 \vspace{10pt}
-\begin{lstlisting}[caption=非推奨な記述方法を含むメソッド, label=include-deprecated-API, captionpos=t, columns=flexible]
+\begin{lstlisting}[caption=非推奨な記述方法を含むメソッド（次バージョンで削除）, label=lis:include-deprecated-API, captionpos=t, columns=flexible]
 def test_backwards_compat_without_term_object(self):
     with ensure_clean_store(self.path) as store:
 
@@ -334,13 +353,13 @@ def test_backwards_compat_without_term_object(self):
 \end{lstlisting}
 \vspace{10pt}
 %----------------------------------
-Listing~\ref{include-deprecated-API}は，古い形式のクエリの書き方が後方互換性を維持して正しく動作するかを検証するメソッドである．
+Listing~\ref{lis:include-deprecated-API}は，古い形式のクエリの書き方が後方互換性を維持し，かつ，正しく動作するかを検証するメソッドである．
 コード内で\texttt{wp = Panel(...)}とある．ここでは，条件を\texttt{('カラム名','演算子','値')}というタプルのリストで渡している．そして，\texttt{with assert\textunderscore produces\textunderscore warning(FutureWarning)}を使って，「この記述方法が将来的に消える」という警告が出ることをテストしている．
 
 
 %----------------------------------
 \vspace{10pt}
-\begin{lstlisting}[caption=推奨APIを含むメソッド, label=include-inplace-API, captionpos=t, columns=flexible]
+\begin{lstlisting}[caption=推奨APIを含むメソッド（次バージョンで生存）, label=lis:include-inplace-API, captionpos=t, columns=flexible]
 def test_panel_assignment(self):
     # GH3777
     wp = Panel(
@@ -364,20 +383,20 @@ def test_panel_assignment(self):
 \vspace{10pt}
 %----------------------------------
 
-Listing~\ref{include-inplace-API}は，まだ実装されていない操作に対して，適切にエラーを発生させているかを検証するテストメソッドである．
+Listing~\ref{lis:include-inplace-API}は，まだ実装されていない操作に対して，適切にエラーを発生させているかを検証するテストメソッドである．
 実行したい処理を内部関数\texttt{f()}の中で，\texttt{wp.loc[...] = wp2.loc[...]}という代入処理を記述している．そして，\texttt{self.assertRaises(NotImplementedError, f)}により関数\texttt{f()}を実行した際に，未実装のエラーが発生することをテストしている．
 
-Listing~\ref{include-deprecated-API}における\texttt{test\textunderscore backwards\textunderscore compat\textunderscore without\textunderscore term\textunderscore object}メソッドは，v0.20.0リリース時には削除された．つまり，v0.19.0の時点では必要であったメソッドがv0.20.0の時点では不要であったため，削除されたと言える．
-一方，Listing~\ref{include-inplace-API}における\texttt{test\textunderscore panel\textunderscore assignment}メソッドはv0.20.0の時点でも削除されずに生存していたため，v0.20.0の時点では不要ではなく，必要なメソッドであると考えられる．その後，メジャーバージョンであるv1.0.0リリース直前のv0.25.0において不要となり，削除された．
+Listing~\ref{lis:include-deprecated-API}における\texttt{test\textunderscore backwards\textunderscore compat\textunderscore without\textunderscore term\textunderscore object}メソッドは，v0.20.0リリース時には削除された．つまり，v0.19.0の時点では必要であったメソッドがv0.20.0の時点では不要であったため，削除されたと言える．
+一方，Listing~\ref{lis:include-inplace-API}における\texttt{test\textunderscore panel\textunderscore assignment}メソッドはv0.20.0の時点でも削除されずに生存していたため，v0.20.0の時点では不要ではなく，必要なメソッドであると考えられる．その後，メジャーバージョンであるv1.0.0リリース直前のv0.25.0において不要となり，削除された．
 
 この結果から，v0.20.0では，\texttt{store.select}メソッドの古い形式の記述方法のサポートが終了したため，それを利用している側のコードが削除されたと考えられる．さらに，v0.25.0においては，\texttt{Panel}オブジェクトが削除されたため，それを呼び出しているメソッドも削除されたと考えられる．
 
 
-\subsection{クローンメソッド群の全てが削除}
-v0.18.0がリリースされた時点において，クローンメソッド群の全てが削除されたメソッドの例を以下に示す．
+\subsection{クローングループの全てのメソッドが削除}
+v0.18.0がリリースされた時点において，クローングループの全てのメソッドが削除された事例をListing~\ref{lis:test-get-options-data}とListing~\ref{lis:test-get-data-with-list}に示す．
 
 \vspace{10pt}
-\begin{lstlisting}[caption=v0.18.0におけるクローンメソッド, label=all-deleted-method-1, captionpos=t, columns=flexible]
+\begin{lstlisting}[caption=v0.18.0におけるクローンメソッド, label=lis:test-get-options-data, captionpos=t, columns=flexible]
 @network
 def test_get_options_data(self):
     # regression test GH6105
@@ -393,10 +412,10 @@ def test_get_options_data(self):
 \end{lstlisting}
 \vspace{10pt}
 
-Listing~\ref{all-deleted-method-1}はオプション取引データの取得機能が正しく動作するかを検証するためのメソッドである．まず，\texttt{self.assertRaises(ValueError, ...)}によって，\texttt{self.aapl.get\textunderscore options\textunderscore data}メソッドに不正な引数を指定した場合に，正しくエラーが発生することを確認している．さらに，その後の\texttt{try ... except ...}句内で実際にデータを取得し，\texttt{self.assertTrue}によって，取得したデータが1以上であることを確認している．
+Listing~\ref{lis:test-get-options-data}はオプション取引データの取得機能が正しく動作するかを検証するためのメソッドである．まず，\texttt{self.assertRaises(ValueError, ...)}によって，\texttt{self.aapl.get\textunderscore options\textunderscore data}メソッドに不正な引数を指定した場合に，正しくエラーが発生することを確認している．さらに，その後の\texttt{try...except...}句内で実際にデータを取得し，\texttt{self.assertTrue}によって，取得したデータが1以上であることを確認している．
 
 \vspace{10pt}
-\begin{lstlisting}[caption=v0.18.0におけるクローンメソッド, label=all-deleted-method-2, captionpos=t, columns=flexible]
+\begin{lstlisting}[caption=v0.18.0におけるクローンメソッド, label=lis:test-get-data-with-list, captionpos=t, columns=flexible]
 @network
 def test_get_data_with_list(self):
     try:
@@ -408,12 +427,14 @@ def test_get_data_with_list(self):
 \end{lstlisting}
 \vspace{10pt}
 
-Listing~\ref{all-deleted-method-2}は，複数のリストをまとめて指定し，データを一括取得できるかを検証するテストコードである．\texttt{self.appl.get\textunderscore call\textunderscore data\textunderscore (expiry=self.aapl.expiry\textunderscore dates)}によって，データのリストを引数にいれ，データを取得する．そして，\texttt{try ... except ...}句内で実際にデータを取得し，\texttt{self.assertTrue}によって，取得したデータが1以上であることを確認している．
+Listing~\ref{lis:test-get-data-with-list}は，複数のリストをまとめて指定し，データを一括取得できるかを検証するテストコードである．\texttt{self.appl.get\textunderscore call\textunderscore data(expiry=self.aapl.expiry\textunderscore dates)}によって，データのリストを引数にいれ，データを取得する．そして，\texttt{try...except...}句内で実際にデータを取得し，\texttt{self.assertTrue}によって，取得したデータが1以上であることを確認している．
 
-Listing~\ref{all-deleted-method-1}とListing~\ref{all-deleted-method-2}は互いに，クローンと判定されたメソッドである．これらは，v0.19.0で削除された．これらのメソッドのパスは\texttt{/pandas/io/tests/test\textunderscore data.py}に存在している．このパスに注目すると，v0.18.0においては，存在しているが，v0.19.0においては存在していなかった．つまり，これらのクローンメソッド群はファイル自体が削除されたことによって，同時にクローングループごと削除されたと判定されたことがわかる．
+Listing~\ref{lis:test-get-options-data}とListing~\ref{lis:test-get-data-with-list}は互いに，クローンと判定されたメソッドであり，類似度は\todo{X}\%である．これらは，v0.19.0で削除された．これらのメソッドのパスは\texttt{/pandas/io/tests/test\textunderscore data.py}に存在している．このパスに注目すると，v0.18.0においては，存在しているが，v0.19.0においては存在していなかった．つまり，これらのクローンメソッド群はファイル自体が削除されたことによって，同時にクローングループごと削除されたと判定されたことがわかる．
+
+次に，クローングループの全てが削除された別の事例をListing~\ref{lis:median}とListing~\ref{lis:f}に示す．
 
 \vspace{10pt}
-\begin{lstlisting}[caption=v0.6.0におけるクローンメソッド, label=all-deleted-method-3, captionpos=t, columns=flexible]
+\begin{lstlisting}[caption=v0.6.0におけるクローンメソッド, label=lis:median, captionpos=t, columns=flexible]
 def median(self, axis='major', skipna=True):
     def f(arr):
         mask = common.notnull(arr)
@@ -428,10 +449,10 @@ def median(self, axis='major', skipna=True):
 \end{lstlisting}
 \vspace{10pt}
 
-Listing~\ref{all-deleted-method-3}は，内部に関数を定義し，それを\texttt{apply}メソッドで指定した軸に適用している．
+Listing~\ref{lis:median}は，内部に関数を定義し，それを\texttt{apply}メソッド用いることで，指定した軸に適用している．
 
 \vspace{10pt}
-\begin{lstlisting}[caption=v0.6.0におけるクローンメソッド, label=all-deleted-method-4, captionpos=t, columns=flexible]
+\begin{lstlisting}[caption=v0.6.0におけるクローンメソッド, label=lis:f, captionpos=t, columns=flexible]
 def f(arr):
     mask = common.notnull(arr)
     if skipna:
@@ -444,7 +465,7 @@ def f(arr):
 \end{lstlisting}
 \vspace{10pt}
 
-Listing~\ref{all-deleted-method-4}は，Listing~\ref{all-deleted-method-3}の内部で定義されている関数である．つまり，関数の内部で関数が定義されている場合，それらの構造は類似しているとコードクローン検出器では，判定される．したがって，上位の関数が削除された場合，下位の関数も同時に削除される．
+Listing~\ref{lis:f}は，Listing~\ref{lis:median}の内部で定義されている関数である．つまり，関数の内部で関数が定義されている場合，それらの構造は類似しているとコードクローン検出器では，判定される．したがって，上位の関数が削除された場合，下位の関数も同時に削除される．
 
 これらの結果より，クローンと判定されたメソッド群が同時に削除される事例は上位概念の削除による副次的作用であることがわかる．
 
