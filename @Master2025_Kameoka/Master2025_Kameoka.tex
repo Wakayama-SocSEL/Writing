@@ -427,7 +427,7 @@ Euc(A, B) = \sqrt{(0.7 - 0.60)^2 + (0.3 - 0.2)^2 + (0.2 - 0.3)^2}
 \label{eq:euc_exm2}
 Euc'(A, B) = \sqrt{(0.7 - 0.60)^2 + (0.25 - 0.30)^2 + (0.3 - 0.2)^2 + (0.2 - 0.3)^2}
 \vspace{10pt}
-end{equation}
+\end{equation}
 
 具体的な類似プロジェクトの選定方法の説明を行う．
 表\ref{tab:example_sim_table}に，プロジェクトごとの各規約違反に対する修正率の例を示す．
@@ -453,6 +453,8 @@ end{equation}
 評価には，適合率（式\ref{eq:precision}），再現率（式\ref{eq:recall}），F1値を利用する．
 本研究において適合率が高いことは，静的解析ツールが現出した警告のうち，修正の必要のない違反を効果的に削減できていることを意味する．
 また，再現率が高いことは，検出された違反のうち，真に修正すべき違反の網羅性が高いことを意味する．
+
+各手法による予測結果における適合率，再現率，F1値を比較することで，提案手法による静的解析ツールの検出結果の修正要否予測への有効性を明らかにする．
 
 \begin{equation}
 \label{eq:precision}
@@ -530,14 +532,19 @@ Pythonは，近年，機械学習やデータ分析における需要の高ま�
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=1.0\linewidth]{@Master2025_Kameoka/fig/all_dataset_histogram.pdf}
-    \caption{フィルタリング前のプロジェクトごとの規約違反数分布}
-    \label{fig:all_dataset_summary}
-    
-    \centering
-    \includegraphics[width=1.0\linewidth]{@IPSJjournal2025_Kameoka/fig/dataset_size_histogram.pdf}
-    \caption{フィルタ条件適用後のプロジェクトごとの規約違反数分布}
-    \label{fig:dataset_summary}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{@Master2025_Kameoka/fig/all_dataset_histogram.pdf}
+        \caption{フィルタリング前のプロジェクトごとの規約違反数分布}
+        \label{fig:all_dataset_summary}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{@IPSJjournal2025_Kameoka/fig/dataset_size_histogram.pdf}
+        \caption{フィルタ条件適用後のプロジェクトごとの規約違反数分布}
+        \label{fig:dataset_summary}
+    \end{minipage}
 \end{figure}
 
 検証に使用するデータセットととして，OSSライブラリ検索サービスであるLibraries.io\footnote{\url{https://libraries.io/}}に登録されているPythonライブラリを用いる．
@@ -601,7 +608,7 @@ RQ1では従来手法である単一学習と提案手法である全学習，�
 
 データセット内のプロジェクト全体の規約違反の修正要否予測の結果を図\ref{fig:boxplot_summary}に示す．
 図は左から各手法の予測結果の適合率，再現率，F1値を順に示し，縦軸にその値を示している．
-選定学習と選定学習（欠損値補完あり）の2手法では，プロジェクト間類似度の測定の際に，ジャッカード係数とユークリッド距離のそれぞれに閾値を設けている．閾値の決定方法は，ジャッカード係数とユークリッド距離の組み合わせの全５０通りの中から，学習データでの予測精度が最も良かった際の値を採用した場合の，評価データでの予測結果を採用している．
+選定学習と選定学習（欠損値補完あり）の2手法では，プロジェクト間類似度の測定の際に，ジャッカード係数とユークリッド距離のそれぞれに閾値を設けている．閾値の決定方法は，ジャッカード係数とユークリッド距離の組み合わせの全50通りの中から，学習データでの予測精度が最も良かった際の値を採用した場合の，評価データでの予測結果を採用している．
 
 結果としては，単一学習の結果と比較して提案手法3種類では，適合率が僅かに改善し，再現率が僅かに悪化する結果となった．
 各メトリクスに対して，4手法間の全ての組み合わせでWilcoxonの符合順位検定を行ったところ，全ての組み合わせにおいて，統計的有意差なしの結果となった．
@@ -614,16 +621,19 @@ RQ1では従来手法である単一学習と提案手法である全学習，�
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=1\linewidth]{@IPSJjournal2025_Kameoka/fig/precision_improvement_by_positive_samples.pdf}
-	\caption{選定学習（欠損値補完あり）による適合率の改善度}
-	\label{fig:boxplot_precision_improvement_by_selected}
-% \end{figure}
-
-% \begin{figure}[ht]
-    \centering
-    \includegraphics[width=1\linewidth]{@IPSJjournal2025_Kameoka/fig/recall_improvement_by_positive_samples.pdf}
-	\caption{選定学習（欠損値補完あり）による再現率の改善度}
-	\label{fig:boxplot_recall_improvement_by_selected}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{@IPSJjournal2025_Kameoka/fig/precision_improvement_by_positive_samples.pdf}
+    	\caption{選定学習（欠損値補完あり）による適合率の改善度}
+    	\label{fig:boxplot_precision_improvement_by_selected}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{@IPSJjournal2025_Kameoka/fig/recall_improvement_by_positive_samples.pdf}
+    	\caption{選定学習（欠損値補完あり）による再現率の改善度}
+    	\label{fig:boxplot_recall_improvement_by_selected}
+    \end{minipage}
 \end{figure}
 
 提案手法の効果が顕著であったプロジェクトの分析結果を示す．
@@ -641,23 +651,52 @@ RQ1では従来手法である単一学習と提案手法である全学習，�
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=1\linewidth]{@Master2025_Kameoka/fig/all_precision_improvement_by_positive_samples.pdf}
-	\caption{全学習手法による適合率の改善度}
-	\label{fig:boxplot_precision_improvement_by_all}
-\end{figure}
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=1\linewidth]{@Master2025_Kameoka/fig/all_recall_improvement_by_positive_samples.pdf}
-	\caption{全学習手法による再現率の改善度}
-	\label{fig:boxplot_recall_improvement_by_all}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{@Master2025_Kameoka/fig/all_precision_improvement_by_positive_samples.pdf}
+    	\caption{全学習手法による適合率の改善度}
+    	\label{fig:boxplot_precision_improvement_by_all}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{@Master2025_Kameoka/fig/all_recall_improvement_by_positive_samples.pdf}
+    	\caption{全学習手法による再現率の改善度}
+    	\label{fig:boxplot_recall_improvement_by_all}
+    \end{minipage}
 \end{figure}
 
 次に全学習手法による，修正予測精度への影響について述べる．
-全学習手法での学習データの正例数ごとの，適合率の改善度を図\ref{fig:boxplot_precision_improvement_by_all}に示し，再現率の改善度を\ref{fig:boxplot_recall_improvement_by_all}に示す．
-全学習手法の結果からも，選定学習の際と同様に単一学習の結果と比較して適合率が上昇傾向にあり，再現率が低下傾向にあることがわかる．
+全学習手法での学習データの正例数ごとの適合率の改善度を図\ref{fig:boxplot_precision_improvement_by_all}に示し，再現率の改善度を図\ref{fig:boxplot_recall_improvement_by_all}に示す．
+全学習手法の結果からも，選定学習の際と同様に単一学習の結果と比較して適合率が上昇傾向にあり，再現率が低下傾向にあることがわかる．単一学習からの適合率の改善度と再現率の悪化度が，選定学習より変化幅が大きいことがわかる．
 
 
+
+\subsection{全学習と選定学習（欠損値補完あり）の予測結果の比較}
+
+\begin{figure}[ht]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{@Master2025_Kameoka/fig/precision_selected_vs_all.pdf}
+    	\caption{全学習から選定学習による適合率の改善度}
+    	\label{fig:boxplot_precision_improvement_selected_vs_all}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{@Master2025_Kameoka/fig/recall_selected_vs_all.pdf}
+    	\caption{全学習手法による再現率の改善度}
+    	\label{fig:boxplot_recall_improvement_selected_vs_all}
+    \end{minipage}
+\end{figure}
+
+提案手法である，全学習と選定学習（欠損値補完あり）間の修正要否予測結果の比較を行う．
+図\ref{fig:boxplot_precision_improvement_selected_vs_all}に，全学習の適合率から，選定学習による適合率の改善度を示す．
+図\ref{fig:boxplot_recall_improvement_selected_vs_all}に，全学習の再現率から，選定学習による再現率の改善度を示す．
+図から見てとれるように，全学習と選定学習（欠損値補完あり）を比較した場合，全学習の方が適合率の高いプロジェクトが多く，選定学習の方が再現率の高いプロジェクトが多い結果となっている．
+
+ここまでの結果から，全学習と選定学習（欠損値補完あり）では，箱ひげ図の分散に違いはあるものの，改善度合いの分布に大きな違いがないことから，単一学習から適合率が改善するプロジェクトと，再現率が低下するプロジェクトは共通しており，全学習の方が選定学習（欠損値補完あり）と比較して，適合率の改善幅と再現率の低下幅が大きいと言える．
 
 \section{類似度の妥当性の評価}
 
@@ -682,43 +721,87 @@ RQ1では従来手法である単一学習と提案手法である全学習，�
 
 \subsection{正例数の少ないプロジェクトでの分析結果}
 
-\begin{table}[ht]
-  \centering
-  \caption{適合率が改善したプロジェクトで出現する規約違反ID（上位10件）}
-  \label{tab:improve_precision_id}
-  \begin{tabular}{lrr}
-    \hline
-    Violation ID & 出現回数 & 出現プロジェクト数 \\ \hline
-    E501 & 31,124 & 35 \\
-    E231 & 2,846 & 8 \\
-    F401 & 1,054 & 28 \\
-    F405 & 798 & 7 \\
-    E225 & 532 & 5 \\
-    E402 & 525 & 15 \\
-    E128 & 480 & 6 \\
-    E203 & 357 & 22 \\
-    E265 & 300 & 10 \\
-    F841 & 270 & 15 \\ \hline
-  \end{tabular}
-  \vspace{10pt}
+% \begin{table}[ht]
+%   \centering
+%   \caption{適合率が改善したプロジェクトで出現する規約違反ID（上位10件）}
+%   \label{tab:improve_precision_id}
+%   \begin{tabular}{lrr}
+%     \hline
+%     Violation ID & 出現回数 & 出現プロジェクト数 \\ \hline
+%     E501 & 31,124 & 35 \\
+%     E231 & 2,846 & 8 \\
+%     F401 & 1,054 & 28 \\
+%     F405 & 798 & 7 \\
+%     E225 & 532 & 5 \\
+%     E402 & 525 & 15 \\
+%     E128 & 480 & 6 \\
+%     E203 & 357 & 22 \\
+%     E265 & 300 & 10 \\
+%     F841 & 270 & 15 \\ \hline
+%   \end{tabular}
+%   \vspace{10pt}
 
-  \centering
-  \caption{適合率が悪化したプロジェクトで出現する規約違反ID（上位10件）}
-  \label{tab:not_improve_precision_id}
-  \begin{tabular}{lrr}
-    \hline
-    Violation ID & 出現回数 & 出現プロジェクト数 \\ \hline
-    E501 & 20,509 & 20 \\
-    E127 & 2,460 & 7 \\
-    E128 & 1,487 & 8 \\
-    F401 & 1,355 & 16 \\
-    E203 & 1,284 & 11 \\
-    W293 & 699 & 5 \\
-    E265 & 587 & 9 \\
-    E302 & 490 & 9 \\
-    E252 & 429 & 2 \\
-    E303 & 420 & 8 \\ \hline
-  \end{tabular}
+%   \centering
+%   \caption{適合率が悪化したプロジェクトで出現する規約違反ID（上位10件）}
+%   \label{tab:not_improve_precision_id}
+%   \begin{tabular}{lrr}
+%     \hline
+%     Violation ID & 出現回数 & 出現プロジェクト数 \\ \hline
+%     E501 & 20,509 & 20 \\
+%     E127 & 2,460 & 7 \\
+%     E128 & 1,487 & 8 \\
+%     F401 & 1,355 & 16 \\
+%     E203 & 1,284 & 11 \\
+%     W293 & 699 & 5 \\
+%     E265 & 587 & 9 \\
+%     E302 & 490 & 9 \\
+%     E252 & 429 & 2 \\
+%     E303 & 420 & 8 \\ \hline
+%   \end{tabular}
+% \end{table}
+
+\begin{table}[ht]
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \caption{適合率が改善したプロジェクトで出現する規約違反ID（上位10件）}
+    \label{tab:improve_precision_id}
+    \small % 表がはみ出す場合はサイズを調整
+    \begin{tabular}{lrr}
+      \hline
+      Violation ID & 出現回数 & 出現プロジェクト数 \\ \hline
+      E501 & 31,124 & 35 \\
+      E231 & 2,846 & 8 \\
+      F401 & 1,054 & 28 \\
+      F405 & 798 & 7 \\
+      E225 & 532 & 5 \\
+      E402 & 525 & 15 \\
+      E128 & 480 & 6 \\
+      E203 & 357 & 22 \\
+      E265 & 300 & 10 \\
+      F841 & 270 & 15 \\ \hline
+    \end{tabular}
+  \end{minipage}
+  \hfill % 左右の表の間に適切な空白を入れる
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \caption{適合率が悪化したプロジェクトで出現する規約違反ID（上位10件）}
+    \label{tab:not_improve_precision_id}
+    \small
+    \begin{tabular}{lrr}
+      \hline
+      Violation ID & 出現回数 & 出現プロジェクト数 \\ \hline
+      E501 & 20,509 & 20 \\
+      E127 & 2,460 & 7 \\
+      E128 & 1,487 & 8 \\
+      F401 & 1,355 & 16 \\
+      E203 & 1,284 & 11 \\
+      W293 & 699 & 5 \\
+      E265 & 587 & 9 \\
+      E302 & 490 & 9 \\
+      E252 & 429 & 2 \\
+      E303 & 420 & 8 \\ \hline
+    \end{tabular}
+  \end{minipage}
 \end{table}
 
 \begin{table}[ht]
@@ -784,16 +867,19 @@ RQ1では従来手法である単一学習と提案手法である全学習，�
 
 \begin{figure}[ht]
 	\centering
-        % \includegraphics[width=0.25\textwidth, bb=0 0 4 3]{fig/dataset_hist.pdf}
-	\includegraphics[width=1\linewidth]{@IPSJjournal2025_Kameoka/fig/precision_similar_projects_count_boxplot.pdf}
-	\caption{適合率が変化したプロジェクト統合プロジェクト数}
-	\label{fig:precision_similar_projects_count_boxplot}
-
-    \centering
-        % \includegraphics[width=0.25\textwidth, bb=0 0 4 3]{fig/dataset_hist.pdf}
-	\includegraphics[width=1\linewidth]{@IPSJjournal2025_Kameoka/fig/recall_similar_projects_count_boxplot.pdf}
-	\caption{再現率が変化したプロジェクト統合プロジェクト数}
-	\label{fig:recall_similar_projects_count_boxplot}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+    	\includegraphics[width=\textwidth]{@IPSJjournal2025_Kameoka/fig/precision_similar_projects_count_boxplot.pdf}
+    	\caption{適合率が変化したプロジェクト統合プロジェクト数}
+    	\label{fig:precision_similar_projects_count_boxplot}
+    \end{minipage}
+    \hfil
+    \begin{minipage}{0.45\textwidth}
+        \centering
+    	\includegraphics[width=1\textwidth]{@IPSJjournal2025_Kameoka/fig/recall_similar_projects_count_boxplot.pdf}
+    	\caption{再現率が変化したプロジェクト統合プロジェクト数}
+    	\label{fig:recall_similar_projects_count_boxplot}
+    \end{minipage}
 \end{figure}
 
 \section{学習データを統合することによって適合率が向上した要因}\label{section:kousatu1}
