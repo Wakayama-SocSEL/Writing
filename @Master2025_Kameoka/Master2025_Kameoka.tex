@@ -40,6 +40,9 @@
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{tabularx}
+\usepackage{tcolorbox}
+\usepackage{tascmac}
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
@@ -204,10 +207,6 @@ xleftmargin=\parindent
 従来研究では，静的解析ツールによる大量に検出した規約違反コードの中から，機械学習を用いて修正すべき規約違反コードを分類する手法が提案されている\cite{JyuraiPre}\cite{beizu}．
 Kimらは，静的解析ツールの出力をベイジアンネットワークに基づいて解析し，修正すべき規約違反コードを分類する手法を提案している\cite{beizu}．また，検出された違反に対する修正優先度付けする研究も数多く行われている\cite{Wang}\cite{Qing}\cite{HowFar}．これらの研究では，予測対象プロジェクトにおける規約違反の修正履歴を学習データとして用い，新たに検出された違反を評価対象とする機械学習モデル（規約違反コードの修正要否判定モデル）の構築と評価が行われている．
 
-
-
-% 従来研究では，静的解析ツールによる大量の違反検出が開発効率の低下を招くことに対処するため，機械学習を用いて修正の優先度を予測する手法が提案されている．たとえば，Ruthruffらは，優先的に修正すべき違反を特定するための機械学習モデルを構築している\cite{JyuraiPre}．また，Kimらは，静的解析ツールの出力をベイジアンネットワークに基づいて解析し，違反の修正優先度を予測する手法を提案している\cite{beizu}．
-% そのほかにも，検出された違反に対する修正優先度付けや修正要否の予測に関する研究が数多く行われている\cite{Wang}\cite{Qing}\cite{HowFar}．これらの研究では，予測対象プロジェクトにおける過去の規約違反修正履歴を学習データとし，新たに検出された違反を評価対象とすることで，予測モデルの構築と評価が行われている．
 
 従来研究では，評価対象プロジェクトの修正履歴を学習データとして用いてモデルを構築している．これは各プロジェクトでコーディングスタイルや開発体制が異なり，評価対象と同一プロジェクトの修正履歴を学習することで高い精度が得られることが示されている．
 % 従来研究では，一般に，評価対象プロジェクトの修正履歴を学習データとして用いて予測モデルを構築する．プロジェクトごとにコーディングスタイルや開発体制が異なるため，対象と同一プロジェクトの履歴を学習する方が，他プロジェクトの履歴を用いるよりも高い精度が得られると考えられている．
@@ -379,7 +378,11 @@ RQ2では，従来手法の課題として挙げた，予測対象プロジェ�
 \begin{equation}
 \label{eq:fixrate}
 \text{修正率} = \frac{\text{違反の修正された数}}{\text{違反を検出した数}}
-\vspace{10pt}
+\end{equation}
+
+ここで、修正率は以下の範囲をとる。
+\begin{equation}
+0 \le \text{修正率} \le 1
 \end{equation}
 
 
@@ -532,19 +535,15 @@ Pythonは，近年，機械学習やデータ分析における需要の高ま�
 
 \begin{figure}[ht]
     \centering
-    \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{@Master2025_Kameoka/fig/all_dataset_histogram.pdf}
-        \caption{フィルタリング前のプロジェクトごとの規約違反数分布}
-        \label{fig:all_dataset_summary}
-    \end{minipage}
-    \hfill
-    \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{@IPSJjournal2025_Kameoka/fig/dataset_size_histogram.pdf}
-        \caption{フィルタ条件適用後のプロジェクトごとの規約違反数分布}
-        \label{fig:dataset_summary}
-    \end{minipage}
+    \includegraphics[width=1\linewidth]{@Master2025_Kameoka/fig/all_dataset_histogram.pdf}
+    \caption{フィルタリング前のプロジェクトごとの規約違反数分布}
+    \label{fig:all_dataset_summary}
+    \vspace{20pt}
+
+    \centering
+    \includegraphics[width=1\linewidth]{@IPSJjournal2025_Kameoka/fig/dataset_size_histogram.pdf}
+    \caption{フィルタ条件適用後のプロジェクトごとの規約違反数分布}
+    \label{fig:dataset_summary}
 \end{figure}
 
 検証に使用するデータセットととして，OSSライブラリ検索サービスであるLibraries.io\footnote{\url{https://libraries.io/}}に登録されているPythonライブラリを用いる．
@@ -582,13 +581,15 @@ Pythonは，近年，機械学習やデータ分析における需要の高ま�
 
 \section{概要}
 
-RQ1では従来手法である単一学習と提案手法である全学習，選定学習（欠損値補完なし），選定学習（欠損値補完あり）との修正優先度の予測結果の評価を行う．
+RQ1では従来手法である単一学習と提案手法である全学習，選定学習（欠損値補完なし），選定学習（欠損値補完あり）との修正要否の予測結果の評価を行う．
 また，提案手法によって，従来手法の課題点としてあげていた，学習データの正例数が少ない場合において予測精度が改善するかを明らかにする．
+なお\ref{sec:result_boxplot}節では，選定学習手法の評価を行う際に，主に選定学習手法（欠損値補完あり）について言及する．
+その理由については\ref{sec:result_ruijinodatou}節にて説明する．
 
 提案手法である選定学習では，閾値を定めることで類似プロジェクトを決定している．
 選定学習手法で，学習データに統合しているプロジェクトを分析することで，本研究で提案している，類似プロジェクトの決定方法の妥当性についての分析を行う．
 
-\section{結果}
+\section{結果}\label{sec:result_boxplot}
 
 \begin{figure}[ht]
 	\centering
@@ -619,21 +620,33 @@ RQ1では従来手法である単一学習と提案手法である全学習，�
 
 \subsection{選定学習手法による予測精度への影響}
 
+% \begin{figure}[ht]
+%     \centering
+%     \begin{minipage}{0.45\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{@IPSJjournal2025_Kameoka/fig/precision_improvement_by_positive_samples.pdf}
+%     	\caption{選定学習（欠損値補完あり）による適合率の改善度}
+%     	\label{fig:boxplot_precision_improvement_by_selected}
+%     \end{minipage}
+%     \hfill
+%     \begin{minipage}{0.45\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{@IPSJjournal2025_Kameoka/fig/recall_improvement_by_positive_samples.pdf}
+%     	\caption{選定学習（欠損値補完あり）による再現率の改善度}
+%     	\label{fig:boxplot_recall_improvement_by_selected}
+%     \end{minipage}
+% \end{figure}
+
 \begin{figure}[ht]
     \centering
-    \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{@IPSJjournal2025_Kameoka/fig/precision_improvement_by_positive_samples.pdf}
-    	\caption{選定学習（欠損値補完あり）による適合率の改善度}
-    	\label{fig:boxplot_precision_improvement_by_selected}
-    \end{minipage}
-    \hfill
-    \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{@IPSJjournal2025_Kameoka/fig/recall_improvement_by_positive_samples.pdf}
-    	\caption{選定学習（欠損値補完あり）による再現率の改善度}
-    	\label{fig:boxplot_recall_improvement_by_selected}
-    \end{minipage}
+    \includegraphics[width=1.0\linewidth]{@IPSJjournal2025_Kameoka/fig/precision_improvement_by_positive_samples.pdf}
+    \caption{選定学習（欠損値補完あり）による適合率の改善度}
+    \label{fig:boxplot_precision_improvement_by_selected}
+
+    \centering
+    \includegraphics[width=1.0\linewidth]{@IPSJjournal2025_Kameoka/fig/recall_improvement_by_positive_samples.pdf}
+    \caption{選定学習（欠損値補完あり）による再現率の改善度}
+    \label{fig:boxplot_recall_improvement_by_selected}
 \end{figure}
 
 提案手法の効果が顕著であったプロジェクトの分析結果を示す．
@@ -649,21 +662,33 @@ RQ1では従来手法である単一学習と提案手法である全学習，�
 
 \subsection{全学習手法による予測精度への影響}
 
+% \begin{figure}[ht]
+%     \centering
+%     \begin{minipage}{0.45\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{@Master2025_Kameoka/fig/all_precision_improvement_by_positive_samples.pdf}
+%     	\caption{全学習手法による適合率の改善度}
+%     	\label{fig:boxplot_precision_improvement_by_all}
+%     \end{minipage}
+%     \hfill
+%     \begin{minipage}{0.45\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{@Master2025_Kameoka/fig/all_recall_improvement_by_positive_samples.pdf}
+%     	\caption{全学習手法による再現率の改善度}
+%     	\label{fig:boxplot_recall_improvement_by_all}
+%     \end{minipage}
+% \end{figure}
+
 \begin{figure}[ht]
     \centering
-    \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{@Master2025_Kameoka/fig/all_precision_improvement_by_positive_samples.pdf}
-    	\caption{全学習手法による適合率の改善度}
-    	\label{fig:boxplot_precision_improvement_by_all}
-    \end{minipage}
-    \hfill
-    \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{@Master2025_Kameoka/fig/all_recall_improvement_by_positive_samples.pdf}
-    	\caption{全学習手法による再現率の改善度}
-    	\label{fig:boxplot_recall_improvement_by_all}
-    \end{minipage}
+    \includegraphics[width=1.0\linewidth]{@Master2025_Kameoka/fig/all_precision_improvement_by_positive_samples.pdf}
+    \caption{全学習手法による適合率の改善度}
+    \label{fig:boxplot_precision_improvement_by_all}
+
+    \centering
+    \includegraphics[width=1.0\linewidth]{@Master2025_Kameoka/fig/all_recall_improvement_by_positive_samples.pdf}
+    \caption{全学習手法による再現率の改善度}
+    \label{fig:boxplot_recall_improvement_by_all}
 \end{figure}
 
 次に全学習手法による，修正予測精度への影響について述べる．
@@ -674,21 +699,33 @@ RQ1では従来手法である単一学習と提案手法である全学習，�
 
 \subsection{全学習と選定学習（欠損値補完あり）の予測結果の比較}
 
+% \begin{figure}[ht]
+%     \centering
+%     \begin{minipage}{0.45\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{@Master2025_Kameoka/fig/precision_selected_vs_all.pdf}
+%     	\caption{全学習から選定学習による適合率の改善度}
+%     	\label{fig:boxplot_precision_improvement_selected_vs_all}
+%     \end{minipage}
+%     \hfill
+%     \begin{minipage}{0.45\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{@Master2025_Kameoka/fig/recall_selected_vs_all.pdf}
+%     	\caption{全学習手法による再現率の改善度}
+%     	\label{fig:boxplot_recall_improvement_selected_vs_all}
+%     \end{minipage}
+% \end{figure}
+
 \begin{figure}[ht]
     \centering
-    \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{@Master2025_Kameoka/fig/precision_selected_vs_all.pdf}
-    	\caption{全学習から選定学習による適合率の改善度}
-    	\label{fig:boxplot_precision_improvement_selected_vs_all}
-    \end{minipage}
-    \hfill
-    \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{@Master2025_Kameoka/fig/recall_selected_vs_all.pdf}
-    	\caption{全学習手法による再現率の改善度}
-    	\label{fig:boxplot_recall_improvement_selected_vs_all}
-    \end{minipage}
+    \includegraphics[width=1.0\linewidth]{@Master2025_Kameoka/fig/precision_selected_vs_all.pdf}
+    \caption{全学習から選定学習による適合率の改善度}
+    \label{fig:boxplot_precision_improvement_selected_vs_all}
+    
+    \centering
+    \includegraphics[width=1.0\linewidth]{@Master2025_Kameoka/fig/recall_selected_vs_all.pdf}
+    \caption{全学習手法による再現率の改善度}
+    \label{fig:boxplot_recall_improvement_selected_vs_all}
 \end{figure}
 
 提案手法である，全学習と選定学習（欠損値補完あり）間の修正要否予測結果の比較を行う．
@@ -698,13 +735,82 @@ RQ1では従来手法である単一学習と提案手法である全学習，�
 
 ここまでの結果から，全学習と選定学習（欠損値補完あり）では，箱ひげ図の分散に違いはあるものの，改善度合いの分布に大きな違いがないことから，単一学習から適合率が改善するプロジェクトと，再現率が低下するプロジェクトは共通しており，全学習の方が選定学習（欠損値補完あり）と比較して，適合率の改善幅と再現率の低下幅が大きいと言える．
 
-\section{類似度の妥当性の評価}
+\section{類似度測定手法の妥当性の評価}\label{sec:result_ruijinodatou}
 
+\subsection{概要}
 
+本研究では，予測対象プロジェクトと類似しているプロジェクトを探すために，ジャッカード係数とユークリッド距離の2種類の値を用いて，類似プロジェクトを決定している．
+2種類の値を利用することによって，発生しているコーディング規約違反の種類の類似度と，違反に対する修正率の類似度を測ることができるため，この2種類の値を採用している．
+この手法は本研究において提案していものであるので，本説では，実験において実際に類似プロジェクトが収集できているのかを明らかにする．
+
+分析方法として，類似度測定手法を使用している，選定学習（欠損値他なし）と選定学習（欠損値補完あり）で，類似していると判断するためのジャッカード係数とユークリッド距離の閾値を最も厳しくした場合のプロジェクトの統合関係を見ることで，妥当なぷうろジェクトが収集されて言えるかを確認する．
+最も厳しい閾値を採用する理由は，
+本研究において最も厳しい閾値は，ジャッカード係数が1，ユークリッド距離が1.0未満の場合である．
+
+\subsection{結果}
+
+\begin{table}[htbp]
+    \centering
+    \caption{ターゲットプロジェクトと類似プロジェクトの比較}
+    \label{tab:merged_projects}
+    \begin{tabularx}{\textwidth}{l p{3cm} p{3cm}}
+        \toprule
+        \textbf{予測対象プロジェクト} & \textbf{選定学習（欠損値補完なし）} & \textbf{選定学習（欠損値補完あり）} \\
+        \midrule
+        Jinja2 & click & click \\
+        click & Jinja2 & Jinja2 \\
+        pytest-cov & tmuxp & (なし) \\
+        nbconvert & aiortc & (なし) \\
+        pelican & apispec, awacs & apispec \\
+        pytest-benchmark & aiosmtplib, mcstatus, openai-whisper, xhtml2pdf & (なし) \\
+        apispec & awacs, pelican & pelican \\
+        aiortc & nbconvert & (なし) \\
+        aiosmtplib & mcstatus, openai-whisper, pytest-benchmark, xhtml2pdf & mcstatus, openai-whisper, xhtml2pdf \\
+        openai-whisper & aiosmtplib, mcstatus, pytest-benchmark, xhtml2pdf & aiosmtplib, xhtml2pdf \\
+        xhtml2pdf & aiosmtplib, mcstatus, openai-whisper, pytest-benchmark & aiosmtplib, mcstatus, openai-whisper \\
+        tmuxp & pytest-cov & (なし) \\
+        mcstatus & aiosmtplib, openai-whisper, pytest-benchmark, xhtml2pdf & aiosmtplib, xhtml2pdf \\
+        awacs & apispec, pelican & (なし) \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+最も閾値を厳しく設定した場合の選定学習で，予測モデルの構築に複数プロジェクトの学習データを利用していたプロジェクトの統合関係を表\ref{tab:merged_projects}に示す．
+表中の最も左の列には予測対象プロジェクトを示し，そのプロジェクトと類似していると判断されたプロジェクトのうち，修正率の欠損値補完を行わない手法を二列目，修正率の欠損値補完を行う手法を三列目に示す．
+
+表の結果から欠損値補完を行わない手法のほうが統合プロジェクト数が多いことがわかる．
+これは，欠損値補完を行わない選定学習手法の類似度計算時のユークリッド距離の計算時に，どちらかのプロジェクトでしか発生していないコーディング規約違反があった場合，その修正率はユークリッド距離の計算から除外しているため，ユークリッド距離が小さくなり，類似していると判定されることが原因である．
+
+欠損値補完を行わない選定学習手法では，（xhtml2pdf，aiosmtplib，mcstatus，openai-whisper，pytest-benchmark）の5プロジェクトが頻繁に互いに統合関係にあることがわかる．
+この5プロジェクトのコーディング規約違反の修正履歴を確認したところ，データにはE501という，他プロジェクトでも最も多く発生している，行内の文字数制限に関するコーディング規約違反の他には，数種類のコーディング規約違反しか存在しなかった．
+つまり，欠損値補完を行わないプロジェクトの類似度測定手法では，発生しているコーディング規約の種類数が少ない場合に，ユークリッド距離が必然的に高くなってしまう傾向にある．
+そのため，発生している少量の種類のコーディング規約違反が，別の少量の種類のコーディング規約違反しか発生していないプロジェクト間では，ジャッカード係数とユークリッド距離の両方の値で類似度が高いと判定されてしまう．
+
+一方で，欠損値補完を行う類似度測定手法では，統合プロジェクトが少なくなってしまっているが，先述の発生しているコーディング規約違反の種類が少ないことに起因する，予期しないプロジェクトの統合を抑制で来ていることがわかる．
+しかし，aiosmtplibなどの予測においては，以前同様の問題が残ることもわかる．
+
+欠損値補完を用いない類似プロジェクト測定結果と欠損値補完を用いる類似プロジェクト測定結果を比較した際に，本研究で取得したい，コーディング規約違反の種類に対する，修正率の類似するプロジェクトの収集結果として，欠損値補完を用いる方が，目的と近しいため，結果の分析において，欠損値補完を用いる選定学習手法の結果について主に分析する．
+
+% \begin{screen}
+
+% \end{screen}
 
 \section{まとめ}
 
+本章では，コーディング規約違反の修正要否予測における提案手法の有効性を検証した．得られた知見を以下に総括する．
 
+本研究で使用したデータセット全体のコーディング規約違反の修正予測において，従来手法である単一学習と比較して，提案手法である全学習と選定学習（欠損値補完あり）では，適合率のわずかな改善と，再現率の僅かな低下の傾向が見られた．
+比較した4手法間では，適合率，再現率，F1値に統計的有意差は見られなかったが，本研究の対象とするプロジェクトがデータが十分に収集できないプロジェクトに焦点を当てているため，この結果は十分想定されていた結果である．
+
+本研究で提案している，予測対象プロジェクト以外のデータを学習に使用する手法が，有効に働くプロジェクトを調査したところ，学習データ内の正例数が100-500件のプロジェクトにおいて，提案手法による精度の変化の影響が最も大きくなることを確認した．
+
+全学習手法と選定学習（欠損値補完あり）の予測結果の比較では，全学習は選定学習（欠損値補完あり）と比較して，適合率の改善幅と再現率の悪化幅が大きいことが明らかになった．
+全学習と選定学習の両手法で，予測精度の変化傾向が共通していることから，単一学習では捉えきれない修正要否を他プロジェクトのデータから補完できていることが示唆される．
+
+また，本研究で提案している，選定学習において類似プロジェクトを選定するための類似度促成手法の妥当性の検討も行った．
+結果としては，手法の性質上，欠損値補完を用いない手法では，発生しているコーディング規約違反の種類が少ない場合に，予期せぬ統合が発生する問題が確認された．
+しかし，欠損値補完を用いる類似度測定手法において，その問題が緩和されていることも確認した．
+そのため，本研究の修正率の類似プロジェクトを収集する目的としては，選定学習（欠損値補完あり）の方が適している．
 
 \chapter{RQ2: 複数プロジェクトを学習することで予測精度が改善するプロジェクトの特徴とは何か}\label{chap:rq2}
 
@@ -712,10 +818,21 @@ RQ1では従来手法である単一学習と提案手法である全学習，�
 
 \section{概要}
 
+RQ1では，従来手法である単一学習と提案手法との予測結果の比較を行った．
+その結果，提案手法の効果が出やすいプロジェクトの条件が明らかになった．
+そこで，RQ2では提案手法によって，予測精度に影響の出やすいプロジェクトのうち，提案手法によって予測精度が改善したプロジェクトと悪化したプロジェクトに分割し，それぞれの特徴について分析することで，提案手法が有効に働くプロジェクト特性を明らかにする．
+また，提案手法によって予測精度が低下したプロジェクトについても分析し，提案手法によって，予測精度が低下しているか，または，外部要因によって予測精度が悪化しているのかを明らかにする．
 
 \section{分析方法}
 
+提案手法による予測精度への影響が大きい，学習データの正例数が100-500件のプロジェクトのうち，選定学習によって予測精度が改善した群とそうでない群に分割し，特徴の分析を行う．
+単一学習と比較する選定学習は，欠損値補完を用いる選定学習を利用する．
+また，選定学習によって予測精度が改善したか否かについては，図\ref{fig:boxplot_precision_improvement_by_selected}と図\ref{fig:boxplot_recall_improvement_by_selected}で単一学習から適合率，再現率が改善したプロジェクトと，悪化したプロジェクトで判断する．
 
+分析する内容として，学習データ内に存在するコーディング規約違反の種類の傾向や説明変数をはじめとする，コードメトリクスや学習データ数，正例数，負例数のような数値的なデータの特徴の傾向を分析する．
+分析には，マンホイットニーのU検定による統計的有意差の確認と，コーエンのdによる効果量の分析を行うことにより，傾向を明らかにする．
+マンホイットニーのU検定を使用する理由は，分析対象である予測結果の改善群と悪化群の分布は正規分布ではないため，t検定ではなく，ノンパラメトリック検定であるマンホイットニーのU検定を採用した．
+コーエンのdについては，一般的に用いられる基準（$0.2$で「小」、$0.5$で「中」、$0.8$以上で「大」）に基づき評価を行う．
 
 \section{分析結果}
 
