@@ -14,9 +14,11 @@
 %\usepackage{graphicx}  % ←graphicx.styを用いてEPSを取り込む場合有効にする
 			% 他のパッケージ・スタイルを使う場合には適宜追加
 
+% コメント用
 \newcommand{\todo}[1]{\colorbox{yellow}{{\bf TODO}:}{\color{red} {\textbf{[#1]}}}}
 \newcommand{\memo}[1]{\colorbox{magenta!30}{{\bf MEMO}:}{\color{red!50} {\textbf{[#1]}}}}
 \newcommand{\ihara}[1]{\colorbox{green}{{\bf IHARA}:}{\color{blue} {\textbf{[#1]}}}}
+
 \newcounter{patternID}
 
 % コード例を載せるためのあれこれ
@@ -137,7 +139,7 @@ ihara@wakayama-u.ac.jp
 
 ここで，開発の早期段階において，システムやアルゴリズムの修正といった規模の大きな最適化だけでなく，既存のソースコード片をより効率的な実装へ置き換え，部分的な性能効率性の向上を図る「部分的な最適化」が行われることがある．\todo{引用？}
 
-特定の処理に対する複数の実装方法の性能を定量的に比較するために，部分的なソースコード片の実行速度を計測する手法はマイクロベンチマークとよばれ，部分的な性能効率性の評価に用いられている．\todo{引用}
+特定の処理に対する複数の実装方法の性能を定量的に比較するために，部分的なソースコード片の実行速度を計測する手法はマイクロベンチマークとよばれ，部分的な性能効率性の評価に用いられている\cite{test2benchmark}\cite{assessment_JMbenchmark}．
 また．マイクロベンチマークを，開発者がWeb上で実行・共有することができるオンラインサービスも存在し，世界中の開発者が投稿した効率的な実装方法についての知見が蓄積されているとともに，開発に利用されることもある．
 
 しかし，サービス上におけるマイクロベンチマークの知見を実プロジェクトの性能改善に直接転用することは難しい．これは，サービス上のソースコードは非常に短く，測定用の補助的コードなどが多分に含んでいることで，性能低下の本質的な要因が構造化されていないためである．このことから，ソースコードの構造的・意味的な特徴から本質的な要因を捉え，自身のプログラム中から低速な箇所を特定する処理が必要となる．
@@ -162,30 +164,17 @@ ihara@wakayama-u.ac.jp
 
 \todo{\textbf{はじめに}との棲み分けを考える}
 ソフトウェアにおける性能効率性は，ユーザー体験の向上，運用コストの削減，およびシステム全体の品質を左右する極めて重要な指標である．
-一般に，性能効率性の向上にはプロファイラといった動的解析を用いてボトルネックの特定が行われる．しかし，システムレベルの大規模なテストによる性能評価は，実行環境の構築や測定に多大なコストを要する\todo{引用}だけでなく，開発の後期工程で問題が発覚した場合，修正による影響範囲が広く\todo{引用}，実装が進むほどに開発者に対して広範な知識や経験を要するようになる．また，性能効率性を向上するためのプログラム変更では，可読性や保守性といった他の品質を損なうリスク（性能改善と他品質のトレードオフ）も指摘されている\cite{negative}．
+一般に，システムの性能評価では，システムレベルの大規模なテストが行われ，プロファイラといった動的解析を用いてボトルネックを特定し，性能効率性の向上が図られる\cite{systemTest_large}．
+
+しかし，これらの手法では実行環境の構築や実行時情報の測定及び分析に多大なコストを要することが課題となっている\cite{systemTest_large}\cite{systemTest_workload}．加えて，システム構築後，あるいは統合後といった開発の後期工程行われることで，問題が発覚した場合，その影響範囲の広さから対処には困難かつ労力を要する\cite{local2system}．
+また，性能効率性を向上するためのプログラム変更では，可読性や保守性といった他の品質を損なうリスク（性能改善と他品質のトレードオフ）も指摘されている\cite{negative}．
 
 これに対し，計算機能力やシステム設計の改善，アルゴリズムの抜本的な変更といった大規模な最適化だけでなく，既存のソースコード断片をより効率的な実装へ置き換える「部分的な最適化」を積み重ねることによって性能効率性の向上を実現することも多い．
 % \todo{↓書くなら参考文献欲しい}
 % 特に，ループ処理やデータ構造操作のように実行回数が多い箇所では，わずかな実装差が全体の実行時間に影響を与えることがある．このようなミクロな性能差を把握し，適切に改善することは，現実的な性能改善戦略の一つである．実際に，
 Webアプリケーション開発では，数行のソースコード修正によって最適化した結果，プログラムの実行時間が25\%から70\%高速化している\cite{jsRefac}．
-また，プログラムを構成する関数やメソッドなどの最小単位が正しく動作するかを検証するユニットテストを実行することや，ユニットテストをもとにしたベンチマークを作成することで，コンポーネント単位の微小な範囲でパフォーマンスの変化を早期に評価することが可能となる\todo{引用}．
+また，プログラムを構成する関数やメソッドなどの最小単位が正しく動作するかを検証するユニットテストを実行することや，ユニットテストをもとにしたベンチマークを作成することで，コンポーネント単位の微小な範囲において，プログラムの変更前後におけるパフォーマンスの変化を評価することが可能となる\cite{test2benchmark}\cite{performanceRegression}
 
-% 参考文献候補リスト
-% 大規模なシステムテストで性能テストやってますよ
-% R. Gao, Z. M. Jiang, C. Barna, and M. Litoiu, “A framework to evaluate the effectiveness of different load testing analysis techniques,” in 2016 IEEE International Conference on Software Testing, Verification and Validation, ICST 2016, Chicago, IL, USA, April 11-15, 2016, 2016, pp.22–32.
-%  H. Malik, H. Hemmati, and A. E. Hassan, “Automatic detection of performance deviations in the load testing of large scale systems,” in 35th International Conference on Software Engineering, ICSE ’13, San Francisco, CA, USA, May 18-26, 2013. IEEE Computer Society, 2013, pp. 1012–1021.
-% T. H. D. Nguyen, B. Adams, Z. M. Jiang, A. E. Hassan, M. N. Nasser, and P. Flora, “Automated verification of load tests using control charts,” in 18th Asia Pacific Software Engineering Conference, APSEC 2011, Ho Chi Minh, Vietnam, December 5-8, 2011. IEEE Computer Society, 2011, pp. 282–289.
-% システムテストはコストめっちゃかかりますよ
- % J. Chen, W. Shang, A. E. Hassan, Y. Wang, and J. Lin, “An experience report of generating load tests using log-recovered workloads at varying granularities of user behaviour,” in 34th IEEE/ACM International Conference on Automated Software Engineering, ASE 2019, San Diego, CA, USA, November 11-15, 2019. IEEE, 2019, pp. 669–681.
-% これに対応するため，ユニットテストやマイクロベンチマークでコンポーネントレベルの小さな範囲でパフォーマンス測ってますよ（動的？ちゃんと見る）
-% J. Chen and W. Shang, “An exploratory study of performance regression introducing code changes,” in 2017 IEEE International Conference on Software Maintenance and Evolution, ICSME 2017, Shanghai, China, September 17-22, 2017. IEEE Computer Society, 2017, pp. 341–352.
-% Z. Ding, J. Chen, and W. Shang, “Towards the use of the readily available
-% tests from the release pipeline as performance tests: are we there yet?” in ICSE ’20: 42nd International Conference on Software Engineering, Seoul, South Korea, 27 June - 19 July, 2020. ACM, 2020, pp. 1435–1446.
-% V. Horky, P. Libic, L. Marek, A. Steinhauser, and P. Tuma, “Utilizing performance unit tests to increase performance awareness,” in Proceedings of the 6th ACM/SPEC International Conference on Performance Engineering, Austin, TX, USA, January 31 - February 4, 2015. ACM,2015, pp. 289–300.
-% D. G. Reichelt, S. Kuhne, and W. Hasselbring, “Peass: A tool for ¨identifying performance changes at code level,” in 34th IEEE/ACM International Conference on Automated Software Engineering, ASE 2019, San Diego, CA, USA, November 11-15, 2019. IEEE, 2019, pp.1146–1149
-% ↓マイクロベンチマークも使ってるやつ
-% M. Jangali, Y. Tang, N. Alexandersson, P. Leitner, J. Yang, and W. Shang, “Automated generation and evaluation of jmh microbenchmark suites from unit tests,” IEEE Transactions on Software Engineering, 2022.
-% C. Laaber and P. Leitner, “An evaluation of open-source software microbenchmark suites for continuous performance assessment,” in Proceedings of the 15th International Conference on Mining Software Repositories, MSR 2018, Gothenburg, Sweden, May 28-29, 2018. ACM, 2018, pp. 119–130.（ソフトウェアマイクロベンチマークスイートの評価に関してLaaberとLeitner[41]は，ほとんどのJavaプロジェクトで50%を超える（すなわち，1.5倍遅い）速度低下はしばしば確実に検出できると観察しています．）
 
 % -----------------------------------------
 \section{マイクロベンチマーク共有サービス}
@@ -220,7 +209,7 @@ Webアプリケーション開発では，数行のソースコード修正に�
 
 ここで，既存の実装から性能向上の余地がある低速な箇所を特定する際，従来の性能評価手法における課題と，その解決策として期待されるマイクロベンチマーク共有サービスの利用における特有の課題について述べる．
 
-従来の性能評価手法における主要な課題は，その多くがプログラムの動的実行に依存している点である．プロファイラやマイクロベンチマークを用いた手法は，実際の動作状況や実行時間を計測することでボトルネックを特定する．そのため，解析対象となるプログラムがコンパイル可能であり，かつ実行に必要な依存ライブラリやテストデータが整備された「実行可能状態」にあることが前提となる．
+従来の性能評価手法における主要な課題は，その多くがプログラムの動的実行に依存している点である．プロファイラやマイクロベンチマークを用いた手法は，実際の動作状況や実行時間を計測することでボトルネックを特定する．そのため，解析対象となるプログラムがコンパイル可能であり，かつ実行に必要な依存ライブラリやテストデータが整備された実行可能状態にあることが前提となる．
 
 しかし，開発の初期段階やリファクタリングの検討段階において，断片的なソースコードに対して即座に実行環境を構築することは容易ではない．また，実装が進むにつれて性能改善のためのプログラム変更は複雑化する傾向にあることが示されている\cite{complicate}．したがって，動的解析を利用する従来の手法では，実装の最中にリアルタイムで低速な記述を検出し，開発を支援することが困難であるという課題がある．
 
@@ -230,7 +219,7 @@ Webアプリケーション開発では，数行のソースコード修正に�
 % 特定の実行環境や入力データに対してのみ有意な差が生じる「コンテキストへの依存」や，
 測定用の補助的な変数宣言や処理など，実行速度の差を生み出す要因とは無関係な記述が混在している．
 
-マイクロベンチマークという極めて小さなソースコード片において，低速の本質的な要因が構造化されていないため，自身のプログラム中から類似の箇所を特定し，改善案を適応することは容易ではない．したがって，膨大な公開データから汎用的な「低速な要因」を抽出・検出するためには，ソースコードの構造的・意味的な特徴を捉え，ソースコード片から本質的なパターンを識別する解析手法が必要となる．
+マイクロベンチマークという極めて小さなソースコード片において，低速の本質的な要因が構造化されていないため，自身のプログラム中から，動的解析を利用したボトルネックの検出を行わずに，マイクロベンチマーク共有サービスにおける低速な実装方法と類似する箇所を特定，および改善案を適用することは容易ではない．したがって，膨大な公開データから汎用的な「低速な要因」を抽出・検出するためには，ソースコードの構造的・意味的な特徴を捉え，ソースコード片から本質的なパターンを識別する解析手法が必要となる．
 
 
 % -----------------------------------------
@@ -291,7 +280,7 @@ for (key in VAR_1) {
 }
 
 // fast
-for (var VAR_8=0; VAR_8<VAR_1.length; ++VAR_8) {
+for (var VAR_8 = 0; VAR_8 < VAR_1.length; ++VAR_8) {
     VAR_2 = VAR_1[VAR_8];
 }
 \end{lstlisting}
@@ -302,7 +291,7 @@ Listing~\ref{diff-inloop}は，それぞれ\texttt{for}文内で \texttt{concat}
 %----------------------------------
 \begin{lstlisting}[caption=繰り返し内部で実行する処理の記述方法が異なる実装対, label=diff-inloop, captionpos=t, columns=flexible]
 // slow
-for (var VAR_2=0; VAR_2<5000; VAR_2++)
+for (var VAR_2 = 0; VAR_2 < 5000; VAR_2++)
     VAR_1 = VAR_1.concat([\"1\", \"2\"]);
 
 // fast
@@ -353,7 +342,7 @@ GumTreeは，ソースコードの抽象構文木を基にした差分解析ツ�
 
 次に，収集した低速コードの特徴候補の中から，プログラムの振る舞いに意味的な影響を与える要素として，繰り返し処理，メソッド呼び出し，配列・オブジェクト操作を抽出・統合する．
 
-図\ref{fig:slow_pattern}は，Listing~\ref{candidates}から作成した低速コードパターンを示す．当該パターンは，if 文内で.hasOwnProperty() を呼び出す for-in 文という特徴を有することが読み取れる．
+これらの操作によって，Listing \ref{diff-loop}に示す実装対から，“\texttt{if}文に\texttt{.hasOwnProperty()}呼び出しを持つ\texttt{for-in}文”という低速コードパターンが作成される．
 
 %----------------------------------
 \begin{lstlisting}[caption=Characteristic Candidates for Slow Code, label=candidates, captionpos=t, columns=flexible, literate=
@@ -375,76 +364,12 @@ for (key in VAR_1) {
 %----------------------------------
 
 
-% \todo{後で直す}
-%----------------------
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=1.0\linewidth]{./fig/slow_pattern.pdf}
-    \caption{低速コードパターン例}
-    \label{fig:slow_pattern}
-\end{figure}
-%----------------------
-
 
 \subsection{低速コードパターンの定義}
 
 \ref{approach:extract}節で述べた手法に基づき，収集したマイクロベンチマーク実装対に対して構造的差分解析を適用し，重複する特徴を集約した．次に，集約された各特徴が，元のマイクロベンチマーク実装対における低速な要因を反映しているかを確認するため，元の実装対と抽出された構造的特徴との対応関係について目視調査を行い，繰り返し処理における低速な要因を適切に表現していると判断した6種類の低速コードパターンを定義した．
 
 表\ref{tab:slow_code_patterns}の“特徴”に作成した6パターンについての概要，“元実装対数”にデータセットにおいて，そのパターンを抽出したマイクロベンチマーク実装対の数を示す．
-
-
-\section{CodeQLによる低速コードパターンの静的検出}
-\subsection{CodeQL}
-
-本研究では，定義した6つの低速コードパターンを実プロジェクトから検出するために静的解析エンジンであるCodeQL\cite{ql}\cite{codeql}を用いる．CodeQLは，GitHub社が開発したコード解析プラットフォームであり，プログラムの構造的・意味的な探索を可能にするツールである．
-
-CodeQLは，対象となるソースコードを解析し，抽象構文木，制御フロー，およびデータフローの情報を含むリレーショナルデータベースを構築する．これに対し，論理プログラミング言語であるQL言語を用いてクエリを記述することで，このデータベースから特定のパターンに合致するコード断片を検索できる．
-
-なお，本研究においては抽象構文木に基づく構造情報をもとに作成した低速コードパターンの検出において，構造情報を参照して静的動作する点でCodeQLを採用した．
-
-
-\subsection{低速コードパターンからCodeQLクエリへの変換}
-
-6つの低速コードパターンをCodeQLで検出可能な形式に変換するため，各パターンの構造的特徴に基づいたQLクエリを手作業で作成した．検出対象の粒度はブロック単位とした．例としてListing~\ref{tab:slow_code_patterns}より，ID\ref{ptn:hasOwnProperty}：低速コードパターン“\texttt{if}文に\texttt{.hasOwnProperty()}呼び出しを持つ\texttt{for-in}文”から作成したQLクエリを\ref{query:ID3}に示す．
-
-本研究では，6つの低速コードパターンから作成したクエリを，対象プロジェクトのCodeQLデータベースに対して実行することで，低速な実装方法が用いられている箇所を検出する．
-
-%----------------------------------
-\begin{lstlisting}[caption=\texttt{if}文に\texttt{.hasOwnProperty()}呼び出しを持つ\texttt{for-in}文のQLクエリ, label=query:ID3, captionpos=t, columns=flexible, escapechar=\@]
-predicate forInWithIfhasOwnProperty(ForInStmt f) {
-  exists(IfStmt ifStmt |
-    // if 文が for-in 文の配下に含まれる
-    f.getBody().getAChild*() = ifStmt and    
-      // if 条件式内に hasOwnProperty 呼び出しが存在
-      exists(CallExpr c |
-        c = ifStmt.getCondition().getAChild*() and
-        c.getCallee().(PropAccess).getPropertyName() = "hasOwnProperty"
-      )
-  )
-}
-\end{lstlisting}
-%----------------------------------
-
-
-\subsection{作成したクエリの妥当性検証}
-\label{subsec:validate_query}
-
-作成したQLクエリが，低速コードパターンを正確に反映できているかを検証するため，収集済みのマイクロベンチマークデータセットを用いて検出実験を行った．ここでは，\ref{collectLoop}節で収集したマイクロベンチマーク実装対における低速コード全11,889件を対象とした．
-作成した6種類のクエリを実行し，検出したソースコード片の件数およびその内容を分析した．クエリの性能を定量的に評価するため，以下の定義に基づき再現率および適合率を算出した．
-
-再現率（Recall）: 特定のパターンを抽出した元の実装対における低速コード片のうち，クエリによって検出された割合．
-$$\text{再現率} = \frac{\text{検出結果に含まれる元低速コード片の数}}{\text{元低速コード片の数}}$$
-
-適合率（Precision）: クエリによって検出された全ソースコード片のうち，元の実装対における低速コード片が占める割合．
-$$\text{適合率} = \frac{\text{検出結果に含まれる元低速コード片の数}}{\text{総検出数}}$$
-
-検出したソースコード片の数を表\ref{tab:slow_code_patterns}の「検索結果」に示す．6種類全てのクエリにおいて，検出した全てのソースコード片の中に，パターンを抽出した元の実装対における低速コード片を全て検出した．
-これにより，再現率は100\%となり，作成したクエリが意図した低速コードパターンを検出できることを確認した．
-一方で，適合率はパターンの種類により13.5\%～61.1\%の範囲に留まった．この比較的低い適合率は，必ずしもクエリの精度の低さを意味するものではなく，本研究のパターン抽出手法の性質に起因するものである．
-
-本研究では差分解析を用いてパターンを抽出しているため，特定のマイクロベンチマーク実装対において差分として現れなかった箇所であっても，クエリが示す特徴を備えている実装対が存在する．これらが検出されたことが，数値上の適合率を押し下げる要因となっている．\memo{具体例あった方がいい？}
-
-ただし，本手法をGitHub上の実リポジトリ等の未知のソースコード群に適用する場合には，対象とする低速コードパターンに対して，偽陽性となるソースコード片が一定数検出される可能性がある．
 
 %----------------------¬
 \begin{table}[!h]
@@ -486,6 +411,64 @@ $$\text{適合率} = \frac{\text{検出結果に含まれる元低速コード�
 \end{table}
 %----------------------
 
+\section{CodeQLによる低速コードパターンの静的検出}
+\subsection{CodeQL}
+
+本研究では，定義した6つの低速コードパターンを実プロジェクトから検出するために静的解析エンジンであるCodeQL\cite{ql}\cite{codeql}を用いる．CodeQLは，GitHub社が開発したコード解析プラットフォームであり，プログラムの構造的・意味的な探索を可能にするツールである．
+
+CodeQLは，対象となるソースコードを解析し，抽象構文木，制御フロー，およびデータフローの情報を含むリレーショナルデータベースを構築する．これに対し，論理プログラミング言語であるQL言語を用いてクエリを記述することで，このデータベースから特定のパターンに合致するコード断片を検索できる．
+
+なお，本研究においては抽象構文木に基づく構造情報をもとに作成した低速コードパターンの検出において，構造情報を参照して静的動作する点でCodeQLを採用した．
+
+
+\subsection{低速コードパターンからCodeQLクエリへの変換}
+
+6つの低速コードパターンをCodeQLで検出可能な形式に変換するため，各パターンの構造的特徴に基づいたQLクエリを手作業で作成した．検出対象の粒度はブロック単位とした．例としてListing~\ref{tab:slow_code_patterns}より，ID\ref{ptn:hasOwnProperty}：低速コードパターン“\texttt{if}文に\texttt{.hasOwnProperty()}呼び出しを持つ\texttt{for-in}文”から作成したQLクエリを\ref{query:ID3}に示す．
+
+本研究では，6つの低速コードパターンから作成したクエリを，対象プロジェクトのCodeQLデータベースに対して実行することで，低速な実装方法が用いられている箇所を検出する．
+
+%----------------------------------
+\begin{lstlisting}[caption=\texttt{if}文に\texttt{.hasOwnProperty()}呼び出しを持つ\texttt{for-in}文のQLクエリ, label=query:ID3, captionpos=t, columns=flexible, escapechar=\@]
+predicate forInWithIfhasOwnProperty(ForInStmt f) {
+  exists(IfStmt ifStmt |
+  
+    // if 文が for-in 文の配下に含まれる
+    f.getBody().getAChild*() = ifStmt and    
+    
+      // if 条件式内に hasOwnProperty 呼び出しが存在
+      exists(CallExpr c |
+        c = ifStmt.getCondition().getAChild*() and
+        c.getCallee().(PropAccess).getPropertyName() = "hasOwnProperty"
+      )
+  )
+}
+\end{lstlisting}
+%----------------------------------
+
+
+\subsection{作成したクエリの妥当性検証}
+\label{subsec:validate_query}
+
+作成したQLクエリが，低速コードパターンを正確に反映できているかを検証するため，収集済みのマイクロベンチマークデータセットを用いて検出実験を行った．ここでは，\ref{collectLoop}節で収集したマイクロベンチマーク実装対における低速コード全11,889件を対象とした．
+作成した6種類のクエリを実行し，検出したソースコード片の件数およびその内容を分析した．クエリの性能を定量的に評価するため，以下の定義に基づき再現率および適合率を算出した．
+
+\subsubsection{再現率（Recall）}
+パターンの抽出元となった実装対における低速コード片のうち，クエリによって検出された割合．
+$$\text{再現率} = \frac{\text{検出結果に含まれる元低速コード片の数}}{\text{元低速コード片の数}}$$
+
+\subsubsection{適合率（Precision）}
+クエリによって検出された全ソースコード片のうち，パターンの抽出元となった実装対における低速コード片が占める割合．
+$$\text{適合率} = \frac{\text{検出結果に含まれる元低速コード片の数}}{\text{総検出数}}$$
+
+検出したソースコード片の数を表\ref{tab:slow_code_patterns}の「検索結果」に示す．6種類全てのクエリにおいて，検出した全てのソースコード片の中に，パターンを抽出した元の実装対における低速コード片を全て検出した．
+これにより，再現率は100\%となり，作成したクエリが意図した低速コードパターンを検出できることを確認した．
+一方で，適合率はパターンの種類により13.5\%～61.1\%の範囲に留まった．この比較的低い適合率は，必ずしもクエリの精度の低さを意味するものではなく，本研究のパターン抽出手法の性質に起因するものである．
+
+本研究では差分解析を用いてパターンを抽出しているため，特定のマイクロベンチマーク実装対において差分として現れなかった箇所であっても，クエリが示す特徴を備えている実装対が存在する．これらが検出されたことが，数値上の適合率を押し下げる要因となっている．\memo{具体例あった方がいい？}
+
+ただし，本手法をGitHub上の実リポジトリ等の未知のソースコード群に適用する場合には，対象とする低速コードパターンに対して，偽陽性となるソースコード片が一定数検出される可能性がある．
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{類似度に基づく検出結果の順位付け}
@@ -517,7 +500,7 @@ Code2Vecは，ソースコードの抽象構文木から抽出されたパスに
 まず，特定の低速コードパターンについて，パターンの抽出元となった複数のマイクロベンチマーク上の低速コード片と，実プロジェクトからの検出結果をそれぞれCode2Vecを用いて分散表現へと変換する．
 次に，ある一つの検出コード片に対して，パターンの元となった個々の低速コード片との間で類似度を算出する．ここでは，ベクトル間の類似度の測定方法から，コサイン類似度を利用する．
 
-2つのソースコード断片$A,B$のコードベクトルを$\overrightarrow{a},\overrightarrow{b}$とした時，内積の定義から，コサイン類似度は次のように計算される．
+なお，コサイン類似度は，2つのソースコード断片$A,B$のコードベクトルを$\overrightarrow{a},\overrightarrow{b}$とした時，内積の定義から次のように計算される．
 
 \begin{displaymath}
 	cos(\overrightarrow{a}, \overrightarrow{b}) = \frac{\overrightarrow{a} \cdot \overrightarrow{b}}{|\overrightarrow{a}||\overrightarrow{b}|}
@@ -526,7 +509,7 @@ Code2Vecは，ソースコードの抽象構文木から抽出されたパスに
 
 ソースコード断片$A,B$が意味的に類似している場合，2つのベクトル$\overrightarrow{a},\overrightarrow{b}$は間の角度が0に近づき，その結果$cos(\overrightarrow{a}, \overrightarrow{b})$が1に近づく．この$cos(\overrightarrow{a}, \overrightarrow{b})$がコサイン類似度であり，ベクトル間の類似度を$[-1,1]$の範囲で測定できる．
 
-次に，パターンの元となった全ての低速コード片に対する類似度の平均値を算出し，その値を当該検出コード片の類似度スコアとする．この処理を全ての検出結果に対して実施し，スコアの降順でソートすることで，元の低速実装に近い特徴を持つ順に結果を並べる．
+ある一つの検出コードと，パターンの元となった全ての低速コード片に対するコサイン類似度を算出した後，それらの平均値を当該検出コード片の類似度スコアとする．この処理を全ての検出結果に対して実施し，スコアの降順でソートすることで，元の低速実装に近い特徴を持つ順に結果を並べる．
 
 図\ref{fig:plot_mb_cosine}は，\ref{subsec:validate_query}節の妥当性検証における検出結果において類似度スコアを算出した結果を示したものである，図中の白い点が検出コード片であり，赤点がパターンの元となった低速コード片である．
 図\ref{fig:plot_mb_cosine}に示すように，類似度が高い上位の結果において低速なコードパターンを含む検出結果が集中していることを想定する．また，実プロジェクトのソースコードを対象とする場合，類似度が低い結果においてどのような構造的ノイズや文脈の差が含まれているかを分析する．\memo{図\ref{fig:plot_mb_cosine}に示すようにといっていいかわからないので消すことも視野}
@@ -591,7 +574,7 @@ GitHubで公開されているリポジトリから，JavaScriptを主要言語�
 \end{figure}
 %----------------------
 
-図\ref{fig:plot_id3}は，低速コードパターンID\ref{ptn:hasOwnProperty}について，リポジトリ規模に対する検出数の関係を示す．横軸は各リポジトリに含まれるJavaScriptファイルの総行数，縦軸は検出数を示す．リポジトリ規模が大きくなるほど低速コードパターンの検出数が増加する傾向があり，スピアマンの順位相関係数は0.44，p値は\(5.12 \times 10^{-14} < 0.05\)より正の相関が認められる．他の低速コードパターンについても，同様の傾向が見られた．\todo{検出数とリポジトリ規模の話を一言}\memo{他のパターンの結果を載せる？}
+図\ref{fig:plot_id3}は，低速コードパターンID\ref{ptn:hasOwnProperty}について，リポジトリ規模に対する検出数の関係を示す．横軸は各リポジトリに含まれるJavaScriptファイルの総行数，縦軸は検出数を示す．リポジトリ規模が大きくなるほど低速コードパターンの検出数が増加する傾向があり，スピアマンの順位相関係数は0.44，p値は\(5.12 \times 10^{-14} < 0.05\)より正の相関が認められる．他の低速コードパターンについても，同様の傾向が見られた．\memo{他のパターンの結果を載せる？}
 
 
 \subsection{類似度に基づく検出結果の特徴分析}
@@ -698,11 +681,29 @@ for (var propKey in rawProps) {
 
 しかし，検出結果の詳細な目視調査により，類似度が高い検出事例において，構造は合致しているものの「妥当な検出結果」の定義を満たさない，すなわちパターンの元となったマイクロベンチマークの知見と意味的に等価ではない事例を確認した．
 
-一例として，\todo{表示形式整える}\todo{Listing~\ref{ID3_highcos}}に，パターンID \ref{ptn:hasOwnProperty}“\texttt{if}文に\texttt{.hasOwnProperty()}呼び出しを持つ\texttt{for-in}文”の検出結果，\todo{Listing~\ref{ID3_highcos}}に，パターンの元となったデータセット中のコード片を挙げる．
-当該箇所はクエリが規定する構造を完全に満たしており，元コード（Listing 6.1）との類似度スコアも $0.XX$ と高値を示していた．しかし，\texttt{.hasOwnProperty()} の処理対象となるオブジェクトが \texttt{for-in} 文で反復される要素とは無関係なデータであり，低速な実装を高速な実装へ置き換えるというマイクロベンチマークの知見が成立しない「意味的な偽陽性」であった．
-このような乖離が生じた要因として，類似度算出に用いたCode2Vecの特性が考えられる．比較元となるマイクロベンチマークのコード片は極めて短いため，分散表現の生成において識別子名（変数名）やコードの長さに影響を受けやすく，本来重要であるべき「変数間のデータフローや依存関係」といった意味的な等価性を完全には反映できていない可能性が示唆された．
+Listing~\ref{ID3_FP}に，パターンID \ref{ptn:hasOwnProperty}“\texttt{if}文に\texttt{.hasOwnProperty()}呼び出しを持つ\texttt{for-in}文”における意味的に等価ではない検出例を挙げる．
+当該箇所はクエリが規定する構造を完全に満たしており，類似度スコアも $0.39$ と高値を示した．しかし，パターンの元コードである Listing~\ref{ID3_origin} と比較して，\texttt{.hasOwnProperty()} の処理対象となるオブジェクトが \texttt{for-in} 文で反復される要素とは無関係なデータであり，低速な実装を高速な実装へ置き換えるというマイクロベンチマークの知見が成立しない検出結果である．
 
-以上の分析から，本研究の提案手法は，実プロジェクトの中から特定の構造を抽出する「低速コードの構造的検出」については，その妥当性を十分に実証できたと評価できる．しかし，前述の定義における「実装方法の合致」までを保証する「意味的な等価性の検証」については依然として課題が残る．したがって，提案手法のさらなる精度向上には，構造的一致の判定に加え，処理対象となるデータの依存関係やセマンティクスを検証する枠組みの導入が必要であると考えられる．
+意味的に等価ではない検出結果に対して，高い類似度スコアとなった要因として，類似度算出に用いたCode2Vecの特性が考えられる．比較元となるマイクロベンチマークのコード片は極めて短いため，分散表現の生成において識別子名（変数名）やコードの長さに影響を受けやすく，本来重要であるべき「変数間のデータフローや依存関係」といった意味的な等価性を完全には反映できていない可能性が示唆された．
+
+以上の分析から，本研究の提案手法は，実プロジェクトの中から特定の構造を抽出する「低速コードの構造的検出」については，その妥当性を実証できたと評価できる．
+しかし，前述の定義における「実装方法の合致」までを保証する「意味的な等価性の検証」については依然として課題が残る．
+したがって，提案手法の精度向上のためには，構造的一致の判定に加え，処理対象となるデータの依存関係やセマンティクスを検証する枠組みの導入が必要であると考えられる．
+
+
+%----------------------------------
+% 1行目のthis.defaultsのみ背景色をつけるために一部改変
+\begin{lstlisting}[caption=意味的に等価ではない検出例, label=ID3_FP, captionpos=t, columns=flexible, literate=
+{this.defaults_target}{{\textcolor{black}{\colorbox{lightred}{this.defaults}}}}{13}
+{options}{{\textcolor{black}{\colorbox{lightred}{options}}}}{7}
+]
+for (var key in this.defaults_target) {
+  if (!options.hasOwnProperty(key)) {
+    attr[key] = this.defaults[key];
+  }
+}
+\end{lstlisting}
+%----------------------------------
 
 
 \section{修正適用による実行速度変化から得られる示唆}
@@ -756,9 +757,9 @@ for (var propKey in rawProps) {
 %%
 %% 謝辞
 %%
-%% \begin{acknowledgements}
-%% 感謝します．
-%% \end{acknowledgements}
+\begin{acknowledgements}
+感謝します．
+\end{acknowledgements}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
