@@ -1,0 +1,235 @@
+@article{LLM_Development,
+author = {Li, Junyi and Tang, Tianyi and Zhao, Wayne Xin and Nie, Jian-Yun and Wen, Ji-Rong},
+title = {Pre-Trained Language Models for Text Generation: A Survey},
+year = {2024},
+issue_date = {September 2024},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {56},
+number = {9},
+issn = {0360-0300},
+url = {https://doi.org/10.1145/3649449},
+doi = {10.1145/3649449},
+abstract = {Text Generation aims to produce plausible and readable text in human language from input data. The resurgence of deep learning has greatly advanced this field, in particular, with the help of neural generation models based on pre-trained language models (PLMs). Text generation based on PLMs is viewed as a promising approach in both academia and industry. In this article, we provide a survey on the utilization of PLMs in text generation. We begin with introducing two key aspects of applying PLMs to text generation: (1) how to design an effective PLM to serve as the generation model; and (2) how to effectively optimize PLMs given the reference text and to ensure that the generated texts satisfy special text properties. Then, we show the major challenges that have arisen in these aspects, as well as possible solutions for them. We also include a summary of various useful resources and typical text generation applications based on PLMs. Finally, we highlight the future research directions which will further improve these PLMs for text generation. This comprehensive survey is intended to help researchers interested in text generation problems to learn the core concepts, the main techniques and the latest developments in this area based on PLMs.},
+journal = {ACM Comput. Surv.},
+month = apr,
+articleno = {230},
+numpages = {39},
+keywords = {Pre-trained language models, natural language processing}
+}
+
+@inproceedings{Use_LLM_1,
+author = {Guo, Qi and Cao, Junming and Xie, Xiaofei and Liu, Shangqing and Li, Xiaohong and Chen, Bihuan and Peng, Xin},
+title = {Exploring the Potential of ChatGPT in Automated Code Refinement: An Empirical Study},
+year = {2024},
+isbn = {9798400702174},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3597503.3623306},
+doi = {10.1145/3597503.3623306},
+abstract = {Code review is an essential activity for ensuring the quality and maintainability of software projects. However, it is a time-consuming and often error-prone task that can significantly impact the development process. Recently, ChatGPT, a cutting-edge language model, has demonstrated impressive performance in various natural language processing tasks, suggesting its potential to automate code review processes. However, it is still unclear how well ChatGPT performs in code review tasks. To fill this gap, in this paper, we conduct the first empirical study to understand the capabilities of ChatGPT in code review tasks, specifically focusing on automated code refinement based on given code reviews. To conduct the study, we select the existing benchmark CodeReview and construct a new code review dataset with high quality. We use CodeReviewer, a state-of-the-art code review tool, as a baseline for comparison with ChatGPT. Our results show that ChatGPT outperforms CodeReviewer in code refinement tasks. Specifically, our results show that ChatGPT achieves higher EM and BLEU scores of 22.78 and 76.44 respectively, while the state-of-the-art method achieves only 15.50 and 62.88 on a high-quality code review dataset. We further identify the root causes for ChatGPT's underperformance and propose several strategies to mitigate these challenges. Our study provides insights into the potential of ChatGPT in automating the code review process, and highlights the potential research directions.},
+booktitle = {Proceedings of the IEEE/ACM 46th International Conference on Software Engineering},
+articleno = {34},
+numpages = {13},
+location = {Lisbon, Portugal},
+series = {ICSE '24}
+}
+
+@inproceedings{Use_LLM_2,
+author = {Pomian, Dorin and Bellur, Abhiram and Dilhara, Malinda and Kurbatova, Zarina and Bogomolov, Egor and Sokolov, Andrey and Bryksin, Timofey and Dig, Danny},
+title = {EM-Assist: Safe Automated ExtractMethod Refactoring with LLMs},
+year = {2024},
+isbn = {9798400706585},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3663529.3663803},
+doi = {10.1145/3663529.3663803},
+abstract = {Excessively long methods, loaded with multiple responsibilities, are challenging to understand, debug, reuse, and maintain. The  solution lies in the widely recognized Extract Method refactoring. While the application of this refactoring is supported in modern  IDEs, recommending which code fragments to extract has been the topic of many research tools. However, they often struggle to replicate real-world developer practices, resulting in recommendations that do not align with what a human developer would do in real  life. To address this issue, we introduce EM-Assist, an IntelliJ IDEA plugin that uses LLMs to generate refactoring suggestions and subsequently validates, enhances, and ranks them. Finally, EM-Assist uses the IntelliJ IDE to apply the user-selected recommendation.  In our extensive evaluation of 1,752 real-world refactorings that actually took place in open-source projects, EM-Assist’s recall rate  was 53.4\% among its top-5 recommendations, compared to 39.4\% for the previous best-in-class tool that relies solely on static analysis. Moreover, we conducted a usability survey with 18 industrial developers and 94.4\% gave a positive rating.},
+booktitle = {Companion Proceedings of the 32nd ACM International Conference on the Foundations of Software Engineering},
+pages = {582–586},
+numpages = {5},
+keywords = {Code smells, Java, Kotlin, LLMs, Long Methods, Refactoring},
+location = {Porto de Galinhas, Brazil},
+series = {FSE 2024}
+}
+
+@article{Use_LLM_3,
+author = {Yuan, Zhiqiang and Liu, Mingwei and Ding, Shiji and Wang, Kaixin and Chen, Yixuan and Peng, Xin and Lou, Yiling},
+title = {Evaluating and Improving ChatGPT for Unit Test Generation},
+year = {2024},
+issue_date = {July 2024},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {1},
+number = {FSE},
+url = {https://doi.org/10.1145/3660783},
+doi = {10.1145/3660783},
+abstract = {Unit testing plays an essential role in detecting bugs in functionally-discrete program units (e.g., methods). Manually writing high-quality unit tests is time-consuming and laborious. Although the traditional techniques are able to generate tests with reasonable coverage, they are shown to exhibit low readability and still cannot be directly adopted by developers in practice. Recent work has shown the large potential of large language models (LLMs) in unit test generation. By being pre-trained on a massive developer-written code corpus, the models are capable of generating more human-like and meaningful test code.                                                                                                 In this work, we perform the first empirical study to evaluate the capability of ChatGPT (i.e., one of the most representative LLMs with outstanding performance in code generation and comprehension) in unit test generation. In particular, we conduct both a quantitative analysis and a user study to systematically investigate the quality of its generated tests in terms of correctness, sufficiency, readability, and usability. We find that the tests generated by ChatGPT still suffer from correctness issues, including diverse compilation errors and execution failures (mostly caused by incorrect assertions); but the passing tests generated by ChatGPT almost resemble manually-written tests by achieving comparable coverage, readability, and even sometimes developers' preference. Our findings indicate that generating unit tests with ChatGPT could be very promising if the correctness of its generated tests could be further improved.                                                                                                 Inspired by our findings above, we further propose ChatTester, a novel ChatGPT-based unit test generation approach, which leverages ChatGPT itself to improve the quality of its generated tests. ChatTester incorporates an initial test generator and an iterative test refiner. Our evaluation demonstrates the effectiveness of ChatTester by generating 34.3\% more compilable tests and 18.7\% more tests with correct assertions than the default ChatGPT. In addition to ChatGPT, we further investigate the generalization capabilities of ChatTester by applying it to two recent open-source LLMs (i.e., CodeLLama-Instruct and CodeFuse) and our results show that ChatTester can also improve the quality of tests generated by these LLMs.},
+journal = {Proc. ACM Softw. Eng.},
+month = jul,
+articleno = {76},
+numpages = {24},
+keywords = {Large language model, Test generation, Unit testing}
+}
+
+@inproceedings{LLM_Code_Generation,
+author = {Du, Xueying and Liu, Mingwei and Wang, Kaixin and Wang, Hanlin and Liu, Junwei and Chen, Yixuan and Feng, Jiayi and Sha, Chaofeng and Peng, Xin and Lou, Yiling},
+title = {Evaluating Large Language Models in Class-Level Code Generation},
+year = {2024},
+isbn = {9798400702174},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3597503.3639219},
+doi = {10.1145/3597503.3639219},
+abstract = {Recently, many large language models (LLMs) have been proposed, showing advanced proficiency in code generation. Meanwhile, many efforts have been dedicated to evaluating LLMs on code generation benchmarks such as HumanEval. Although being very helpful for comparing different LLMs, existing evaluation focuses on a simple code generation scenario (i.e., function-level or statement-level code generation), which mainly asks LLMs to generate one single code unit (e.g., a function or a statement) for the given natural language description. Such evaluation focuses on generating independent and often small-scale code units, thus leaving it unclear how LLMs perform in real-world software development scenarios.To fill this knowledge gap, we make the first attempt to evaluate LLMs in a more challenging code generation scenario, i.e., class-level code generation. Compared with existing code generation benchmarks, it better reflects real-world software development scenarios due to it comprising broader contextual dependencies and multiple, interdependent units of code. We first manually construct the first class-level code generation benchmark ClassEval of 100 class-level Python code generation tasks with approximately 500 person-hours. Based on the new benchmark ClassEval, we then perform the first study of 11 state-of-the-art LLMs on class-level code generation. Based on our results, we find that all LLMs perform much worse on class-level code generation compared to the method-level. While GPT models still dominate other LLMs on class-level code generation, the performance rankings of other models on method-level code generation no longer holds for class-level code generation. Besides, most models (except GPT models) perform better when generating the class method by method; and they have the limited ability of generating dependent code. Based on our findings, we call for software engineering (SE) researchers' expertise to build more LLM benchmarks based on practical and complicated software development scenarios.},
+booktitle = {Proceedings of the IEEE/ACM 46th International Conference on Software Engineering},
+articleno = {81},
+numpages = {13},
+keywords = {class-level code generation, large language model, benchmark},
+location = {Lisbon, Portugal},
+series = {ICSE '24}
+}
+
+@inproceedings{Abandonment_of_Inference,
+title = {The Illusion of Thinking: Understanding the Strengths and Limitations of Reasoning Models via the Lens of Problem Complexity},
+booktitle = {NeurIPS},
+author = {Parshin Shojaee* and Iman Mirzadeh* and Keivan Alizadeh and Maxwell Horton and Samy Bengio and Mehrdad Farajtabar},
+year = {2025},
+URL = {https://arxiv.org/abs/2506.06941}
+}
+
+@inproceedings{LLM_few_shot,
+author = {Brown, Tom B. and Mann, Benjamin and Ryder, Nick and Subbiah, Melanie and Kaplan, Jared and Dhariwal, Prafulla and Neelakantan, Arvind and Shyam, Pranav and Sastry, Girish and Askell, Amanda and Agarwal, Sandhini and Herbert-Voss, Ariel and Krueger, Gretchen and Henighan, Tom and Child, Rewon and Ramesh, Aditya and Ziegler, Daniel M. and Wu, Jeffrey and Winter, Clemens and Hesse, Christopher and Chen, Mark and Sigler, Eric and Litwin, Mateusz and Gray, Scott and Chess, Benjamin and Clark, Jack and Berner, Christopher and McCandlish, Sam and Radford, Alec and Sutskever, Ilya and Amodei, Dario},
+title = {Language models are few-shot learners},
+year = {2020},
+isbn = {9781713829546},
+publisher = {Curran Associates Inc.},
+address = {Red Hook, NY, USA},
+abstract = {We demonstrate that scaling up language models greatly improves task-agnostic, few-shot performance, sometimes even becoming competitive with prior state-of-the-art fine-tuning approaches. Specifically, we train GPT-3, an autoregressive language model with 175 billion parameters, 10x more than any previous non-sparse language model, and test its performance in the few-shot setting. For all tasks, GPT-3 is applied without any gradient updates or fine-tuning, with tasks and few-shot demonstrations specified purely via text interaction with the model. GPT-3 achieves strong performance on many NLP datasets, including translation, question-answering, and cloze tasks. We also identify some datasets where GPT-3's few-shot learning still struggles, as well as some datasets where GPT-3 faces methodological issues related to training on large web corpora.},
+booktitle = {Proceedings of the 34th International Conference on Neural Information Processing Systems},
+articleno = {159},
+numpages = {25},
+location = {Vancouver, BC, Canada},
+series = {NIPS '20}
+}
+
+@article{TOSEM,
+author = {Jiang, Xue and Dong, Yihong and Wang, Lecheng and Fang, Zheng and Shang, Qiwei and Li, Ge and Jin, Zhi and Jiao, Wenpin},
+title = {Self-Planning Code Generation with Large Language Models},
+year = {2024},
+issue_date = {September 2024},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {33},
+number = {7},
+issn = {1049-331X},
+url = {https://doi.org/10.1145/3672456},
+doi = {10.1145/3672456},
+abstract = {Although large language models (LLMs) have demonstrated impressive ability in code generation, they are still struggling to address the complicated intent provided by humans. It is widely acknowledged that humans typically employ planning to decompose complex problems and schedule solution steps prior to implementation. To this end, we introduce planning into code generation to help the model understand complex intent and reduce the difficulty of problem-solving. This paper proposes a self-planning code generation approach with large language models, which consists of two phases, namely planning phase and implementation phase. Specifically, in the planning phase, LLM plans out concise solution steps from the intent combined with few-shot prompting. Subsequently, in the implementation phase, the model generates code step by step, guided by the preceding solution steps. We conduct extensive experiments on various code-generation benchmarks across multiple programming languages. Experimental results show that self-planning code generation achieves a relative improvement of up to 25.4\% in Pass@1 compared to direct code generation, and up to 11.9\% compared to Chain-of-Thought of code generation. Moreover, our self-planning approach also enhances the quality of the generated code with respect to correctness, readability, and robustness, as assessed by humans.},
+journal = {ACM Trans. Softw. Eng. Methodol.},
+month = sep,
+articleno = {182},
+numpages = {30},
+keywords = {Code Generation, Large language models, Planning}
+}
+
+@inproceedings{META_GPT,
+ author = {Hong, Sirui and Zhuge, Mingchen and Chen, Jonathan and Zheng, Xiawu and Cheng, Yuheng and Wang, Jinlin and Zhang, Ceyao and wang, zili and Yau, Steven and Lin, Zijuan and Zhou, Liyang and Ran, Chenyu and Xiao, Lingfeng and Wu, Chenglin and Schmidhuber, J\"{u}rgen},
+ booktitle = {International Conference on Learning Representations},
+ editor = {B. Kim and Y. Yue and S. Chaudhuri and K. Fragkiadaki and M. Khan and Y. Sun},
+ pages = {23247--23275},
+ title = {MetaGPT: Meta Programming for A Multi-Agent Collaborative Framework},
+ url = {https://proceedings.iclr.cc/paper_files/paper/2024/file/6507b115562bb0a305f1958ccc87355a-Paper-Conference.pdf},
+ volume = {2024},
+ year = {2024}
+}
+
+@misc{AutoDev,
+      title={AutoDev: Automated AI-Driven Development}, 
+      author={Michele Tufano and Anisha Agarwal and Jinu Jang and Roshanak Zilouchian Moghaddam and Neel Sundaresan},
+      year={2024},
+      eprint={2403.08299},
+      archivePrefix={arXiv},
+      primaryClass={cs.SE},
+      url={https://arxiv.org/abs/2403.08299}, 
+}
+
+@inproceedings{ChatDev,
+    title = "{C}hat{D}ev: Communicative Agents for Software Development",
+    author = "Qian, Chen  and
+      Liu, Wei  and
+      Liu, Hongzhang  and
+      Chen, Nuo  and
+      Dang, Yufan  and
+      Li, Jiahao  and
+      Yang, Cheng  and
+      Chen, Weize  and
+      Su, Yusheng  and
+      Cong, Xin  and
+      Xu, Juyuan  and
+      Li, Dahai  and
+      Liu, Zhiyuan  and
+      Sun, Maosong",
+    editor = "Ku, Lun-Wei  and
+      Martins, Andre  and
+      Srikumar, Vivek",
+    booktitle = "Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+    month = aug,
+    year = "2024",
+    address = "Bangkok, Thailand",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.acl-long.810/",
+    doi = "10.18653/v1/2024.acl-long.810",
+    pages = "15174--15186",
+    abstract = "Software development is a complex task that necessitates cooperation among multiple members with diverse skills. Numerous studies used deep learning to improve specific phases in a waterfall model, such as design, coding, and testing. However, the deep learning model in each phase requires unique designs, leading to technical inconsistencies across various phases, which results in a fragmented and ineffective development process. In this paper, we introduce ChatDev, a chat-powered software development framework in which specialized agents driven by large language models (LLMs) are guided in what to communicate (via chat chain) and how to communicate (via communicative dehallucination). These agents actively contribute to the design, coding, and testing phases through unified language-based communication, with solutions derived from their multi-turn dialogues. We found their utilization of natural language is advantageous for system design, and communicating in programming language proves helpful in debugging. This paradigm demonstrates how linguistic communication facilitates multi-agent collaboration, establishing language as a unifying bridge for autonomous task-solving among LLM agents. The code and data are available at https://github.com/OpenBMB/ChatDev."
+}
+
+@article{Division_Size,
+author = {Masood, Zainab and Hoda, Rashina and Blincoe, Kelly},
+title = {Real World Scrum A Grounded Theory of Variations in Practice},
+year = {2022},
+issue_date = {May 2022},
+publisher = {IEEE Press},
+volume = {48},
+number = {5},
+issn = {0098-5589},
+url = {https://doi.org/10.1109/TSE.2020.3025317},
+doi = {10.1109/TSE.2020.3025317},
+abstract = {Scrum, the most popular agile method and project management framework, is widely reported to be used, adapted, misused, and abused in practice. However, not much is known about how Scrum actually works in practice, and critically, where, when, how and why it diverges from Scrum by the book. Through a Grounded Theory study involving semi-structured interviews of 45 participants from 30 companies and observations of five teams, we present our findings on how Scrum works in practice as compared to how it is presented in its formative books. We identify significant variations in these practices such as work breakdown, estimation, prioritization, assignment, the associated roles and artefacts, and discuss the underlying rationales driving the variations. Critically, we claim that not all variations are process misuse/abuse and propose a nuanced classification approach to understanding variations as <italic>standard, necessary, contextual,</italic> and <italic>clear deviations</italic> for successful Scrum use and adaptation.},
+journal = {IEEE Trans. Softw. Eng.},
+month = may,
+pages = {1579–1591},
+numpages = {13}
+}
+
+@article{LLM_English,
+author = {Chang, Yupeng and Wang, Xu and Wang, Jindong and Wu, Yuan and Yang, Linyi and Zhu, Kaijie and Chen, Hao and Yi, Xiaoyuan and Wang, Cunxiang and Wang, Yidong and Ye, Wei and Zhang, Yue and Chang, Yi and Yu, Philip S. and Yang, Qiang and Xie, Xing},
+title = {A Survey on Evaluation of Large Language Models},
+year = {2024},
+issue_date = {June 2024},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {15},
+number = {3},
+issn = {2157-6904},
+url = {https://doi.org/10.1145/3641289},
+doi = {10.1145/3641289},
+abstract = {Large language models (LLMs) are gaining increasing popularity in both academia and industry, owing to their unprecedented performance in various applications. As LLMs continue to play a vital role in both research and daily use, their evaluation becomes increasingly critical, not only at the task level, but also at the society level for better understanding of their potential risks. Over the past years, significant efforts have been made to examine LLMs from various perspectives. This paper presents a comprehensive review of these evaluation methods for LLMs, focusing on three key dimensions: what to evaluate, where to evaluate, and how to evaluate. Firstly, we provide an overview from the perspective of evaluation tasks, encompassing general natural language processing tasks, reasoning, medical usage, ethics, education, natural and social sciences, agent applications, and other areas. Secondly, we answer the ‘where’ and ‘how’ questions by diving into the evaluation methods and benchmarks, which serve as crucial components in assessing the performance of LLMs. Then, we summarize the success and failure cases of LLMs in different tasks. Finally, we shed light on several future challenges that lie ahead in LLMs evaluation. Our aim is to offer invaluable insights to researchers in the realm of LLMs evaluation, thereby aiding the development of more proficient LLMs. Our key point is that evaluation should be treated as an essential discipline to better assist the development of LLMs. We consistently maintain the related open-source materials at:},
+journal = {ACM Trans. Intell. Syst. Technol.},
+month = mar,
+articleno = {39},
+numpages = {45},
+keywords = {Large language models, evaluation, model assessment, benchmark}
+}
+
+@misc{GPT_4o_mini,
+  author       = {{OpenAI}},
+  title        = {GPT-4o mini：費用効率の高いインテリジェンスの推進},
+  year         = {2024},
+  month        = jul,
+  day          = {18},
+  howpublished = {\url{https://openai.com/ja-JP/index/gpt-4o-mini-advancing-cost-efficient-intelligence/}},
+  note         = {OpenAI（リリース）。Accessed: 2026-02-03},
+  url          = {https://openai.com/ja-JP/index/gpt-4o-mini-advancing-cost-efficient-intelligence/},
+  language     = {ja}
+}
