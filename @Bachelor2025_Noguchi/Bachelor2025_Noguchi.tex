@@ -555,16 +555,16 @@ $$\text{適合率} = \frac{\text{検出結果に含まれる元低速コード�
 %----------------------
 \begin{figure}[t]
     \centering
-    \includegraphics[width=1.0\linewidth]{./fig/MB_cosine.pdf}
+    \includegraphics[width=1.0\linewidth]{./fig/MB_cosine_box.png}
     \caption{マイクロベンチマーク実装対データセットに対する検出結果における類似度スコア}
     \label{fig:plot_mb_cosine}
 \end{figure}
 %----------------------
 
 検出されたコード片が，元の低速コードとどの程度類似しているかを定量的に評価するため，Code2Vecを用いた分散表現によるコサイン類似度を算出した．
-図\ref{fig:plot_mb_cosine}に，マイクロベンチマーク実装対データセットからの検出結果における類似度スコアの分布を示す．図中の白い点が検出したコードを示し，赤点がパターンの元となった低速コードを示す．
+図\ref{fig:plot_mb_cosine}に，マイクロベンチマーク実装対データセットからの検出結果における類似度スコアの分布を示す．図中の白い箱ひげ図が検出したコードの類似度スコアの分布を示し，赤い箱ひげ図がパターンの元となった低速コードの類似度スコアの分布を示す．
 
-図\ref{fig:plot_mb_cosine}に示すように，類似度スコアが高い上位の結果には，正解データである元低速コードが多く分布していた．
+図\ref{fig:plot_mb_cosine}に示すように，検出コードと比較して，正解データである元低速コードの類似度スコアが高い値で分布していた．
 ここで，適合率を低下させる要因となった「元低速コード以外の検出コード（偽陽性）」に着目し，検出コードとマイクロベンチマーク実装対において対になる高速コードについて，目視による確認を行った．
 その結果，計算上は偽陽性と判定されたコード片は，実際にはクエリが意図する低速コードパターンと同一の構文構造を持っていることを確認した．
 具体例として，パターンID\ref{ptn:applymap}（\texttt{apply()} \textbf{\_} \texttt{map()}）における検出事例を Listing \ref{lst:fp_example} に示す．
@@ -582,7 +582,7 @@ while (VAR_5 < VAR_1) VAR_4[VAR_5++] = VAR_2;
 
 Listing \ref{lst:fp_example} (a) は，本手法により検出されたコード片であり，パターンID4の要件である \texttt{apply} メソッド，および \texttt{map} メソッドの呼び出しを含んでいる．
 
-このような，低速コードパターンと同一の構文構造を持っているものの，偽陽性として扱われた要因として，パターン作成時の手法設計に関する2点が確認された．
+このような，低速コードパターンと同一の構文構造を持っているものの，偽陽性として扱われた要因として，パターン作成手法の設計に関する要因が考えられる．
 まず，本手法における元低速コード（正解データ）の定義が「差分」に基づいている点である．マイクロベンチマーク実装対には，差分として現れない箇所にも同一の構文が含まれているケースが存在し，本実験のクエリはこれらを検出したため，正解ラベルとの不整合が生じた．
 次に，データセット構築時の特徴抽出において，今回作成した6パターン以外の形式で特徴が抽出されていた場合が存在する点である．同一ファイル内であっても，GumTreeによる差分解析の結果，別の構文変化が主要な特徴として抽出，分類されている場合，検出対象となった低速パターンの元低速コード（正解データ）として判定されない．
 
@@ -595,7 +595,7 @@ Listing \ref{lst:fp_example} (a) は，本手法により検出されたコー�
 \label{sec:toOSS}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-次に，提案手法の実用性を評価するため，GitHub上のOSSリポジトリを対象に低速コードパターンの検出実験を行った．実験対象として，JavaScriptを主要言語とし，かつ最終コミットが1年以内であるスター数上位1,000件のリポジトリを収集し，2025年10月13日時点における最新スナップショットのJavaScriptファイルを用いた．\todo{可能なら：図〜に，対象となるプロジェクトのjsコード行数の分布を示す}
+次に，提案手法の実用性を評価するため，GitHub上のOSSリポジトリを対象に低速コードパターンの検出実験を行った．実験対象として，JavaScriptを主要言語とし，かつ最終コミットが1年以内であるスター数上位1,000件のリポジトリより，2025年10月13日時点における最新スナップショットを用いた．
 
 \subsection{検出結果}
 
@@ -621,29 +621,76 @@ Listing \ref{lst:fp_example} (a) は，本手法により検出されたコー�
 
 表\ref{tab:result_detect}に，各低速コードパターンごとの検出結果を示す．なお，「ID」は低速コードパターンのID，「検出リポジトリ数」は1つ以上のコード片が検出されたリポジトリの数，「最大検出数」は単一リポジトリにおける最大検出数，「総検出数」は，1,000リポジトリにおける総検出数を示す．
 
-表\ref{tab:result_detect}から，パターンによって検出数に差があるものの，$49$リポジトリ 〜 $844$リポジトリで検出結果を得た．\ref{tab:slow_code_patterns}に示す，ID\ref{ptn:for-in}や，ID\ref{ptn:forEach}の低速コードパターンのように，一般的に利用頻度の高い構文でありマイクロベンチマーク実装対における検索結果の数が多いパターンは，，リポジトリにおいても検出数が多かった．また，これに対し，ID\ref{ptn:push}では，マイクロベンチマーク実装対において，検索結果の数が少なかったものの，データセットにおけるリポジトリにおいては検出数が多くなった．これは，一般的に可読性が高いとされる\texttt{for-of}についての低速コードパターンであることから，実行速度以外の品質への考慮が示唆される．\memo{2026-02-01 ↑ここまで}
+表\ref{tab:result_detect}から，パターンによって検出数に差があるものの，$49$リポジトリ 〜 $844$リポジトリで検出結果を得た．\ref{tab:slow_code_patterns}に示す，ID\ref{ptn:for-in}や，ID\ref{ptn:forEach}の低速コードパターンのように，一般的に利用頻度の高い構文でありマイクロベンチマーク実装対における検索結果の数が多いパターンは，，リポジトリにおいても検出数が多かった．また，これに対し，ID\ref{ptn:push}では，マイクロベンチマーク実装対において，検索結果の数が少なかったものの，データセットにおけるリポジトリにおいては検出数が多くなった．これは，一般的に可読性が高いとされる\texttt{for-of}についての低速コードパターンであることから，実行速度以外の品質への考慮が示唆される．
 
 %----------------------
-\begin{figure}[t]
+\begin{figure}[p]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
     \centering
-    \includegraphics[width=0.8\linewidth]{./fig/log_ID3_spia.pdf}
+    \includegraphics[width=0.9\linewidth]{./fig/plot_Repo/plot_id1.pdf}
+    \caption{低速コードパターンID1による検出数とリポジトリ規模}
+    \label{fig:plot_id1}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=0.9\linewidth]{./fig/plot_Repo/plot_id2.pdf}
+    \caption{低速コードパターンID2による検出数とリポジトリ規模}
+    \label{fig:plot_id2}
+\end{minipage}
+
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=0.8\linewidth]{./fig/plot_Repo/plot_id3.pdf}
     \caption{低速コードパターンID3による検出数とリポジトリ規模}
     \label{fig:plot_id3}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=0.8\linewidth]{./fig/plot_Repo/plot_id4.pdf}
+    \caption{低速コードパターンID4による検出数とリポジトリ規模}
+    \label{fig:plot_id4}
+\end{minipage}
+
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=0.8\linewidth]{./fig/plot_Repo/plot_id5.pdf}
+    \caption{低速コードパターンID5による検出数とリポジトリ規模}
+    \label{fig:plot_id5}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=0.8\linewidth]{./fig/plot_Repo/plot_id6.pdf}
+    \caption{低速コードパターンID6による検出数とリポジトリ規模}
+    \label{fig:plot_id6}
+\end{minipage}
 \end{figure}
 %----------------------
 
-\todo{他のパターンの結果を全て載せる}
-図\ref{fig:plot_id3}は，低速コードパターンID\ref{ptn:hasOwnProperty}について，リポジトリ規模に対する検出数の関係を示す．横軸は各リポジトリに含まれるJavaScriptファイルの総行数，縦軸は検出数を示す．リポジトリ規模が大きくなるほど低速コードパターンの検出数が増加する傾向があり，スピアマンの順位相関係数は0.44，p値は\(5.12 \times 10^{-14} < 0.05\)より正の相関が認められる．他の低速コードパターンについても，同様の傾向が見られた．
+図\ref{fig:plot_id1}から図\ref{fig:plot_id6}は，それぞれ，低速コードパターンID\ref{ptn:for-in}からID\ref{ptn:hasOwnProperty}について，リポジトリ規模に対する検出数の関係を示す．横軸は各リポジトリに含まれるJavaScriptファイルの総行数，縦軸は検出数を示す．スピアマンの順位相関係数は0.30から0.62であり，正の相関が認められることから，全てのパターンにおいて，リポジトリ規模が大きくなるほど低速コードパターンの検出数が増加する傾向があることを確認した．
 したがって，プロジェクトの規模（総行数）が増大するほど，低速コードパターンが混入する可能性が高まることが示唆された．
+
 
 
 \subsection{類似度に基づく検出結果の特徴分析}
 
-\todo{他のパターンについてもやった結果をまとめて図にする}
-図\ref{fig:boxplot_cosine}は，パターンID \ref{ptn:hasOwnProperty}“\texttt{if}文に\texttt{.hasOwnProperty()}呼び出しを持つ\texttt{for-in}文”の検出結果を対象としたコサイン類似度スコアを示した箱ひげ図である．左からそれぞれ，収集したマイクロベンチマークデータセットに対する検出結果についての類似度スコア，リポジトリに対する検出結果についての類似度スコアを示している．また，Listing~\ref{ID3_origin}にマイクロベンチマーク実装対におけるパターン抽出元低速コードの例，Listing~\ref{ID3_highcos}にコサイン類似度の高い検出例，Listing~\ref{ID3_lowcos}にコサイン類似度の低い検出例を示す．Listing~\ref{ID3_highcos}の類似度スコアは$0.41$，Listing~\ref{ID3_lowcos}の類似度スコアは$-0.37$である．
+%----------------------
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\linewidth]{./fig/Repo_cosine_box.png}
+    \caption{OSSリポジトリに対する検出結果における類似度スコア}
+    \label{fig:plot_Repo_cosine}
+\end{figure}
+%----------------------
 
-なお，長大，または文法的に不正なコード片は，分散表現取得における構文解析で失敗する．したがってリポジトリに対する検出結果の類似度スコアでは，検出総数9,516件中，分散表現の取得に成功した7,039件を対象としたものとなっている．
+OSSリポジトリから検出されたコード片について，Code2Vecを用いた類似度評価および目視による確認を行った．図\ref{fig:plot_Repo_cosine}に，全6種類のパターンにおける，リポジトリからの検出結果に対する類似度スコアの分布を示す．なお，Code2Vecによる分散表現の取得において，構文解析に失敗する文法的に不正なコード片や，処理可能なトークン長を超える長大なコード片については，本評価の対象から除外している．したがって，図中のデータ数 $n$ は，表\ref{tab:result_detect}で示した総検出数のうち，分散表現の取得に成功したコード片の数を示している．
 
+
+
+
+また，Listing~\ref{ID3_origin}にマイクロベンチマーク実装対におけるパターン抽出元低速コードの例，Listing~\ref{ID3_highcos}にコサイン類似度の高い検出例，Listing~\ref{ID3_lowcos}にコサイン類似度の低い検出例を示す．Listing~\ref{ID3_highcos}の類似度スコアは$0.41$，Listing~\ref{ID3_lowcos}の類似度スコアは$-0.37$である．
 \memo{マイクロベンチマークデータセットに対する結果を載せるかは要議論}
 検出結果の類似度スコアの範囲は$-0.37$ 〜 $0.41$で，平均値は0.09，中央値は0.09となった．
 
@@ -655,14 +702,14 @@ Listing~\ref{ID3_highcos}に示すような類似度スコアの高いコード�
 
 これらの結果から，コサイン類似度は，コード長や変数名の影響を受けることが示唆されるとともに，ソースコードの構造に基づいて検索を行ったことで，コード長や変数名といった表面的な情報に影響を受けずに，低速コードパターンを含むコード片を検出できたことが示唆される．
 
-%----------------------
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.7\linewidth]{./fig/boxplot_github_id3.pdf}
-    \caption{低速コードパターンID \ref{ptn:hasOwnProperty}で検出されたコード片とパターン元低速コードのコサイン類似度}
-    \label{fig:boxplot_cosine}
-\end{figure}
-%----------------------
+% %----------------------
+% \begin{figure}[t]
+%     \centering
+%     \includegraphics[width=0.7\linewidth]{./fig/boxplot_github_id3.pdf}
+%     \caption{低速コードパターンID \ref{ptn:hasOwnProperty}で検出されたコード片とパターン元低速コードのコサイン類似度}
+%     \label{fig:boxplot_cosine}
+% \end{figure}
+% %----------------------
 
 %----------------------------------
 \begin{lstlisting}[caption=パターン抽出元低速コード例, label=ID3_origin, captionpos=t, columns=flexible]
