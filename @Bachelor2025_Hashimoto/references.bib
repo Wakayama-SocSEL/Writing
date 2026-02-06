@@ -21,7 +21,6 @@ publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
 url = {https://doi.org/10.1145/3106237.3106246},
 doi = {10.1145/3106237.3106246},
-abstract = {Open source is experiencing a renaissance period, due to the appearance of modern platforms and workflows for developing and maintaining public code. As a result, developers are creating open source software at speeds never seen before. Consequently, these projects are also facing unprecedented mortality rates. To better understand the reasons for the failure of modern open source projects, this paper describes the results of a survey with the maintainers of 104 popular GitHub systems that have been deprecated. We provide a set of nine reasons for the failure of these open source projects. We also show that some maintenance practices---specifically the adoption of contributing guidelines and continuous integration---have an important association with a project failure or success. Finally, we discuss and reveal the principal strategies developers have tried to overcome the failure of the studied projects.},
 booktitle = {Proceedings of the 2017 11th Joint Meeting on Foundations of Software Engineering},
 pages = {186–196},
 numpages = {11},
@@ -41,16 +40,6 @@ doi = {https://doi.org/10.1016/j.infsof.2021.106616},
 url = {https://www.sciencedirect.com/science/article/pii/S0950584921000902},
 author = {Vijaya Kumar Eluri and Thomas A. Mazzuchi and Shahram Sarkani},
 keywords = {Long-time contributor, GitHub, GHTorrent, BigQuery, Machine learning models},
-abstract = {Context:
-Many organizations develop software systems using open source software (OSS), which is risky due to the high possibility of losing support. Contributors are critical for the survival of OSS projects, but very few new contributors remain with OSS projects to become long-time contributors (LTCs). Identification of factors that contribute to become an LTC can help OSS project owners utilize limited resources to retain new contributors.
-Objective:
-In this paper, we investigate whether we can effectively predict new contributors to OSS repositories becoming long time contributors based on repository and contributor meta-data collected from GitHub.
-Method:
-We construct a dataset containing 70,899 observations from 888 most popular repositories with 56,766 contributors. Each observation represents a contributor who joined the repository and is categorized as either an LTC or a non-LTC, depending on whether their project tenure is longer than 3 years. Each observation has 31 features that are calculated using the information of the new contributor and the repository when a new contributor joins the project. We build several machine learning models, including naive Bayes, k-nearest neighbor, logistic regression, decision tree, and random forest to predict LTC validated using 10-fold cross-validation. We compare our best model with state of the art model in terms of precision, recall, F1-score, Matthews correlation coefficient (MCC), and area under the curve (AUC).
-Results:
-In 10-fold cross-validation, the precision, recall, F1-score, MCC, and AUC of our best model (random forest) are 0.695, 0.079, 0.140, 0.226, and 0.913, respectively. These values are 27.29%, 92.68%, 86.67%, 56.94%, and 0.55%, respectively better than the best baseline state of the art model (random forest).
-Conclusion:
-Compared to state of the art models, the models built using our approach use less than 50% features (31 vs 63), have no wait time of one month after the contributor joins to predict future LTC status, and produce better results.}
 }
 
 @ARTICLE{related2,
@@ -92,7 +81,6 @@ title = {What make long term contributors: willingness and opportunity in OSS co
 year = {2012},
 isbn = {9781467310673},
 publisher = {IEEE Press},
-abstract = {To survive and succeed, software projects need to attract and retain contributors. We model the individual's chances to become a valuable contributor through their capacity, willingness, and the opportunity to contribute at the time of joining. Using issue tracking data of Mozilla and Gnome, we find that the probability for a new joiner to become a Long Term Contributor (LTC) is associated with her willingness and environment. Specifically, during their first month, future LTCs tend to be more active and show more community-oriented attitude than other joiners. Joiners who start by commenting on instead of reporting an issue or ones who succeed to get at least one reported issue to be fixed, more than double their odds of becoming an LTC. The macro-climate with high project relative sociality and the micro-climate with a large, productive, and clustered peer group increase the odds. On the contrary, the macro-climate with high project popularity and the micro-climate with low attention from peers reduce the odds. This implies that the interaction between individual's attitude and project's climate are associated with the odds that an individual would become a valuable contributor or disengage from the project. Our findings may provide a basis for empirical approaches to design a better community architecture and to improve the experience of contributors.},
 booktitle = {Proceedings of the 34th International Conference on Software Engineering},
 pages = {518–528},
 numpages = {11},
@@ -124,7 +112,6 @@ year="2006",
 publisher="Springer US",
 address="Boston, MA",
 pages="319--330",
-abstract="This paper furthers inquiry into the social structure of free and open source software (FLOSS) teams by undertaking social network analysis across time. Contrary to expectations, we confirmed earlier findings of a wide distribution of centralizations even when examining the networks over time. The paper also provides empirical evidence that while change at the center of FLOSS projects is relatively uncommon, participation across the project communities is highly skewed, with many participants appearing for only one period. Surprisingly, large project teams are not more likely to undergo change at their centers.",
 isbn="978-0-387-34226-9"
 }
 
@@ -148,6 +135,16 @@ isbn="978-0-387-34226-9"
   keywords={Companies;Software;Feature extraction;Data mining;Standards;Computer science;developer turnover;prediction model;mining software repositories},
   doi={10.1109/MSR.2017.58}}
 
+@article{sport,
+  title={Predicting long time contributors with knowledge units of programming languages: an empirical study},
+  author={Ahasanuzzaman, Md and Oliva, Gustavo A and Hassan, Ahmed E},
+  journal={Empirical Software Engineering},
+  volume={30},
+  number={3},
+  pages={99},
+  year={2025},
+  publisher={Springer}
+}
 
 @article{motivation2,
   title={An empirical analysis of open source software developers’ motivations and continuance intentions},
@@ -199,7 +196,6 @@ number = {2},
 issn = {1382-3256},
 url = {https://doi.org/10.1007/s10664-018-9646-1},
 doi = {10.1007/s10664-018-9646-1},
-abstract = {Modern Code Review (MCR) plays a key role in software quality practices. In MCR process, a new patch (i.e., a set of code changes) is encouraged to be examined by reviewers in order to identify weaknesses in source code prior to an integration into main software repositories. To mitigate the risk of having future defects, prior work suggests that MCR should be performed with sufficient review participation. Indeed, recent work shows that a low number of participated reviewers is associated with poor software quality. However, there is a likely case that a new patch still suffers from poor review participation even though reviewers were invited. Hence, in this paper, we set out to investigate the factors that are associated with the participation decision of an invited reviewer. Through a case study of 230,090 patches spread across the Android, LibreOffice, OpenStack and Qt systems, we find that (1) 16\%-66\% of patches have at least one invited reviewer who did not respond to the review invitation; (2) human factors play an important role in predicting whether or not an invited reviewer will participate in a review; (3) a review participation rate of an invited reviewers and code authoring experience of an invited reviewer are highly associated with the participation decision of an invited reviewer. These results can help practitioners better understand about how human factors associate with the participation decision of reviewers and serve as guidelines for inviting reviewers, leading to a better inviting decision and a better reviewer participation.},
 journal = {Empirical Softw. Engg.},
 month = apr,
 pages = {973–1016},
@@ -219,7 +215,6 @@ number = {2},
 issn = {1049-331X},
 url = {https://doi.org/10.1145/3473139},
 doi = {10.1145/3473139},
-abstract = {Many open-source software projects depend on a few core developers, who take over both the bulk of coordination and programming tasks. They are supported by peripheral developers, who contribute either via discussions or programming tasks, often for a limited time. It is unclear what role these peripheral developers play in the programming and communication efforts, as well as the temporary task-related sub-groups in the projects. We mine code-repository data and mailing-list discussions to model the relationships and contributions of developers in a social network and devise a method to analyze the temporal collaboration structures in communication and programming, learning about the strength and stability of social sub-groups in open-source software projects. Our method uses multi-modal social networks on a series of time windows. Previous work has reduced the network structure representing developer collaboration to networks with only one type of interaction, which impedes the simultaneous analysis of more than one type of interaction. We use both communication and version-control data of open-source software projects and model different types of interaction over time. To demonstrate the practicability of our measurement and analysis method, we investigate 10&nbsp;substantial and popular open-source software projects and show that, if sub-groups evolve, modeling these sub-groups helps predict the future evolution of interaction levels of programmers and groups of developers. Our method allows maintainers and other stakeholders of open-source software projects to assess instabilities and organizational changes in developer interaction and can be applied to different use cases in organizational analysis, such as understanding the dynamics of a specific incident or discussion.},
 journal = {ACM Trans. Softw. Eng. Methodol.},
 month = nov,
 articleno = {19},
@@ -254,7 +249,6 @@ number = {1},
 issn = {1049-331X},
 url = {https://doi.org/10.1145/3736405},
 doi = {10.1145/3736405},
-abstract = {Aim. The code review team at Meta is continuously improving the code review process. In this work, we report on three randomized controlled experimental trials to improve code reviewer recommendation.Method. To evaluate the recommenders, we conduct three A/B tests which are a type of randomized controlled experimental trial. The unit is either the code diff (Meta’s term for a pull-request) or all the diffs that an author creates during the experimental period. We set goal metrics, i.e., those we expect to improve, and guardrail metrics, those that we do not want to negatively impact, i.e., analogous to safety metrics in medical trials. We test the outcomes using a t-test, Wilcoxon test, or Fisher test depending on the type of data.Expt. 1. We developed a new recommender, RevRecV2, based on features that had been successfully used in the literature and that could be calculated with low latency. In an A/B test on 82k diffs in Spring 2022, we found that the new recommender was more accurate and had lower latency. The new recommender did not impact the amount of time a diff was under review. The results allowed us to roll-out the recommender in the Summer 2022 to all of Meta.Expt. 2. Reviewer workload is not evenly distributed, our goal was to reduce the workload of top reviewers. Based on the literature and using historical data, we conducted backtests to determine the best measure of reviewer workload. We then ran an A/B test on 28k diff authors in Winter 2023 on a workload-balanced recommender, RevRecWL. Our A/B test led to mixed results. When a low workload reviewer had reasonable expertise, authors selected them, however, the top recommended low workload reviewer was often not selected. There was no impact on our guardrail metrics of the amount of time to perform a review. This workload-balancing replaced the recommender from the first experiment as the recommender in production at Meta.Expt. 3. Engineers at Meta often select a team rather than an individual reviewer to review a diff. We suspected the bystander effect might be slowing down reviews of these diffs because no single individual was assigned the review. On diffs that only had a team assigned, we randomly selected one of the top three recommended reviewers to review the diff with BystanderRecRnd. We conducted an A/B test on 12.5k authors in Spring 2023 and found a large decrease in the amount of time it took for diffs to be reviewed. We did not find that reviewers rushed reviews. The results were strong enough to roll this recommender out to all diffs that only have a team assigned for review.Implications. Aside from the direct findings from our work, our findings suggest there can be a discrepancy between historical backtesting and A/B test experimental findings, and that more A/B tests are necessary to test recommenders in production. Outcome measures beyond accuracy are important. This is especially true in understanding how recommenders change a reviewer’s workload. We also see that the latency in displaying a recommendation can have a large impact on how often authors select recommendations making the reporting of latency an important metric for future work.},
 journal = {ACM Trans. Softw. Eng. Methodol.},
 month = dec,
 articleno = {24},
