@@ -100,7 +100,7 @@ location = {Zurich, Switzerland},
 series = {ICSE '12}
 }
 
-@inproceedings{steinmacher2013newcomers,
+@inproceedings{abandon,
   title={Why do newcomers abandon open source software projects?},
   author={Steinmacher, Igor and Wiese, Igor and Chaves, Ana Paula and Gerosa, Marco Aur{\'e}lio},
   booktitle={2013 6th International Workshop on Cooperative and Human Aspects of Software Engineering (CHASE)},
@@ -128,6 +128,15 @@ abstract="This paper furthers inquiry into the social structure of free and open
 isbn="978-0-387-34226-9"
 }
 
+@inproceedings{ihara_LTC,
+  title={Early identification of future committers in open source software projects},
+  author={Ihara, Akinori and Kamei, Yasutaka and Ohira, Masao and Hassan, Ahmed E and Ubayashi, Naoyasu and Matsumoto, Ken-ichi},
+  booktitle={2014 14th International Conference on Quality Software},
+  pages={47--56},
+  year={2014},
+  organization={IEEE}
+}
+
 @INPROCEEDINGS{turnover,
   author={Bao, Lingfeng and Xing, Zhenchang and Xia, Xin and Lo, David and Li, Shanping},
   booktitle={2017 IEEE/ACM 14th International Conference on Mining Software Repositories (MSR)}, 
@@ -139,15 +148,6 @@ isbn="978-0-387-34226-9"
   keywords={Companies;Software;Feature extraction;Data mining;Standards;Computer science;developer turnover;prediction model;mining software repositories},
   doi={10.1109/MSR.2017.58}}
 
-@inproceedings{IRL,
-  title={Algorithms for inverse reinforcement learning.},
-  author={Ng, Andrew Y and Russell, Stuart and others},
-  booktitle={Icml},
-  volume={1},
-  number={2},
-  pages={2},
-  year={2000}
-}
 
 @article{motivation2,
   title={An empirical analysis of open source software developers’ motivations and continuance intentions},
@@ -169,21 +169,12 @@ isbn="978-0-387-34226-9"
   organization={IEEE}
 }
 
-@inproceedings{bib2,
+@inproceedings{rolemigration,
   title={Role migration and advancement processes in OSSD projects: A comparative case study},
   author={Jensen, Chris and Scacchi, Walt},
   booktitle={29th International Conference on Software Engineering (ICSE'07)},
   pages={364--374},
   year={2007},
-  organization={IEEE}
-}
-
-@inproceedings{abadon,
-  title={Why do newcomers abandon open source software projects?},
-  author={Steinmacher, Igor and Wiese, Igor and Chaves, Ana Paula and Gerosa, Marco Aur{\'e}lio},
-  booktitle={2013 6th International Workshop on Cooperative and Human Aspects of Software Engineering (CHASE)},
-  pages={25--32},
-  year={2013},
   organization={IEEE}
 }
 
@@ -194,13 +185,7 @@ isbn="978-0-387-34226-9"
   publisher={" O'Reilly Media, Inc."}
 }
 
-@InProceedings{BCE-FocalLoss,
-author = {Lin, Tsung-Yi and Goyal, Priya and Girshick, Ross and He, Kaiming and Dollar, Piotr},
-title = {Focal Loss for Dense Object Detection},
-booktitle = {Proceedings of the IEEE International Conference on Computer Vision (ICCV)},
-month = {Oct},
-year = {2017}
-}
+
 
 @article{feature,
 author = {Ruangwan, Shade and Thongtanunam, Patanamon and Ihara, Akinori and Matsumoto, Kenichi},
@@ -220,4 +205,77 @@ month = apr,
 pages = {973–1016},
 numpages = {44},
 keywords = {Reviewer participation, Modern code review, Developer collaboration}
+}
+
+@article{collaboration,
+author = {Bock, Thomas and Schmid, Angelika and Apel, Sven},
+title = {Measuring and Modeling Group Dynamics in Open-Source Software Development: A Tensor Decomposition Approach},
+year = {2021},
+issue_date = {April 2022},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {31},
+number = {2},
+issn = {1049-331X},
+url = {https://doi.org/10.1145/3473139},
+doi = {10.1145/3473139},
+abstract = {Many open-source software projects depend on a few core developers, who take over both the bulk of coordination and programming tasks. They are supported by peripheral developers, who contribute either via discussions or programming tasks, often for a limited time. It is unclear what role these peripheral developers play in the programming and communication efforts, as well as the temporary task-related sub-groups in the projects. We mine code-repository data and mailing-list discussions to model the relationships and contributions of developers in a social network and devise a method to analyze the temporal collaboration structures in communication and programming, learning about the strength and stability of social sub-groups in open-source software projects. Our method uses multi-modal social networks on a series of time windows. Previous work has reduced the network structure representing developer collaboration to networks with only one type of interaction, which impedes the simultaneous analysis of more than one type of interaction. We use both communication and version-control data of open-source software projects and model different types of interaction over time. To demonstrate the practicability of our measurement and analysis method, we investigate 10&nbsp;substantial and popular open-source software projects and show that, if sub-groups evolve, modeling these sub-groups helps predict the future evolution of interaction levels of programmers and groups of developers. Our method allows maintainers and other stakeholders of open-source software projects to assess instabilities and organizational changes in developer interaction and can be applied to different use cases in organizational analysis, such as understanding the dynamics of a specific incident or discussion.},
+journal = {ACM Trans. Softw. Eng. Methodol.},
+month = nov,
+articleno = {19},
+numpages = {50},
+keywords = {Coordination, group structures, open-source software, repository mining, tensor decomposition}
+}
+
+@article{ModernCodeReview,
+author="Patanamon, Thongtanunam and Shane, McIntosh and Ahmed E. Hassan and Hajimu, Iida",
+title="Review participation in modern code review",
+journal="Empirical Software Engineering",
+ISSN="1382-3256",
+publisher="Springer Science and Business Media LLC",
+year="2016",
+month="10",
+volume="22",
+number="2",
+pages="768-817",
+DOI="10.1007/s10664-016-9452-6",
+URL="https://cir.nii.ac.jp/crid/1360283690356077440"
+}
+
+@article{improving_code_reviewer_recommendation,
+author = {Rigby, Peter C. and Rogers, Seth and Saleem, Sadruddin and Suresh, Parth and Suskin, Daniel and Riggs, Patrick and Maddila, Chandra and Nagappan, Nachiappan and Mockus, Audris},
+title = {Improving Code Reviewer Recommendation: Accuracy, Latency, Workload, and Bystanders},
+year = {2025},
+issue_date = {January 2026},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {35},
+number = {1},
+issn = {1049-331X},
+url = {https://doi.org/10.1145/3736405},
+doi = {10.1145/3736405},
+abstract = {Aim. The code review team at Meta is continuously improving the code review process. In this work, we report on three randomized controlled experimental trials to improve code reviewer recommendation.Method. To evaluate the recommenders, we conduct three A/B tests which are a type of randomized controlled experimental trial. The unit is either the code diff (Meta’s term for a pull-request) or all the diffs that an author creates during the experimental period. We set goal metrics, i.e., those we expect to improve, and guardrail metrics, those that we do not want to negatively impact, i.e., analogous to safety metrics in medical trials. We test the outcomes using a t-test, Wilcoxon test, or Fisher test depending on the type of data.Expt. 1. We developed a new recommender, RevRecV2, based on features that had been successfully used in the literature and that could be calculated with low latency. In an A/B test on 82k diffs in Spring 2022, we found that the new recommender was more accurate and had lower latency. The new recommender did not impact the amount of time a diff was under review. The results allowed us to roll-out the recommender in the Summer 2022 to all of Meta.Expt. 2. Reviewer workload is not evenly distributed, our goal was to reduce the workload of top reviewers. Based on the literature and using historical data, we conducted backtests to determine the best measure of reviewer workload. We then ran an A/B test on 28k diff authors in Winter 2023 on a workload-balanced recommender, RevRecWL. Our A/B test led to mixed results. When a low workload reviewer had reasonable expertise, authors selected them, however, the top recommended low workload reviewer was often not selected. There was no impact on our guardrail metrics of the amount of time to perform a review. This workload-balancing replaced the recommender from the first experiment as the recommender in production at Meta.Expt. 3. Engineers at Meta often select a team rather than an individual reviewer to review a diff. We suspected the bystander effect might be slowing down reviews of these diffs because no single individual was assigned the review. On diffs that only had a team assigned, we randomly selected one of the top three recommended reviewers to review the diff with BystanderRecRnd. We conducted an A/B test on 12.5k authors in Spring 2023 and found a large decrease in the amount of time it took for diffs to be reviewed. We did not find that reviewers rushed reviews. The results were strong enough to roll this recommender out to all diffs that only have a team assigned for review.Implications. Aside from the direct findings from our work, our findings suggest there can be a discrepancy between historical backtesting and A/B test experimental findings, and that more A/B tests are necessary to test recommenders in production. Outcome measures beyond accuracy are important. This is especially true in understanding how recommenders change a reviewer’s workload. We also see that the latency in displaying a recommendation can have a large impact on how often authors select recommendations making the reporting of latency an important metric for future work.},
+journal = {ACM Trans. Softw. Eng. Methodol.},
+month = dec,
+articleno = {24},
+numpages = {23},
+keywords = {Code Review, Recommender Systems, Experimentation, A/B Testing}
+}
+
+@inproceedings{IRL,
+  title={Algorithms for inverse reinforcement learning.},
+  author={Ng, Andrew Y and Russell, Stuart and others},
+  booktitle={Icml},
+  volume={1},
+  number={2},
+  pages={2},
+  year={2000}
+}
+
+@InProceedings{BCE-FocalLoss,
+author = {Lin, Tsung-Yi and Goyal, Priya and Girshick, Ross and He, Kaiming and Dollar, Piotr},
+title = {Focal Loss for Dense Object Detection},
+booktitle = {Proceedings of the IEEE International Conference on Computer Vision (ICCV)},
+month = {Oct},
+year = {2017}
 }
