@@ -4,6 +4,9 @@
 \usepackage{url}	% \url{}コマンド用．URLを表示する際に便利
 \usepackage[dvipdfmx]{graphicx,xcolor}
 \usepackage{listings}
+\usepackage{enumitem}
+\usepackage{fvextra}
+
 \lstset{
   basicstyle={\ttfamily},
   identifierstyle={\small},
@@ -314,7 +317,8 @@ AtCoderはAから難易度が低い順に問題の難易度が設定されてお
 難易度の低い問題では要件の分割により，タスク粒度が過度に小さくなってしまう可能性を考慮して，A問題とB問題は，実験から除外する．
 
 \section{評価手法}
-各問題は 2件から4件程度の入出力サンプルを備えており，これを評価用テストとして活用し，生成したソースコードの評価に用いる．
+各問題は 2件から4件程度の入出力サンプルを備えており，C，D，E，F問題200問に備わっている入出力テストそれぞれ，526件，552件，546件，536件を使用する．
+これを評価用テストとして活用し，生成したソースコードの評価に用いる．
 また，大規模言語モデルの事前学習に用いられる学習用データの多くは英語が中心であり，他言語と比較して性能の差が挙げられる \cite{LLM_English}．
 要件の理解の一貫性や再現性を担保するために，問題文などの自然言語は全て英語の問題を対象とする．
 
@@ -373,8 +377,9 @@ RQ5では，初回のソースコード生成を基準とし，プロセスの�
 
 
  \chapter{結果}
- \section{RQ1}
-図\ref{RQ1}，200 問を対象に提案手法によって各 3 回ソースコード生成した結果のテスト通過率を示す．
+ \section{RQ1: 計画フェーズ・実装フェーズに基づくソースコード生成は，従来手法と比較して有効であるか？}
+図\ref{RQ1}に，800問を対象に提案手法によって各3回ソースコード生成した結果のテスト通過率を示す．
+横軸には全てのテストを基にしたテスト通過率を，縦軸には生成手法ごとに示す．
 
 \begin{figure}[tb]
     \centering
@@ -383,14 +388,16 @@ RQ5では，初回のソースコード生成を基準とし，プロセスの�
     \label{RQ1}
 \end{figure}
 
-実験の結果，few-shot 学習による要件の細分化を実施し，各 大規模言語モデル の入力に全体概要を含む場合に，テスト通過率が最も高い 67.07\%となった．zero-shot の場合は，テストで失敗したケースにおいても入出力でエラーが発生したケースは少なく，入出力の取り扱いは概ね正しく実装されているが，出力不一致などによる失敗が多く見られた．
+実験の結果，few-shot 学習による要件の細分化を実施し，各大規模言語モデルの入力に要求文(全体概要)を含む場合に，テスト通過率が最も高い 67.07\%となった．zero-shot の場合は，テストで失敗したケースにおいても入出力でエラーが発生したケースは少なく，入出力のフォーマット部分は概ね正しく実装されているが，出力不一致などによる失敗が多く見られた．
 これは全体概要の学習で，関数の呼び出しやデータの入出力構造などをはじめとする全体の整合性が保たれる一方で，局所的推論の部分でテスト失敗となっていると示唆される．
 一方で，全体概要の学習を行わず，few-shot のみの場合では，タイムアウトや関数呼び出しなど，実行時の構造的不整合に起因するエラーが相対的に多くみられた．
 これは，局所的な構造自体は与えられているが，全体像が欠如している事による開発の断片化により発生したものであると考えられる．
 
 
-\section{RQ2}
+\section{RQ2: 要件の統合により，テスト通過率に変化は見られるか？}
 図\ref{RQ2_1}には，データセットに含まれるAtCoderの問題200問に備わった入出力テスト全体のテスト通過率を示す．
+図の横軸には入出力テストの通過率，図の縦軸には各手法を示す．
+縦軸は具体的には，要件の分割を行わない従来手法，要件統合を行う前(few-shot学習による要求分割と要求文提示を行なった場合)，要件を閾値に沿って統合した後，の3つに分類を行なった．
 要件の統合前ではテスト通過率が67.07\%であるのに対して，統合後には68.76\%とおおよそ横ばいの結果が確認された．
 
 \begin{figure}[tb]
@@ -400,52 +407,61 @@ RQ5では，初回のソースコード生成を基準とし，プロセスの�
     \label{RQ2_1}
 \end{figure}
 
-また，図\ref{RQ2_2}にはデータセットの問題200問(C問題100問，D問題100問)において，各3回ずつソースコードを生成し，それに対するテスト通過数の分布を示す．
-具体的には，3回とも統合前後の両方でテストを通過した場合，3回とも統合前後の両方でテストを通過しなかった場合，統合前ではテストを通過せず統合後にテストを通過が1回以上通過するようになった場合，そしてそれ以外の場合で分類を行った．
+また，図\ref{RQ2_2}にはデータセットの問題800問(C問題200問，D問題200問，E問題200問，F問題200問)において，各3回ずつソースコードを生成し，それに対するテスト通過数の分布を示す．
+図の横軸にはテストを通過した問題数を，図の縦軸にはテストの通過可否を示す．
+縦軸は具体的には，3回とも統合前後の両方でテストを通過した場合，3回とも統合前後の両方でテストを通過しなかった場合，統合前ではテストを通過せず統合後にテストを通過が1回以上通過するようになった場合，そしてそれ以外の場合で分類を行った．
 尚，「テストを通過する」とは，問題に備わった入出力テストを全て通過したケースを指し，1つでもテストを通過しない入出力テストが存在する場合には，未通過という定義とする．
-その結果，全200問のうち168問が統合前後で入出力テストの結果に変化が発生しなかった事から，テスト通過率の優位的な劣化は見られない事が
+その結果，全800問のうち716問が統合前後で入出力テストの結果に変化が発生しなかった事から，テスト通過率の優位的な劣化は見られない事が確認された．
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[width=0.7\linewidth]{./Toyoshima_fig/RQ2_2.pdf}
+    \includegraphics[width=\linewidth]{./Toyoshima_fig/RQ2_2.pdf}
     \caption{RQ2: 問題単位でのテスト通過数}
     \label{RQ2_2}
 \end{figure}
 
-\section{RQ3}
-RQ2において，要件を統合した場合においても，統合前後でテストを通過する問題数に明示的な差は確認できなかったため，RQ4では統合した要件をfew-shotの学習例として活用する事で再分割した要件からソースコードを生成するために，要求文の再分割を実施した．
-few-shotで提示する分割例は，要件の統合を行った際に入出力テストを通過したケースを無作為に8問(C問題4問，D問題4問)を取得し，これら８問を除いた192問の統合を行った．
+\section{RQ3: 要件の再分割により，分割粒度の再検討が行われるか？}
+RQ2において，要件を統合した場合においても，統合前後でテストを通過する問題数に明示的な差は確認されなかった為，RQ3では，再計画フェーズで生成された再分割後の要件文を目視で確認し，再分割が単なる表現の言い換えに留まらず，要件文の粒度を更新しているかをケーススタディ的に調査した．
+few-shotで提示する分割例は，要件の統合を行った際に入出力テストを通過したケースを無作為に各難易度ごとに4問ずつ(C問題4問，D問題4問，E問題4問，F問題4問)を取得し，データセット800問から，これら16問を除いた784問で要件文の統合を行った．
 
-その中の一部をケーススタディ的に調査した結果を以下に示す．
-\todo{目視の結果を載せる}
+なお，具体例は付録に掲載する．
 
-\section{RQ4}
-RQ3で実施した統合後の要件から要求文を再分割した要件群を基に192問の問題からソースコードの生成を行い，その入出力テストを実施し，そのテスト通過の可否の結果を示す．
+目視の結果，再分割後では，要件の分割粒度が変化していることを確認した．
+具体的には，再分割前（統合後）では，入力，操作の適用，合計，出力といった粗い単位で要件がまとめられていたのに対し，再分割後では，入出力に関する処理と，要求を満たすための機能の部分を明示した上で，データ構造，並べ替え，集計，出力といった各工程が独立した要件として分割されていた．
+また，計算量や整数型といった実装上の制約が要件として明示され，実装時の解釈の揺れを抑える方向に再編されていることも確認できた．
 
-図\ref{RQ4_1}に，対象の192問のデータセットに備わった入出力テスト全体に対するテスト通過率を示す．
-再分割前では68.76\%であったのに対して，再分割後は87.59\%とおよそ18\%のテスト通過率の向上が確認された．
+以上により，再分割は要件1つあたりの粒度を更新すると同時に，工程間の境界やコンテキストから読み出されるような暗黙の制約などを顕在化させることで，要件の分割粒度を更新しうることが示された．
+このような粒度の更新は，後続の実装フェーズによる誤った実装の発生確率を低減し，生成されるソースコードの生合成向上に寄与する可能性がある．
+
+
+\section{RQ4: 要件の再分割により，テスト通過率は向上するか？}
+RQ3で実施した統合後の要件から要求文を再分割した要件群を基に784問の問題からソースコードの生成を行い，その入出力テストを実施し，そのテスト通過の可否の結果を示す．
+
+図\ref{RQ4_1}に，対象の784問のデータセットに備わった入出力テスト全体に対するテスト通過率を示す．
+再分割前では43.38\%であったのに対して，再分割後は57.59\%とおよそ14\%のテスト通過率の向上が確認された．
 
 \begin{figure}[tb]
     \centering
     \includegraphics[width=0.7\linewidth]{./Toyoshima_fig/RQ4_1.pdf}
-    \caption{RQ4: }
+    \caption{RQ4: 統合前・再分割前（統合後）・再分割後における全テスト通過率の比較}
     \label{RQ4_1}
 \end{figure}
 
 
-図\ref{RQ4_2}に，対象192問から各3回ずつソースコードを生成した際のテスト通過数の分布を示す．
-具体的には，3回全てで再分割前後の両方でテストを通過した場合，3回全てで再分割によりテストを通過するようになった場合，3回のうち1回以上でテストを通過するようになった場合，そしてその他の4つに分類する．
+図\ref{RQ4_2}に，対象784問から各3回ずつソースコードを生成した際のテスト通過数の分布を示す．
+図の横軸にはテストを通過した問題数を，図の縦軸にはテストの通過可否を示す．
+具体的には，3回全てで再分割前後の両方でテストを通過した場合，3回全てで再分割によりテストを通過するようになった場合，3回のうち1回以上でテストを通過するようになった場合，そしてその他の4つに分類した．
 
-その結果，3回全てで再分割によりテストを通過するようになったケースがC問題で24問，D問題で37問となっており，合計で192問のうち約32\%を占める結果となった．
+その結果，3回全てで再分割によりテストを通過するようになったケースがC問題で57問，D問題で76問，E問題で23問，F問題で16問となっており，合計で784問のうち約22\%を占める結果となった．
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[width=0.7\linewidth]{./Toyoshima_fig/RQ4_2.pdf}
-    \caption{RQ4: }
+    \includegraphics[width=\linewidth]{./Toyoshima_fig/RQ4_2.pdf}
+    \caption{RQ4: 再分割によるテスト通過状況の内訳（難易度別・問題単位）}
     \label{RQ4_2}
 \end{figure}
 
-\section{RQ5}
+\section{RQ5: プロセスの反復により，テスト通過率に変化は見られるか？}
 RQ1からRQ4までで計画フェーズ・実装フェーズ・再計画フェーズ並びに要件粒度の再検討が，生成されるソースコードのテスト通過率の向上に寄与し得る事が示唆される．この事から，要件粒度を再検討する反復プロセスを繰り返し行っていく事でテスト更なるテスト通過率の向上の可能性を調査する．
 
 具体的には，これまでのRQと同様にテスト通過数の変遷についてや，再計画フェーズ時の要件数の変化について調査する．
@@ -455,11 +471,11 @@ RQ1からRQ4までで計画フェーズ・実装フェーズ・再計画フェ�
 \begin{figure}[tb]
     \centering
     \includegraphics[width=0.7\linewidth]{./Toyoshima_fig/RQ5.pdf}
-    \caption{RQ5: }
+    \caption{RQ5: 反復回数に伴う完全通過問題数の推移（難易度別）}
     \label{RQ5}\end{figure}
 
 
-要件粒度の再検討を繰り返した場合において，C問題，D問題共に反復回数とテストを通過する問題数における有意的な変化は確認されなかった．
+要件粒度の再検討を繰り返した場合において，全ての難易度の問題において，反復回数とテストを通過する問題数における有意的な変化は確認されなかった．
 
 
 \chapter{考察}
@@ -476,7 +492,7 @@ RQ1からRQ4までで計画フェーズ・実装フェーズ・再計画フェ�
 
 \section{統合前・統合後・再分割後の全てでテストを全て通過するケース}
 統合前・統合語・再分割後のいずれにおいてもテストを通過したケースでは，生成されたソースコードの主要機能は一貫して満たされているため，差異は主に「要件の区切り方」に確認される．
-統合前の要件群は，変数・関数の宣言，値の代入，単一の条件分岐といった「作業単位」の細かい粒度で列挙する傾向が見られた．\todo{具体例提示する？キモくなるだけ？}
+統合前の要件群は，変数・関数の宣言，値の代入，単一の条件分岐といった「作業単位」の細かい粒度で列挙する傾向が見られた．
 この場合，ここの要件は局所的に明示されている一方で，要件間で前提や状態，データ構造の共有が複数回において必要となり，実装時に影響を及ぼす可能性が考えられる．
 しかし，問題構造が比較的単純であったり，要件間の依存関係が薄い場合においては，細かな粒度でも破綻が発生せずに通過し得る．
 
@@ -484,7 +500,7 @@ RQ1からRQ4までで計画フェーズ・実装フェーズ・再計画フェ�
 このような区切り方は実装時に参照すべき文脈をまとまりとして保持しやすく，整合性のを持ったソースコードを生成しやすい．
 即ち，機能を維持し，一貫性を保った状態で生成可能な最小単位へと要件が再編成されたことが，全ての状態においてテストを通過したケースであることが考えられる．
 
-また本研究の実装フェーズでは，各ステップでの分割前要求文(全体概要)と直前までの成果物を参照する．この設計により，要件の粒度が細かな場合においても全体としての入出力形式や主要データの流れが参照可能となり，変数名・関数名の揺らぎやインタフェースの不整合を抑制可能となる．そのため，統合前後で要件1つあたりの粒度が違っている場合でも，テストが通過した可能性が考えられる．\todo{ここの段落はRQ1に対応する部分なので，この考察だけは前に持ってくる？}
+また本研究の実装フェーズでは，各ステップでの分割前要求文(全体概要)と直前までの成果物を参照する．この設計により，要件の粒度が細かな場合においても全体としての入出力形式や主要データの流れが参照可能となり，変数名・関数名の揺らぎやインタフェースの不整合を抑制可能となる．そのため，統合前後で要件1つあたりの粒度が違っている場合でも，テストが通過した可能性が考えられる．
 
 
 \section{再分割により改善が見られたケース}
@@ -507,7 +523,7 @@ RQ1からRQ4までで計画フェーズ・実装フェーズ・再計画フェ�
 再分割前に意図が部分的に記述されていた場合においても，要件粒度が細かく分散している場合では，大規模言語モデルが要件間の依存関係や変数の意味やデータ構造などの前提を正しく理解できない場合がある．
 本研究の実装フェーズでは，要求文と同時に分割前の要求文を提示し，全体の前提条件を参照しながらコードを生成する工夫を実施しているが，要求文を平気した場合においても前提条件が要件のどの箇所にどのように適応されるべきかのコンテキストを大規模言語モデルが十分に読み取ることができない場合があり，その結果として要求文を満たすソースコードを生成できないケースが発生している．
 
-これに対し，再分割後は要件が意味的まとまりとして提示され，各要件内で入出力条件や，格納した値の更新，分岐などがまとまって記述される傾向が確認された．\memo{やっぱり具体例提示しないとイメージしてもらえる気がしない}
+これに対し，再分割後は要件が意味的まとまりとして提示され，各要件内で入出力条件や，格納した値の更新，分岐などがまとまって記述される傾向が確認された．
 その結果，1つあたりの要件粒度が大きくなり，先行研究でも提示された大規模言語モデルが学習しやすい粒度へと変化し，コンテキストや前提条件の理解不足が抑制され，要件に沿ったソースコードが生成されるようになったことが考えられる．
 
 
@@ -515,8 +531,8 @@ RQ1からRQ4までで計画フェーズ・実装フェーズ・再計画フェ�
 本節では再分割によって得られた「テストを通過した要件群」を分割例として再利用し，計画・実装・再計画の3フェーズを反復がテスト通過率に与える影響について議論する．
 
 
-先の節子で示した通り，反復に回数の増加に伴う通過数の一環した増加は確認できず，特に高難易度問題においては未解決となった問題が多く残った．
-反復による改善が頭打ちとなった要因として，要件の区切り方や粒度の調整ではなく，問題文のコンテキストの理解における失敗が考えられる．\memo{文キモい気がする．あとで見直す．}
+先の節で示した通り，反復に回数の増加に伴う通過数の一環した増加は確認できず，特に高難易度問題においては未解決となった問題が多く残った．
+反復による改善が頭打ちとなった要因として，要件の区切り方や粒度の調整ではなく，問題文の前提や制約の取り違えによるコンテキストの誤解が考えられる．
 
 実際にプロセスの反復を実施した中で，テストが継続して通過しなかったケースをケーススタディ的に確認したところ，境界条件や偶奇処理の誤解，配列インデックスの取り違えや，処理の順序誤りなどが確認された．
 また，加えて，処理に無関係な関数の定義などの過剰実装が行われ，重要な処理の検討が不十分となる例も観察された．これらのように，コンテキストの誤解が生成されるソースコードに与える影響は甚大であり，大規模言語モデル上で誤解を解くためのアプローチが行われない限り，生成されるソースコードには同種の誤りを内包してしまう事が考えられる．
@@ -556,7 +572,7 @@ RQ1からRQ4までで計画フェーズ・実装フェーズ・再計画フェ�
 そのため，日本語要求や箇条書き形式の仕様書などの要求形式が異なる場合に提案手法が同様に機能するかは不明であり，言語・形式の違いに対する一般化は今後の検証が必要となる．
 
 
-\chapter{終わりに}
+\chapter{おわりに}
 
 
 
@@ -585,26 +601,116 @@ RQ1からRQ4までで計画フェーズ・実装フェーズ・再計画フェ�
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%
-%% 付録
+% 付録
 %%
-% \appendix
-% 
-% \chapter{サンプルプログラム}
-% 
-% プログラムリストや実行結果など，本論を補足する上で必要と思われるものが
-% あれば付録として付ける．
-% 
-% {
-% \footnotesize
-% \begin{verbatim}
-% #include <stdio.h>
-% int main(void)
-% {
-%     printf("Hello, World!\n");
-%     return 0;
-% }
-% \end{verbatim}
-% }
+\appendix
+\todo{フォーマット修正}
+% =========================
+% Appendix numbering fix
+% =========================
+\setcounter{section}{0}
+\setcounter{subsection}{0}
+\renewcommand{\thesection}{A.\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+
+\section{ケーススタディ：要件の再分割例}
+\label{app:case-study-resplit}
+
+本付録では，同一ケースに対して作成された「再分割前（統合後）」と「再分割後」のサブタスク列を示す．
+なお，各サブタスクの本文は，入力として用いた英語テキスト（原文）をそのまま掲載する．
+
+% fvextra の Verbatim はオプションで自動折り返し可能
+\subsection{再分割後}
+\begin{description}
+  \item[\texttt{--subtask1}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+Input: - Read integers N and M. - Read list A of length N: A[0..N-1]. - For j in 1..M, read integers B_j and C_j and store as tuples in a list offers = [(B_1, C_1), ..., (B_M, C_M)]. - Handle with a function solve() that reads stdin, then passes arguments to compute_max_sum(A, offers, N).
+\end{Verbatim}
+
+  \item[\texttt{--subtask2}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+Define the core function compute_max_sum(A: List[int], offers: List[Tuple[int, int]], N: int) -> int that returns the maximum possible sum after all operations.
+\end{Verbatim}
+
+  \item[\texttt{--subtask3}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+Build the candidate multiset in compressed form: - Initialize a list candidates: List[Tuple[int, int]]. - For each a in A, append (a, 1) to candidates. - For each (B_j, C_j) in offers, append (C_j, B_j) to candidates.
+\end{Verbatim}
+
+  \item[\texttt{--subtask4}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+Sort by value descending: - Sort candidates with key on value, descending: candidates.sort(key=lambda x: x[0], reverse=True).
+\end{Verbatim}
+
+  \item[\texttt{--subtask5}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+Take the top N values without expanding counts: - Initialize remain = N and total_sum = 0 (use 64-bit integer). - For (value, count) in candidates in order: - take = min(count, remain). - total_sum += value * take. - remain -= take. - If remain == 0: break.
+\end{Verbatim}
+
+  \item[\texttt{--subtask6}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+Return the result: - compute_max_sum returns total_sum to the caller.
+\end{Verbatim}
+
+  \item[\texttt{--subtask7}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+Wire up solve(): - After parsing input in solve(), call ans = compute_max_sum(A, offers, N). - Print ans.
+\end{Verbatim}
+
+  \item[\texttt{--subtask8}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+Complexity and types (implementation constraint): - Ensure O((N + M) log(N + M)) time due to sorting, and O(N + M) memory. - Use 64-bit integers for sums (e.g., Python int, or long long in C++).
+\end{Verbatim}
+
+  \item[\texttt{--subtask9}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+Function and variable names to use: - Functions: solve(), compute_max_sum(A, offers, N). - Variables: N, M, A, offers, candidates, total_sum, remain, value, count, take.
+\end{Verbatim}
+
+  \item[\texttt{--subtask10}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+Output format: - Print a single integer (the maximum possible sum) followed by a newline to standard output.
+\end{Verbatim}
+\end{description}
+
+\subsection{再分割前（統合後）}
+\begin{description}
+  \item[\texttt{--subtask1}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+Read integers N and M from standard input, followed by an array A of length N representing the integers on the cards.
+\end{Verbatim}
+
+  \item[\texttt{--subtask2}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+Read M pairs of integers (B_j, C_j) from standard input, where B_j is the maximum number of cards that can be replaced and C_j is the value to replace with.
+\end{Verbatim}
+
+  \item[\texttt{--subtask3}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+Sort the operations based on C_j in descending order to prioritize higher replacement values.
+\end{Verbatim}
+
+  \item[\texttt{--subtask4}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+Initialize a max-heap (or priority queue) to efficiently manage the smallest values in array A.
+\end{Verbatim}
+
+  \item[\texttt{--subtask5}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+For each operation (B_j, C_j):
+  - If B_j is greater than 0, replace up to B_j smallest values in A with C_j using the max-heap.
+\end{Verbatim}
+
+  \item[\texttt{--subtask6}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+After processing all operations, compute the sum of the modified array A.
+\end{Verbatim}
+
+  \item[\texttt{--subtask7}]
+\begin{Verbatim}[breaklines=true,breakanywhere=true]
+Print the maximum possible sum of the integers written on the N cards after all operations.
+\end{Verbatim}
+\end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
