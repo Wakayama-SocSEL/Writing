@@ -624,55 +624,55 @@ RQ1からRQ4までで計画フェーズ・実装フェーズ・再計画フェ�
 本付録では，同一ケースに対して作成された「再分割前（統合後）」と「再分割後」のサブタスク列を示す．
 なお，各サブタスクの本文は，入力として用いた英語テキスト（原文）をそのまま掲載する．
 
-% fvextra の Verbatim はオプションで自動折り返し可能
+
 \subsection{再分割後}
-\begin{description}
-  \item[\texttt{--subtask1}]
-\begin{Verbatim}[breaklines=true,breakanywhere=true]
+\begin{description}[style=nextline]
+  \item[\texttt{--subtask1}]\par\noindent
+\begin{Verbatim}[breaklines=true,breakanywhere=true,xleftmargin=\leftmargin]
 Input: - Read integers N and M. - Read list A of length N: A[0..N-1]. - For j in 1..M, read integers B_j and C_j and store as tuples in a list offers = [(B_1, C_1), ..., (B_M, C_M)]. - Handle with a function solve() that reads stdin, then passes arguments to compute_max_sum(A, offers, N).
 \end{Verbatim}
 
-  \item[\texttt{--subtask2}]
-\begin{Verbatim}[breaklines=true,breakanywhere=true]
+  \item[\texttt{--subtask2}]\par\noindent
+\begin{Verbatim}[breaklines=true,breakanywhere=true,xleftmargin=\leftmargin]
 Define the core function compute_max_sum(A: List[int], offers: List[Tuple[int, int]], N: int) -> int that returns the maximum possible sum after all operations.
 \end{Verbatim}
 
-  \item[\texttt{--subtask3}]
-\begin{Verbatim}[breaklines=true,breakanywhere=true]
+  \item[\texttt{--subtask3}]\par\noindent
+\begin{Verbatim}[breaklines=true,breakanywhere=true,xleftmargin=\leftmargin]
 Build the candidate multiset in compressed form: - Initialize a list candidates: List[Tuple[int, int]]. - For each a in A, append (a, 1) to candidates. - For each (B_j, C_j) in offers, append (C_j, B_j) to candidates.
 \end{Verbatim}
 
-  \item[\texttt{--subtask4}]
-\begin{Verbatim}[breaklines=true,breakanywhere=true]
+  \item[\texttt{--subtask4}]\par\noindent
+\begin{Verbatim}[breaklines=true,breakanywhere=true,xleftmargin=\leftmargin]
 Sort by value descending: - Sort candidates with key on value, descending: candidates.sort(key=lambda x: x[0], reverse=True).
 \end{Verbatim}
 
-  \item[\texttt{--subtask5}]
-\begin{Verbatim}[breaklines=true,breakanywhere=true]
+  \item[\texttt{--subtask5}]\par\noindent
+\begin{Verbatim}[breaklines=true,breakanywhere=true,xleftmargin=\leftmargin]
 Take the top N values without expanding counts: - Initialize remain = N and total_sum = 0 (use 64-bit integer). - For (value, count) in candidates in order: - take = min(count, remain). - total_sum += value * take. - remain -= take. - If remain == 0: break.
 \end{Verbatim}
 
-  \item[\texttt{--subtask6}]
+  \item[\texttt{--subtask6}]\par\noindent
 \begin{Verbatim}[breaklines=true,breakanywhere=true]
 Return the result: - compute_max_sum returns total_sum to the caller.
 \end{Verbatim}
 
-  \item[\texttt{--subtask7}]
+  \item[\texttt{--subtask7}]\par\noindent
 \begin{Verbatim}[breaklines=true,breakanywhere=true]
 Wire up solve(): - After parsing input in solve(), call ans = compute_max_sum(A, offers, N). - Print ans.
 \end{Verbatim}
 
-  \item[\texttt{--subtask8}]
+  \item[\texttt{--subtask8}]\par\noindent
 \begin{Verbatim}[breaklines=true,breakanywhere=true]
 Complexity and types (implementation constraint): - Ensure O((N + M) log(N + M)) time due to sorting, and O(N + M) memory. - Use 64-bit integers for sums (e.g., Python int, or long long in C++).
 \end{Verbatim}
 
-  \item[\texttt{--subtask9}]
+  \item[\texttt{--subtask9}]\par\noindent
 \begin{Verbatim}[breaklines=true,breakanywhere=true]
 Function and variable names to use: - Functions: solve(), compute_max_sum(A, offers, N). - Variables: N, M, A, offers, candidates, total_sum, remain, value, count, take.
 \end{Verbatim}
 
-  \item[\texttt{--subtask10}]
+  \item[\texttt{--subtask10}]\par\noindent
 \begin{Verbatim}[breaklines=true,breakanywhere=true]
 Output format: - Print a single integer (the maximum possible sum) followed by a newline to standard output.
 \end{Verbatim}
@@ -680,38 +680,38 @@ Output format: - Print a single integer (the maximum possible sum) followed by a
 
 \subsection{再分割前（統合後）}
 \begin{description}
-  \item[\texttt{--subtask1}]
+  \item[\texttt{--subtask1}]\par\noindent
 \begin{Verbatim}[breaklines=true,breakanywhere=true]
 Read integers N and M from standard input, followed by an array A of length N representing the integers on the cards.
 \end{Verbatim}
 
-  \item[\texttt{--subtask2}]
+  \item[\texttt{--subtask2}]\par\noindent
 \begin{Verbatim}[breaklines=true,breakanywhere=true]
 Read M pairs of integers (B_j, C_j) from standard input, where B_j is the maximum number of cards that can be replaced and C_j is the value to replace with.
 \end{Verbatim}
 
-  \item[\texttt{--subtask3}]
+  \item[\texttt{--subtask3}]\par\noindent
 \begin{Verbatim}[breaklines=true,breakanywhere=true]
 Sort the operations based on C_j in descending order to prioritize higher replacement values.
 \end{Verbatim}
 
-  \item[\texttt{--subtask4}]
+  \item[\texttt{--subtask4}]\par\noindent
 \begin{Verbatim}[breaklines=true,breakanywhere=true]
 Initialize a max-heap (or priority queue) to efficiently manage the smallest values in array A.
 \end{Verbatim}
 
-  \item[\texttt{--subtask5}]
+  \item[\texttt{--subtask5}]\par\noindent
 \begin{Verbatim}[breaklines=true,breakanywhere=true]
 For each operation (B_j, C_j):
   - If B_j is greater than 0, replace up to B_j smallest values in A with C_j using the max-heap.
 \end{Verbatim}
 
-  \item[\texttt{--subtask6}]
+  \item[\texttt{--subtask6}]\par\noindent
 \begin{Verbatim}[breaklines=true,breakanywhere=true]
 After processing all operations, compute the sum of the modified array A.
 \end{Verbatim}
 
-  \item[\texttt{--subtask7}]
+  \item[\texttt{--subtask7}]\par\noindent
 \begin{Verbatim}[breaklines=true,breakanywhere=true]
 Print the maximum possible sum of the integers written on the N cards after all operations.
 \end{Verbatim}
