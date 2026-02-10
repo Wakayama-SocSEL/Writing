@@ -5,9 +5,14 @@
 
 \usepackage{wuse_resume}
 \usepackage{url}	% \url{}コマンド用．URLを表示する際に便利
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{makecell}
 %\usepackage[dvipdfmx]{graphicx}  % ←graphicx.styを用いてEPSを取り込む場合有効にする
 			% 他のパッケージ・スタイルを使う場合には適宜追加
 
+\newcounter{patternID}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%
@@ -21,9 +26,7 @@
 \氏名{野口 隼杜}
 
 \概要{%
-この文章は，和歌山大学システム工学部システム工学科社会情報学メジャーの卒業研究発表会に
-おいて配布されるレジュメをp\LaTeX を用いて作成するための方法を記述したものである．
-この文章もまた，統一されたレジュメの体裁に沿って作成されており，レジュメ作成の際の参考にされたい．
+ソフトウェアの性能効率性は重要であるが，性能低下箇所の同定，および修正は開発者の経験に依存し，プロファイラ等の動的解析は実装途中の早期段階で適用が難しい．本研究はJavaScriptを対象に，マイクロベンチマーク共有サービス上の実行速度が評価された機能的に等価な実装対を抽象構文木へ変換し，構造的差分解析により低速コードパターンを抽出する．さらに，このパターンをCodeQLにより静的検出へ利用することで，プログラムを実行せずに低速なコード片を検出する．繰り返し処理に焦点を当てて6種類の低速コードパターンを作成し，GitHub上の1,000件のJavaScriptリポジトリで検出実験と類似度評価，目視調査を行った結果，本手法は構造的特徴に基づく検出に有効である一方，意味的に等価な検出結果であるかの検証が必要であることを明らかにした．
 }
 
 \キーワード{プログラム実行速度}
@@ -46,163 +49,135 @@
 %% 本文 - ここから
 %%
 
-\section{レジュメ}
+\section{はじめに}
 
-レジュメは，A4用紙2枚を上限とし，卒業論文提出時に同時に提出することに
-なっている\footnote{平成15年度より，レジュメのスタイルは学科である程度統一されることになった．}．
-レジュメに記述しなければならないのは，本文に加えて次の各項目である．
+ソフトウェア開発において，ソフトウェアの性能効率性はシステム全体の品質やユーザ体験，運用コストに直結する重要な要素である\cite{JISX25010, ISO25010}．従来，性能低下の要因を特定する手法として動的解析が広く用いられているが，プログラムが実行可能な状態でなければ適用できず，実装途中など開発の早期段階での適用が難しいという課題がある．一般に，開発が進行するほど修正コストは増大するため\cite{local2system}，実装初期段階における性能評価手法が期待されている．
 
-\begin{itemize}
-  \item タイトル
-  \item 所属研究室
-  \item 学生番号
-  \item 氏名
-  \item 概要
-  \item キーワード(5語程度)
-  \item 参考文献
-\end{itemize}
+本研究では，開発者がWeb上でマイクロベンチマークを作成，実行，共有できるマイクロベンチマーク共有サービスに着目し，実行速度が評価された機能的に等価な実装対から，抽象構文木に基づく構造的差分を解析し，性能低下に寄与する共通のコード構造を低速コードパターンとして抽出する．抽出したパターンを静的解析エンジンであるCodeQLによる解析に利用することで，静的にソースコード中から性能向上の余地がある箇所を早期に検出する手法を提案する．
 
-本フォーマットでは，2ページという限られた領域を有効に利用するために，2段組のレイアウトを採用して
-いる．
 
-本レジュメフォーマットは，
-\begin{itemize}
-  \item {\tt wuse\_resume.sty}
-  \item {\tt resume\_sample.tex}
-\end{itemize}
-の2つのファイルから構成される．
-{\tt wuse\_resume.sty}ファイルは，\TeX を用いてレジュメを作成する際に，統一的なスタイルを
-与える
-\LaTeX のスタイルファイルである．
-{\tt resume\_sample.tex}ファイルは，このスタイルファイルを利用してレイアウトした文書の例であ
-る．
+\section{事前分析：マイクロベンチマークにおける低速コードの特徴}
+\label{preanalysis}
 
-以下では，本スタイルファイルを利用するための方法，および2段組のレイアウトを効果的に使うための手
-法を解説する．
-なお，本スタイルファイルの姉妹版として，
-卒業論文用スタイルファイル\cite{wusethesis}
-も用意しているので参考にされたい．
-\TeX や\LaTeX についての情報は，書籍\cite{latex_j,latexcomp,latex2e}や
-\TeX Wiki\footnote{\url{https://texwiki.texjp.org/}}が詳しい．
+大森ら\cite{omori}が作成したマイクロベンチマーク共有サービスJsPerf\footnote{JsPerf: \url{https://jsperf.app/}}のデータセット（29,809件の実装対）を対象に，解析対象を絞り込むための事前分析を行った．マイクロベンチマーク実装対では，実行速度の差を増幅させ評価を容易にする目的で，繰り返し処理が利用されることが多い点に着目し，構文解析を実施した．
 
-\section{タイトル，氏名，概要など}
+その結果，全実装対の39.9\%に繰り返し処理（\texttt{for}，\texttt{for-of}，\texttt{for-in}，\texttt{while}，\texttt{do-while}）が含まれていた．この結果に基づき，本研究では繰り返し処理に焦点を当てた低速コードパターンの作成を行う．
 
-タイトルや氏名などは，それぞれ``\verb|\タイトル|''や``\verb|\氏名|''コマンドを利用して指
-定する．
-この他に，
-  所属研究室(\verb|\研究室|)，
-  学生番号(\verb|\学生番号|)，
-  概要(\verb|\概要|)，
-  キーワード(\verb|\キーワード|)
-を指定するためのコマンドが用意されている．
-これらの情報は，\verb|\maketitle|によって1ページ目上部中央に出力される．
 
-\section{図，表}\label{chap:fig-tab-exp}
+\section{提案手法}
 
-論文/レジュメでは，図，表などを効果的に使用する．
+\subsection{低速コードパターンの作成}\label{create_pattern}
 
-\subsection{図}
+マイクロベンチマーク実装対に対し，抽象構文木ベースの差分解析ツールGumTree\cite{gumtree}を用いて，低速なコードから高速なコードへの編集操作を抽出する．削除または更新された要素を低速なコード特有の処理や構造を示す特徴として収集し，目視精査を経て低速コードパターンへと集約する．
 
-{\tt figure}環境を利用することによって図にキャプション(\verb|\caption|)を付けることができ
-る．
-図には通し番号が付けられ，キャプションに\verb|\label|を設定しておくと，
-``図\ref{fig:sample}''のように\verb|\ref|によって図を番号で参照することができる．
-図\ref{fig:sample}に{\tt figure}環境を用いた記述例を示す．
-なお，図のキャプションは，図の下部に付けるのが一般的である．
+\subsection{CodeQLによる静的検出}
 
-\begin{figure}[t]
-  \centering
-  %% EPS形式の図を入れる場合には，以下のminipageを \includegraphics{hoge.eps}
-  %% などに置き換える．
-  \begin{minipage}{0.45\textwidth}
-    \begin{verbatim}
-	  \begin{figure}
-	    \centering
-	    図(\includegraphics{hoge.eps}など)
-	    \caption{figure環境}\label{figenv}
-	  \end{figure}
-    \end{verbatim}
-  \end{minipage}
-  %% ここまで(置き換える範囲)
-  \caption{図の例}\label{fig:sample}
-\end{figure}
+抽出したパターンの構造的特徴を，CodeQL\cite{codeql}のクエリ言語（QL）に手作業で変換する．このクエリを対象プログラムに対して実行することで，静的に低速コードパターンを含むコード片を特定する．
 
-\verb|includegraphics|を用いてPDF形式/PNG形式/JPEG形式/EPS形式等の図を文章の中に取り込むことができる．
-この場合には，\verb|\begin{document}|の前に\verb|\usepackage[dvipdfmx]{graphicx}|を追加する．
+\subsection{類似度に基づく評価方法}
 
-\subsection{表}
+検出結果の妥当性を検証するため，検出したコード片とパターンの抽出元となった低速なコードとのコサイン類似度を算出する．これにより，検出結果を定量的に順位付けし，効率的な目視調査を可能にする．
 
-{\tt table}環境を利用することによって図と同じように，キャプションをつけたり，ラベルにより参照したり
-することができる．
-なお，表のキャプションは，表の上部に付けるのが一般的である．
 
-\subsection{横長の図・表}
+\section{結果}
 
-2段組の文書を作成していて，1段でレイアウトしたい横長の図や表を入れるためには，
-\verb|figure*|や\verb|table*|環境を利用する．
-表\ref{tab:long_sample}に横長の表の例を示す．
+\subsection{低速コードパターンの作成}
 
-\begin{table*}
-  \caption{横長の表}\label{tab:long_sample}
-  \centering
-  \begin{tabular}{lrrrr}
-  \hline
-  \multicolumn{1}{c}{条件} & \multicolumn{1}{c}{その1} & \multicolumn{1}{c}{その2} & \multicolumn{1}{c}{その3} & \multicolumn{1}{c}{その4}\\ 
-  \hline
-  条件1 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979\\
-  条件2 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979\\
-  条件3 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979 & 3.14159265358979\\
-  \hline
-  \end{tabular}
-\end{table*}
+%----------------------
+\begin{table}[!h]
+    \centering
+    \caption{低速コードパターン}
+    \label{tab:slow_code_patterns}
+    \setcounter{patternID}{0} % 表が始まる前にカウンタを0にリセット
+    \begin{threeparttable}
+        \begin{tabular}{clr}
+            \toprule
+            \textbf{ID} & \textbf{パターン名}  & \textbf{元低速コード数} \\
+            \midrule
+            
+            \refstepcounter{patternID}\label{ptn:for-in}
+            \thepatternID & 
+            \texttt{for-in} & 
+            534 \\
+            
+            \refstepcounter{patternID}\label{ptn:forEach}
+            \thepatternID &
+            \texttt{forEach()} &
+            194 \\
+            
+            \refstepcounter{patternID}\label{ptn:hasOwnProperty}
+            \thepatternID &
+            \makecell[l]{%
+              \texttt{for-in\_}\\
+              \texttt{  if\_hasOwnProperty()}
+            } &
+            102 \\
 
-\section{参考文献}
+            \refstepcounter{patternID}\label{ptn:applymap}
+            \thepatternID &
+            \texttt{apply()}\textbf{\_}\texttt{map()} &
+            12 \\
+            
+            \refstepcounter{patternID}\label{ptn:json}
+            \thepatternID &
+            \texttt{parse(stringify())} &
+            11 \\
+            
+            \refstepcounter{patternID}\label{ptn:push}
+            \thepatternID &
+            \texttt{for-of}\textbf{\_}\texttt{push()} &
+            8\\
+                
+            \bottomrule
+        \end{tabular}
+    \end{threeparttable}
+\end{table}
+%----------------------
 
-レジュメには，参考文献も含める．
-ここでは，一般的な\verb|thebibliography|環境を利用している．
+\ref{preanalysis}章および，\ref{create_pattern}節に基づき，計6種類の低速コードパターンを作成した（表\ref{tab:slow_code_patterns}）．なお，表\ref{tab:slow_code_patterns}中の「元低速コード数」は，そのパターンに集約されたデータセット中の低速コードの数を示す．
 
-\section{質問等}
 
-このレジュメ体裁(p\LaTeX 版)に関する質問は，
-メールにて，\verb|fukuyasu@wakayama-u.ac.jp|まで．
+\subsection{データセットに対する検証}
 
-\section{おためし}
+作成した低速コードパターンおよびCodeQLクエリが意図した構造を正しく検出できるかを検証するため，抽出元であるマイクロベンチマーク実装対データセット（低速コード全11,889件）に対して検出実験を行った．その結果，全てのパターンで再現率は$1.0$となり，クエリが意図した低速コードパターンを検出できることを確認した．一方で，適合率は$0.14$から$0.61$の範囲となったが，目視調査の結果，計算上は偽陽性と判定されたコード片であっても，実際にはクエリが意図する低速コードパターンと同一の構文構造を持っていることを確認した．
 
-\subsection{箇条書}
+\subsubsection{OSSリポジトリへの適用}
 
-\begin{itemize}
-  \item 普通の箇条書1
-  \item 普通の箇条書2
-  \item 普通の箇条書3
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-\end{itemize}
+%----------------------
+\begin{table}[ht]
+    \centering
+    \caption{低速コードパターンによる検出結果}
+    \label{tab:result_detect}
+  \begin{tabular}{crrr}
+        \toprule
+    \textbf{ID} & \textbf{検出リポジトリ数} & \textbf{総検出数 (件)} \\
+        \midrule           
+    \ref{ptn:for-in} & 692 & 101,212 \\
+    \ref{ptn:forEach} & 844 & 174,047 \\
+    \ref{ptn:hasOwnProperty} & 308 & 9,516 \\
+    \ref{ptn:applymap} & 49 & 139 \\
+    \ref{ptn:json} & 284 & 2,823 \\
+    \ref{ptn:push} & 480 & 32,812 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+%----------------------
 
-\subsection{番号付き箇条書}
+GitHub上のOSSリポジトリから，JavaScriptを主要言語とし，かつ最終コミットが1年以内であるスター数上位1,000件に本手法を適用した結果，パターンによって検出数に差があるものの，$49$リポジトリから$844$リポジトリで検出結果を得た（表\ref{tab:result_detect}）．また，検出数とリポジトリ規模（JavaScriptファイルの総行数）の間には正の相関が認められた．
 
-\begin{enumerate}
-  \item 普通の箇条書1
-  \item 普通の箇条書2
-  \item 普通の箇条書3
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-  \item 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-\end{enumerate}
 
-\begin{description}
-  \item[hoge] 普通の箇条書1
-  \item[foo] 普通の箇条書2
-  \item[var] 普通の箇条書3
-  \item[長い箇条書のタイトル] 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-  \item[長い箇条書のタイトル] 長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト，長い箇条書のテスト
-\end{description}
+\section{考察}
 
-\subsubsection{subsubsectionのタイトル}
+OSSリポジトリに対する検出結果を類似度に基づき目視調査したところ，類似度スコアが高い検出結果はコード長が短く，低速コードパターンの構文構造のみで完結する処理が多い一方，類似度スコアが低い検出結果は例外処理や条件分岐など周辺の処理を多く含み，コード長が長く複雑である傾向が確認された．また，複数の構文要素が複合するパターン（ID\ref{ptn:hasOwnProperty}からID\ref{ptn:push}）では構造的には一致していても，元低速コードと意味的に等価ではない検出例が見られた．
+以上より，本手法は，定義した構造的特徴に基づいて低速コードパターンを含むコード片を静的に検出可能である一方，意味的等価性の確認が課題となることがわかった．
+ユニットテストを備える検出箇所を対象とした小規模な修正実験を実施したところ，テストを通過（修正が成功）する事例を確認した．したがって，本手法は構造的観点から静的に低速なコード片を検出可能であり，また，高速な実装に置き換えられる箇所を検出できる手法であることが示唆された．
 
-\paragraph{パラグラフ}
 
-\subparagraph{サブパラグラフ}
+\section{おわりに}
 
-文章の構造は，section, subsection, subsubsection, paragraph, subparagraph である．
+本研究では，マイクロベンチマーク共有サービスに蓄積された知見を静的解析に統合し，JavaScriptにおいて低速な要因を含み，性能向上の余地があるコード片を，プログラムを実行することなく静的に検出する手法を提案した．繰り返し処理を中心とした6種類の低速コードパターンを作成し，ケーススタディとしてGitHub上の1,000件のOSSリポジトリに適用した結果，ソースコード中から低速コードパターンを含む箇所を網羅的に検出できることを示した．
+
+
 
 %%
 %% 本文 - ここまで
@@ -214,40 +189,42 @@
 %% 参考文献
 %%
 
-\begin{thebibliography}{9}	% {9}は文献に付ける通し番号の表示に必
+\begin{thebibliography}{99}	% {99}は文献に付ける通し番号の表示に必
 				% 要な幅を指定している．10件以上になる
 				% 場合には2桁の数({99}など)を指定する．
-\bibitem{wusethesis}
-  福安直樹，
-  卒業論文スタイルファイル（和歌山大学システム工学部用），
-  \url{https://github.com/fukuyasu/wuse_thesis}．
 
-\bibitem{tex}
-  Knuth, D.,
-  Remarks to Celebrate the Publication of Computers \& Typesetting,
-  TUGboat, Vol.7, No.2, pp.95--98, 1986.
+\bibitem{JISX25010}
+  日本産業規格，
+  JIS X 25010:2013 システム及びソフトウェア製品の品質要求及び評価（SQuaRE）−システム及びソフトウェア品質モデル，
+  2013．
 
-\bibitem{latex}
-  Lamport, L.,
-  文書処理システム\LaTeXe{}，
-  ピアソン・エデュケーション，1999，
-  \newblock{}阿瀬はる美 訳．
+\bibitem{ISO25010}
+  International Organization for Standardization,
+  Systems and software engineering --- Systems and software Quality Requirements and Evaluation (SQuaRE) --- Product quality model,
+  2023．
 
-\bibitem{latex_j}
-  奥村晴彦，\LaTeX{}入門 ---美文書作成のポイント---，技術評論社，1993．
+\bibitem{local2system}
+  Liao, L., Eismann, S., Li, H., Bezemer, C.-P., Costa, D. E., van Hoorn, A. and Shang, W.,
+  Early Detection of Performance Regressions by Bridging Local Performance Data and Architectural Models,
+  Proceedings of the IEEE/ACM 47th International Conference on Software Engineering,
+  pp.2841--2853, 2025.
 
-\bibitem{latex2e}
-  奥村晴彦，黒木裕介，[改定第6版] \LaTeXe~美文書作成入門，技術評論社，2013．
+\bibitem{omori}
+  大森 楓己，伊原 彰紀，柏 祐太郎，
+  マイクロベンチマーク共有サービスを用いた実行高速化のための自動リファクタリングへの試み，
+  情報処理学会研究報告，2024．
 
-\bibitem{latexcomp}
-  Goossens, M., Mittelbach, F. and Samarin, A.,
-  The \LaTeX{}コンパニオン，アスキー出版局，1998，
-  \newblock{}アスキー書籍編集部 監訳．
+\bibitem{gumtree}
+  Falleri, J.-R., Morandat, F., Blanc, X., Martinez, M. and Monperrus, M.,
+  Fine-grained and accurate source code differencing,
+  2014 ACM/IEEE International Conference on Automated Software Engineering,
+  pp.313--324, 2014.
 
-\bibitem{texwiki}
-  \LaTeX 入門 --- \TeX{} Wiki，
-  \url{https://texwiki.texjp.org/?LaTeX%E5%85%A5%E9%96%80}，
-  2021年12月3日閲覧．
+\bibitem{codeql}
+  GitHub Security Lab,
+  CodeQL,
+  \url{https://codeql.github.com/}，2025年12月22日アクセス．
+
 \end{thebibliography}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
