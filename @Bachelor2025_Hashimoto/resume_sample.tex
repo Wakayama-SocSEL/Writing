@@ -51,7 +51,7 @@
 
 OSS開発において，長期貢献者(LTC)はソフトウェアの実装に限らず，コードレビューや新規参加者のメンターなど，プロジェクトの継続的な運用を支える重要な役割を担っている\cite{LTC}．しかし，開発者の流動性が高く離脱が頻繁に発生するため，LTCは少数であり，作業負担が集中しやすい\cite{related2}．そのため，LTCとなる開発者を早期に特定し，適切なサポートを行うことが求められている．
 
-従来研究\cite{LTC}\cite{related1}では，LTCとなり得る開発者を早期に予測するLTC予測として，プロジェクト参加後の一定期間を基準とし，1年後や3年後以降に貢献があるか否かを予測する手法が提案されている．しかし，単一時点以降の貢献の有無を予測するため，開発者がどの期間で貢献するかを予測することはできず，適切なタスク配分が困難である．
+従来研究\cite{LTC}では，LTCとなり得る開発者を早期に予測するLTC予測として，プロジェクト参加後の一定期間を基準とし，1年後や3年後以降に貢献があるか否かを予測する手法が提案されている．しかし，単一時点以降の貢献の有無を予測するため，開発者がどの期間で貢献するかを予測することはできず，適切なタスク配分が困難である．
 
 本研究では，作業依頼に対する応答が把握しやすいコードレビューに着目する．レビュー依頼の承諾は単発の行動ではなく，過去の活動や作業負荷に応じた継続的な意思決定プロセスである．このプロセスを状態と行動の時系列的な遷移としてモデル化するために，逆強化学習(IRL)を用いて報酬関数を推定し，連続する各期間（0-3m，3-6m，6-9m，9-12m）におけるレビュー承諾の有無を予測するモデルを提案する．
 
@@ -105,24 +105,19 @@ IRLの勾配ベースの重要度分析の結果，短期予測（0-3m）では�
 \begin{thebibliography}{9}
 
 \bibitem{motivation}
-  Wu, Y., et al.,
-  Open Source Software Developer and Project Networks,
-  Proc. KDD Workshop, 2007.
+  Ye, Y. and Kishida, K.,
+  Toward an Understanding of the Motivation of Open Source Software Developers,
+  Proc. ICSE, pp.419--429, 2003.
 
 \bibitem{OTC}
-  Lee, A., et al.,
-  One-Time Contributors to FLOSS: Surveys and Data Analysis,
-  Proc. OSS, 2017.
+  Lee, A. and Carver, J.C.,
+  Are One-Time Contributors Different? A Comparison to Core and Periphery Developers in FLOSS Repositories,
+  Proc. ESEM, pp.1--10, 2017.
 
 \bibitem{LTC}
   Zhou, M. and Mockus, A.,
-  Who Will Stay in the FLOSS Community? Modeling Participant's Initial Behavior,
-  IEEE Trans. Software Eng., Vol.41, No.1, pp.82--99, 2015.
-
-\bibitem{related1}
-  Eluri, V.R., et al.,
-  Predicting Long-Term Contributors to Open Source Projects Using Machine Learning,
-  Proc. MSR, pp.497--501, 2021.
+  What Make Long Term Contributors: Willingness and Opportunity in OSS Community,
+  Proc. ICSE, pp.518--528, 2012.
 
 \bibitem{related2}
   Bao, L., et al.,
